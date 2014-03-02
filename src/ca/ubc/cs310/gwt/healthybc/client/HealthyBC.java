@@ -39,6 +39,15 @@ public class HealthyBC implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		init();
+	}
+	
+	private void init() {
+		createUI();
+		createMap();
+	}
+	
+	private void createUI() {
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -148,5 +157,9 @@ public class HealthyBC implements EntryPoint {
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+	}
+	
+	private void createMap() {
+		//TODO: implement
 	}
 }

@@ -1,14 +1,10 @@
 package ca.ubc.cs310.gwt.healthybc.server;
 
 public class ClinicHours {
-
 	private String hours;
 	
+	public String getHours() { return hours; }
 	
-	public ClinicHours(String hours) {
-		this.hours = hours;
-	}
-	public String getHours() {
-		return this.hours;
-	}
+	@Override
+	public String toString() { return getHours(); }
 }
