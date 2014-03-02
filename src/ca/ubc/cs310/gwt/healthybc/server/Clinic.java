@@ -11,6 +11,19 @@ public class Clinic {
 	private String phone;
 	private String lang;
 	
+	public Clinic(String refID, String name, ClinicHours hours, Location loc, String addr, String pcode,
+					String email, String phone, String lang) {
+		this.refID = refID;
+		this.name = name;
+		this.hours = hours;
+		this.loc = loc;
+		this.addr = addr;
+		this.pcode = pcode;
+		this.email = email;
+		this.phone = phone;
+		this.lang = lang;
+	}
+	
 	public String getRefID() { return refID; }
 	public String getName() { return name; }
 	public String getHoursString() { return hours.getHours(); }
