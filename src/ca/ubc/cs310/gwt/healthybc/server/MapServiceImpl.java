@@ -7,6 +7,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class MapServiceImpl extends RemoteServiceServlet implements MapService {
 
+	/**
+	 * serialization
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public MapInfo[] getMapList() {
 		// TODO Auto-generated method stub
