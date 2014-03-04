@@ -48,6 +48,8 @@ public class HealthyBC implements EntryPoint {
 	}
 	
 	private void createUI() {
+		//TODO: replace the content of this method with our own
+		
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
