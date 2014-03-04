@@ -38,8 +38,8 @@ public class ClinicManagerTest {
 			assertTrue(cm.removeClinic(refID));
 		}
 		catch (RuntimeException re) {
-			fail("RuntimeException happened. Stacktrace as follows.");
 			re.printStackTrace();
+			fail("See printed stack trace.");
 		}
 	}
 }
