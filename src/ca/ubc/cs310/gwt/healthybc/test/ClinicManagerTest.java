@@ -17,7 +17,7 @@ public class ClinicManagerTest {
 	}
 	
 	/**
-	 * set up a dummy clinic to test ClinicManagerImpl functionalities
+	 * set up dummy clinics to test ClinicManagerImpl functionalities
 	 */
 	@Test
 	public void testClinicManagerImplementation() {
@@ -32,7 +32,15 @@ public class ClinicManagerTest {
 		String phone = "1234567";
 		String languages = "English/French/German";
 		
-		cm.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages);
+		//add a normal clinic
+		boolean testValue = cm.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages);
+		assertTrue(testValue);
+		//add a duplicate
+		testValue = cm.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages);
+		assertFalse(testValue);
+		//try adding with null refID
+		testValue = cm.addNewClinic(null, name, lat, lon, hours, address, pcode, email, phone, languages);
+		assertFalse(testValue);
 		
 		try {
 			assertTrue(cm.removeClinic(refID));
