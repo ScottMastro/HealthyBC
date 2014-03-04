@@ -1,5 +1,8 @@
 package ca.ubc.cs310.gwt.healthybc.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.ubc.cs310.gwt.healthybc.client.TableInfo;
 import ca.ubc.cs310.gwt.healthybc.client.TableService;
 
@@ -11,10 +14,18 @@ public class TableServiceImpl  extends RemoteServiceServlet implements TableServ
 	 * serialization
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	private List<TableInfo> tableList;
+	
+	public TableServiceImpl() {
+		tableList = new ArrayList<TableInfo>();
+	}
+	
+	/**
+	 * @return an array of TableInfo
+	 */
 	@Override
 	public TableInfo[] getTableList() {
-		// TODO Auto-generated method stub
-		return null;
+		return (TableInfo[]) tableList.toArray();
 	}
 }
