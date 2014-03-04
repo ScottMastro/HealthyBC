@@ -42,21 +42,22 @@ public class ClinicManagerImpl implements ClinicManager {
 	 * Removes clinic from the ArrayList of clinics
 	 *
 	 * @param refID 	ID of the clinic to be removed
+	 * @return true if clinic with corresponding refID is removed
 	 */
 	@Override
-	public void removeClinic(String refID) {
+	public boolean removeClinic(String refID) {
 
 		for(Clinic clinic : clinics) {
 			if(clinic.getRefID().equals(refID)) {
 				if (clinics.remove(clinic)) {
-					return;
+					return true;
 				}
 				else {
 					throw new RuntimeException("Not supposed to happen!");
 				}
 			}
-			
-			throw new RuntimeException("removeClinic did not find clinic to be removed.");
 		}
+		
+		return false;
 	}
 }

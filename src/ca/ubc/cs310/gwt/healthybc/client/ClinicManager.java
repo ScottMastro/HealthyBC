@@ -6,5 +6,5 @@ public interface ClinicManager {
 			String hours, String address, String pcode, String email, String phone,
 			String languages);
 	
-	public void removeClinic(String refID);
+	public boolean removeClinic(String refID);
 }

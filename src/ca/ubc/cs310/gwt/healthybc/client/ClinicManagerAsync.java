@@ -11,7 +11,7 @@ public interface ClinicManagerAsync extends ClinicManager {
 			String name, Location loc, String hours, String address, String pcode, String email,
 			String phone, String languages);
 	
-	public ClinicManagerAsync removeClinic(AsyncCallback<Void> callback, String refID);
+	public ClinicManagerAsync removeClinic(AsyncCallback<Boolean> callback, String refID);
 	
 	public void getClinicList(AsyncCallback<Clinic[]> callback);
 }
