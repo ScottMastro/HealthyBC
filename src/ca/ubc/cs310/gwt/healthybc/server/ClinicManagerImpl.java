@@ -56,11 +56,14 @@ public class ClinicManagerImpl implements ClinicManager {
 	/**
 	 * Removes clinic from the ArrayList of clinics
 	 *
-	 * @param refID 	ID of the clinic to be removed
+	 * @param refID 	ID of the clinic to be removed; if null or empty, return false
 	 * @return true if clinic with corresponding refID is removed
 	 */
 	@Override
 	public boolean removeClinic(String refID) {
+		if (refID == null || refID.isEmpty()) {
+			return false;
+		}
 
 		for(Clinic clinic : clinics) {
 			if(clinic.getRefID().equals(refID)) {

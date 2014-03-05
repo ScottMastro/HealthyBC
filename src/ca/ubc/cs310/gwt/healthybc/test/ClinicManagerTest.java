@@ -35,15 +35,27 @@ public class ClinicManagerTest {
 		//add a normal clinic
 		boolean testValue = cm.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages);
 		assertTrue(testValue);
+		
 		//add a duplicate
 		testValue = cm.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages);
 		assertFalse(testValue);
+		
 		//try adding with null refID
 		testValue = cm.addNewClinic(null, name, lat, lon, hours, address, pcode, email, phone, languages);
 		assertFalse(testValue);
 		
+		//try adding with empty refID
+		testValue = cm.addNewClinic("", name, lat, lon, hours, address, pcode, email, phone, languages);
+		assertFalse(testValue);
+		
 		try {
 			assertTrue(cm.removeClinic(refID));
+			
+			//try removing  with null refID
+			assertFalse(cm.removeClinic(null));
+			
+			//try removing with empty refID
+			assertFalse(cm.removeClinic(""));
 		}
 		catch (RuntimeException re) {
 			re.printStackTrace();
