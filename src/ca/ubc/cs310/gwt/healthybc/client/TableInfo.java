@@ -18,7 +18,7 @@ public class TableInfo implements Serializable {
 		this.addr = address;
 		this.email = email;
 	}
-	
+
 	public String getName() { return name; }
 	public String getAddress() { return addr; }
 	public String getEmail() { return email; }

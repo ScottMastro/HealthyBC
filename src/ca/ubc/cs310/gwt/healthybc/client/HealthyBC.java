@@ -17,7 +17,6 @@ import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.base.LatLng;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -173,8 +172,7 @@ public class HealthyBC implements EntryPoint {
 		nameField.addKeyUpHandler(handler);
 	}
 	
-	//for Jay: mock table for testing
-	private void createMockTable() {
+	private void createTable() {
 		TableBuilder builder = new TableBuilder();
 		//TODO: get real parsed data in here; the following uses mock objects
 		TableInfo tabInfo1 = new TableInfo("Blah Clinic", "123 McKee Place", "blah@blahclinic.ca");
