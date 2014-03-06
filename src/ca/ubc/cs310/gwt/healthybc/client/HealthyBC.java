@@ -54,7 +54,7 @@ public class HealthyBC implements EntryPoint {
 	
 	private void init() {
 		createUI();
-		createTable();
+//		createTable();
 //		createMap();
 	}
 	
@@ -172,7 +172,8 @@ public class HealthyBC implements EntryPoint {
 		nameField.addKeyUpHandler(handler);
 	}
 	
-	private void createTable() {
+	//for Jay: mock table for testing
+	private void createMockTable() {
 		TableBuilder builder = new TableBuilder();
 		//TODO: get real parsed data in here; the following uses mock objects
 		TableInfo tabInfo1 = new TableInfo("Blah Clinic", "123 McKee Place", "blah@blahclinic.ca");
