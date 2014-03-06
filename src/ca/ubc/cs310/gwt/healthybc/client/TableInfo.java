@@ -13,6 +13,12 @@ public class TableInfo implements Serializable {
 	private String addr;
 	private String email;
 	
+	public TableInfo(String name, String address, String email) {
+		this.name = name;
+		this.addr = address;
+		this.email = email;
+	}
+	
 	public String getName() { return name; }
 	public String getAddress() { return addr; }
 	public String getEmail() { return email; }

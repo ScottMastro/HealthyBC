@@ -54,6 +54,7 @@ public class HealthyBC implements EntryPoint {
 	
 	private void init() {
 		createUI();
+		createTable();
 //		createMap();
 	}
 	
@@ -169,6 +170,16 @@ public class HealthyBC implements EntryPoint {
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+	}
+	
+	private void createTable() {
+		TableBuilder builder = new TableBuilder();
+		//TODO: get real parsed data in here; the following uses mock objects
+		TableInfo tabInfo1 = new TableInfo("Blah Clinic", "123 McKee Place", "blah@blahclinic.ca");
+		TableInfo tabInfo2 = new TableInfo("Random Clinic", "234 Random Street", "rand@randomclinic.ca");
+		TableInfo tabInfo3 = new TableInfo("Superman Clinic", "434 Superman Street", "supes@supermanclinic.ca");
+		
+		RootLayoutPanel.get().add(builder.buildTable(tabInfo1, tabInfo2, tabInfo3));
 	}
 	
 	private void createMap() {
