@@ -53,6 +53,7 @@ public class HealthyBC implements EntryPoint {
 	}
 	
 	private void init() {
+		loadMapApi();
 		createUI();
 //		createTable();
 //		createMap();
@@ -199,5 +200,29 @@ public class HealthyBC implements EntryPoint {
 		
 		RootLayoutPanel.get().add(map);
 		
+	}
+	
+	private void loadMapApi() {
+		boolean sensor = false;
+		
+		// Load libraries needed for maps
+	    ArrayList<LoadLibrary> loadLibraries = new ArrayList<LoadApi.LoadLibrary>();
+//	    loadLibraries.add(LoadLibrary.ADSENSE);
+	    loadLibraries.add(LoadLibrary.DRAWING);		// need this api to draw overlays on the map
+//	    loadLibraries.add(LoadLibrary.GEOMETRY);
+//	    loadLibraries.add(LoadLibrary.PANORAMIO);
+//	    loadLibraries.add(LoadLibrary.PLACES);
+//	    loadLibraries.add(LoadLibrary.WEATHER);
+//	    loadLibraries.add(LoadLibrary.VISUALIZATION);
+	    
+	    Runnable onLoad = new Runnable() {
+	        @Override
+	        public void run() {
+	        	// callback on successful api load
+	        	createMap();
+	        }
+	    };
+
+	    LoadApi.go(onLoad, loadLibraries, sensor);
 	}
 }
