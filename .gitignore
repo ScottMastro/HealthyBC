@@ -2,4 +2,4 @@
 *.prefs
 /test-classes
 gwt-unitCache/
-*.class
+war/WEB-INF/classes/ca/ubc/cs310/gwt/healthybc/client/*.class
