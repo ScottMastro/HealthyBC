@@ -1,6 +1,9 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
+import java.util.ArrayList;
+
 import ca.ubc.cs310.gwt.healthybc.shared.FieldVerifier;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -8,11 +11,18 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.maps.client.LoadApi;
+import com.google.gwt.maps.client.LoadApi.LoadLibrary;
+import com.google.gwt.maps.client.MapOptions;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.base.LatLng;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -44,7 +54,7 @@ public class HealthyBC implements EntryPoint {
 	
 	private void init() {
 		createUI();
-		createMap();
+//		createMap();
 	}
 	
 	private void createUI() {
@@ -163,5 +173,19 @@ public class HealthyBC implements EntryPoint {
 	
 	private void createMap() {
 		//TODO: implement
+		
+		// Vancouver center coordinates
+		LatLng vanCity = LatLng.newInstance(49.2569425,-123.123904);
+		
+		MapOptions options = MapOptions.newInstance();
+		options.setZoom(13);
+		options.setCenter(vanCity);
+		
+		MapWidget map = new MapWidget(options);
+		map.setSize("500px", "500px");
+		map.getElement().setId("mapWidget");
+		
+		RootLayoutPanel.get().add(map);
+		
 	}
 }
