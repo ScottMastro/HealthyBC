@@ -1,3 +1,5 @@
 
 *.prefs
 /test-classes
+gwt-unitCache/
+*.class
