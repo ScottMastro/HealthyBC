@@ -1,11 +1,13 @@
-Team Name: The Blank Slate (blankslate)
+###Team Name: The Blank Slate (blankslate)
 
-Team members (Names and CS ID):
+###Team Members
 
-Dhananjay Bhaskar (w7d7)
-Alex Tan (h5m8)
-Scott Mastromatteo (i7z7)
-Ben Liang (w0y7)
+Name | CS ID
+---- | -----
+Dhananjay Bhaskar | w7d7
+Alex Tan | h5m8
+Scott Mastromatteo | i7z7
+Ben Liang | w0y7
 
 Project title: Healthy BC - Walk-In Clinics in our province
 
