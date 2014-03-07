@@ -3,3 +3,4 @@
 /test-classes
 gwt-unitCache/
 *.class
+.metadata/
