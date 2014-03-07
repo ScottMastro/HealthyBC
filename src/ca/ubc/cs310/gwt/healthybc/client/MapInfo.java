@@ -14,32 +14,30 @@ public class MapInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
-	private LatLng loc;
+	private double lat;
+	private double lng;
 	
-<<<<<<< HEAD
-	public MapInfo(String name, Location loc) {
+	public MapInfo(String name, double lat, double lng) {
 		this.name = name;
-		this.loc = loc;
+		this.lat = lat;
+		this.lng = lng;
 	}
 	
-	public String getName() { return name; }
-	public Location getLocation() { return loc; }
-=======
-	public MapInfo(String string, LatLng loc) {
-		this.name = string;
-		this.loc = loc;
-	}
 	public String getName() { return this.name; }
-	public LatLng getLatLng() { return this.loc; }
->>>>>>> maps
-
+	public double getLat() { return this.lat; }
+	
 	public MapInfo setName(String n) {
 		this.name = n;
 		return this;
 	}
 	
-	public MapInfo setLatLng(LatLng l) {
-		this.loc = l;
+	public MapInfo setLat(double l) {
+		this.lat = l;
+		return this;
+	}
+	
+	public MapInfo setLng(double l) {
+		this.lng = l;
 		return this;
 	}
 }
