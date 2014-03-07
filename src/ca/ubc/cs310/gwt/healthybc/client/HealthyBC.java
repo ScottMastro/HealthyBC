@@ -23,7 +23,14 @@ import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.base.LatLng;
+import com.google.gwt.maps.client.events.click.ClickMapEvent;
+import com.google.gwt.maps.client.events.click.ClickMapHandler;
+import com.google.gwt.maps.client.overlays.InfoWindow;
+import com.google.gwt.maps.client.overlays.InfoWindowOptions;
+import com.google.gwt.maps.client.overlays.Marker;
+import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -54,6 +61,8 @@ public class HealthyBC implements EntryPoint {
 			.create(GreetingService.class);
 
 	private LayoutPanel layout;
+	private MapWidget map;
+	private InfoWindow infoWindow;
 	
 	/**
 	 * This is the entry point method.
@@ -94,16 +103,50 @@ public class HealthyBC implements EntryPoint {
 		// Vancouver center coordinates
 		LatLng vanCity = LatLng.newInstance(49.2569425,-123.123904);
 		
+		InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
+		infoWindow = InfoWindow.newInstance(iwOptions);
+		
 		MapOptions options = MapOptions.newInstance();
 		options.setZoom(13);
 		options.setCenter(vanCity);
 		
-		MapWidget map = new MapWidget(options);
-		map.setSize("500px", "500px");
-		map.getElement().setId("mapWidget");
+		map = new MapWidget(options);
+		map.setSize("100%", "100%");
+		map.triggerResize();
+//		map.getElement().setId("mapWidget");
+		
+		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
+		clinics.add(new MapInfo("Test Clinic 1", 49.265082, -123.244573));
+		clinics.add(new MapInfo("Test Clinic 2", 49.263671, -123.146184));
+		clinics.add(new MapInfo("Test Clinic 3", 48.42349, -123.366963));
+		
+		displayClinics(map, clinics);
 		
 		layout.add(map);
 		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
+	}
+	
+	private void displayClinics(final MapWidget map, ArrayList<MapInfo> clinics) {
+		for (MapInfo clinic : clinics) {
+			MarkerOptions options = MarkerOptions.newInstance();
+			options.setMap(map);
+			options.setClickable(true);
+			options.setTitle(clinic.getName());
+			options.setPosition(LatLng.newInstance(clinic.getLat(), clinic.getLng()));
+
+			final Marker marker = Marker.newInstance(options);
+			final String desc = clinic.getName();
+			
+			ClickMapHandler handler = new ClickMapHandler() {
+				public void onEvent(ClickMapEvent e) {
+					System.out.println(desc);
+//					infoWindow.setContent("<span style=\"display:inline-block;height:80px;width:180px;\">" + desc + "</span>");
+					infoWindow.setContent("<div style=\"max-width:400px; line-height:normal; white-space:nowrap; overflow:auto;\">" + desc + "</div>");
+					infoWindow.open(map, marker);
+				} 
+			};
+			marker.addClickHandler(handler);
+		}
 	}
 	
 	private void loadMapApi() {
