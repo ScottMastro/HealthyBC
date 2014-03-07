@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.http.conn.routing.RouteInfo.LayerType;
 
 import ca.ubc.cs310.gwt.healthybc.shared.FieldVerifier;
+import ca.ubc.cs310.gwt.healthybc.test.MockClinicObject;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -120,11 +121,13 @@ public class HealthyBC implements EntryPoint {
 		map.setSize("100%", "100%");
 //		map.getElement().setId("mapWidget");
 		
+//		MockClinicObject mco = new MockClinicObject();
+//		ArrayList<MapInfo> clinics = mco.MockMapInfo();
 		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
 		clinics.add(new MapInfo("Test Clinic 1", 49.265082, -123.244573));
 		clinics.add(new MapInfo("Test Clinic 2", 49.263671, -123.146184));
 		clinics.add(new MapInfo("Test Clinic 3", 48.42349, -123.366963));
-		
+
 		displayClinics(map, clinics);
 		
 		mapContainer.add(map);
@@ -146,8 +149,7 @@ public class HealthyBC implements EntryPoint {
 			ClickMapHandler handler = new ClickMapHandler() {
 				public void onEvent(ClickMapEvent e) {
 					System.out.println(desc);
-//					infoWindow.setContent("<span style=\"display:inline-block;height:80px;width:180px;\">" + desc + "</span>");
-					infoWindow.setContent("<div style=\"max-width:400px; line-height:normal; white-space:nowrap; overflow:auto;\">" + desc + "</div>");
+					infoWindow.setContent("<div style=\"width:250px; line-height:normal; white-space:nowrap; overflow:auto;\">" + desc + "</div>");
 					infoWindow.open(map, marker);
 				} 
 			};
