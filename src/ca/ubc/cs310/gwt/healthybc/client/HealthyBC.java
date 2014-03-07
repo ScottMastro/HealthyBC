@@ -149,7 +149,7 @@ public class HealthyBC implements EntryPoint {
 			ClickMapHandler handler = new ClickMapHandler() {
 				public void onEvent(ClickMapEvent e) {
 					System.out.println(desc);
-					infoWindow.setContent("<div style=\"width:250px; line-height:normal; white-space:nowrap; overflow:auto;\">" + desc + "</div>");
+					infoWindow.setContent("<div style=\"max-width:250px; line-height:normal; white-space:nowrap; overflow:auto;\">" + desc + "</div>");
 					infoWindow.open(map, marker);
 				} 
 			};
