@@ -13,7 +13,7 @@ import ca.ubc.cs310.gwt.healthybc.server.Location;
 public class MockClinicObject {
 	
 	private String csvFile = "data/walkinclinics.csv";
-	private ArrayList<Clinic> parsedClinicdata;
+	private ArrayList<Clinic> parsedClinicdata = new ArrayList<Clinic>();;
 	private BufferedReader br = null;
 	private String line = "";
 	private String cvsSplitBy = ";";
@@ -69,14 +69,20 @@ public class MockClinicObject {
 
 
 	public ArrayList<MapInfo> MockMapInfo(){
-		ArrayList<MapInfo> testMapInfo = null;
-		
+		ArrayList<MapInfo> testMapInfo = new ArrayList<MapInfo>();;
+		for (Clinic myclinic : parsedClinicdata){
+			MapInfo newMapInfo = new MapInfo(myclinic.getName(), myclinic.getLoc().getLatitude(), myclinic.getLoc().getLongitude());
+			testMapInfo.add(newMapInfo);
+		}
 		return testMapInfo;
 	}
 
 	public ArrayList<TableInfo> MocktableInfo(){
-		ArrayList<TableInfo> testTableInfo = null;
-		
+		ArrayList<TableInfo> testTableInfo = new ArrayList<TableInfo>();;
+		for (Clinic myclinic : parsedClinicdata){
+			TableInfo newTableInfo = new TableInfo(myclinic.getName(), myclinic.getAddressString(), myclinic.getEmail());
+			testTableInfo.add(newTableInfo);
+		}
 		return testTableInfo;
 	}
 
