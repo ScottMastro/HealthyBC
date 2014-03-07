@@ -21,7 +21,7 @@ After authentication, the users of this application can browse and query importa
 **Project Contents**:
 
 1. data/walkinclinics.csv : This CSV file (containing the following fields separated by semicolons) is generated from the dataset provided by DataBC. This file will be parsed by our application to store data persistently in the Google App Engine.
-* NAME 
+..* NAME 
 * REFERENCE (unique identifier string)
 * PHONE
 * WEBSITE
