@@ -2,8 +2,12 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import org.apache.http.conn.routing.RouteInfo.LayerType;
 
+=======
+import ca.ubc.cs310.gwt.healthybc.server.Location;
+>>>>>>> maps
 import ca.ubc.cs310.gwt.healthybc.shared.FieldVerifier;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -23,9 +27,9 @@ import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.base.LatLng;
-
+<<<<<<< HEAD
 import com.google.gwt.user.cellview.client.CellTable;
-
+=======
 import com.google.gwt.maps.client.events.MapEvent;
 import com.google.gwt.maps.client.events.click.ClickMapEvent;
 import com.google.gwt.maps.client.events.click.ClickMapHandler;
@@ -34,7 +38,7 @@ import com.google.gwt.maps.client.overlays.InfoWindowOptions;
 import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.client.Event;
-
+>>>>>>> maps
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -116,10 +120,10 @@ public class HealthyBC implements EntryPoint {
 		map.setSize("1200px", "800px");
 		map.getElement().setId("mapWidget");
 		
-
+<<<<<<< HEAD
 		layout.add(map);
 		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
-
+=======
 		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
 		clinics.add(new MapInfo("Test Clinic 1", LatLng.newInstance(49.265082, -123.244573)));
 		clinics.add(new MapInfo("Test Clinic 2", LatLng.newInstance(49.263671, -123.146184)));
@@ -129,6 +133,7 @@ public class HealthyBC implements EntryPoint {
 		
 		RootLayoutPanel.get().add(map);
 		
+>>>>>>> maps
 	}
 	
 	private void displayClinics(final MapWidget map, ArrayList<MapInfo> clinics) {
