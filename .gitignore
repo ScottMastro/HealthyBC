@@ -1,5 +1,7 @@
-
 *.prefs
 /test-classes
-gwt-unitCache/
-war/WEB-INF/classes/ca/ubc/cs310/gwt/healthybc/client/*.class
+/gwt-unitCache/
+/war/WEB-INF/classes/
+/war/WEB-INF/lib/
+/war/WEB-INF/deploy/
+/war/healthybc/
