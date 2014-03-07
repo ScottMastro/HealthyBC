@@ -209,9 +209,9 @@ public class HealthyBC implements EntryPoint {
 		map.getElement().setId("mapWidget");
 		
 		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
-		clinics.add(new MapInfo("Test Clinic 1", LatLng.newInstance(49.265082, -123.244573)));
-		clinics.add(new MapInfo("Test Clinic 2", LatLng.newInstance(49.263671, -123.146184)));
-		clinics.add(new MapInfo("Test Clinic 3", LatLng.newInstance(48.42349, -123.366963)));
+		clinics.add(new MapInfo("Test Clinic 1", 49.265082, -123.244573));
+		clinics.add(new MapInfo("Test Clinic 2", 49.263671, -123.146184));
+		clinics.add(new MapInfo("Test Clinic 3", 48.42349, -123.366963));
 		
 		displayClinics(map, clinics);
 		

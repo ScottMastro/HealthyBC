@@ -2,10 +2,6 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.io.Serializable;
 
-import com.google.gwt.maps.client.base.LatLng;
-
-import ca.ubc.cs310.gwt.healthybc.server.Location;
-
 public class MapInfo implements Serializable {
 
 	/**
@@ -14,22 +10,30 @@ public class MapInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
-	private LatLng loc;
+	private double lat;
+	private double lng;
 	
-	public MapInfo(String string, LatLng loc) {
-		this.name = string;
-		this.loc = loc;
+	public MapInfo(String name, double lat, double lng) {
+		this.name = name;
+		this.lat = lat;
+		this.lng = lng;
 	}
 	public String getName() { return this.name; }
-	public LatLng getLatLng() { return this.loc; }
+	public double getLat() { return this.lat; }
+	public double getLng() { return this.lng; }
 
 	public MapInfo setName(String n) {
 		this.name = n;
 		return this;
 	}
 	
-	public MapInfo setLatLng(LatLng l) {
-		this.loc = l;
+	public MapInfo setLat(double l) {
+		this.lat = l;
+		return this;
+	}
+	
+	public MapInfo setLng(double l) {
+		this.lng = l;
 		return this;
 	}
 }
