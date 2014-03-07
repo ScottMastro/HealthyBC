@@ -2,6 +2,7 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
+import ca.ubc.cs310.gwt.healthybc.server.Location;
 import ca.ubc.cs310.gwt.healthybc.shared.FieldVerifier;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -16,6 +17,14 @@ import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.base.LatLng;
+import com.google.gwt.maps.client.events.MapEvent;
+import com.google.gwt.maps.client.events.click.ClickMapEvent;
+import com.google.gwt.maps.client.events.click.ClickMapHandler;
+import com.google.gwt.maps.client.overlays.InfoWindow;
+import com.google.gwt.maps.client.overlays.InfoWindowOptions;
+import com.google.gwt.maps.client.overlays.Marker;
+import com.google.gwt.maps.client.overlays.MarkerOptions;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -30,6 +39,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class HealthyBC implements EntryPoint {
+	
+	private MapWidget map;
+	
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -192,21 +204,54 @@ public class HealthyBC implements EntryPoint {
 		options.setZoom(13);
 		options.setCenter(vanCity);
 		
-		MapWidget map = new MapWidget(options);
-		map.setSize("500px", "500px");
+		map = new MapWidget(options);
+		map.setSize("1200px", "800px");
 		map.getElement().setId("mapWidget");
+		
+		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
+		clinics.add(new MapInfo("Test Clinic 1", LatLng.newInstance(49.265082, -123.244573)));
+		clinics.add(new MapInfo("Test Clinic 2", LatLng.newInstance(49.263671, -123.146184)));
+		clinics.add(new MapInfo("Test Clinic 3", LatLng.newInstance(48.42349, -123.366963)));
+		
+		displayClinics(map, clinics);
 		
 		RootLayoutPanel.get().add(map);
 		
 	}
 	
+	private void displayClinics(final MapWidget map, ArrayList<MapInfo> clinics) {
+		for (MapInfo clinic : clinics) {
+			MarkerOptions options = MarkerOptions.newInstance();
+			options.setMap(map);
+			options.setClickable(true);
+			options.setTitle(clinic.getName());
+			options.setPosition(clinic.getLatLng());
+
+			final Marker marker = Marker.newInstance(options);
+			
+			final String desc = clinic.getName();
+			
+			final InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
+			iwOptions.setMaxWidth(350);
+			final InfoWindow infoWindow = InfoWindow.newInstance(iwOptions);
+			
+			ClickMapHandler handler = new ClickMapHandler() {
+				public void onEvent(ClickMapEvent e) {
+					System.out.println(desc);
+					infoWindow.setContent("<span style=\"display:inline-block;height:80px;width:180px;\">" + desc + "</span>");
+					infoWindow.open(map, marker);
+				} 
+			};
+			marker.addClickHandler(handler);
+		}
+	}
 	private void loadMapApi() {
 		boolean sensor = false;
 		
 		// Load libraries needed for maps
 	    ArrayList<LoadLibrary> loadLibraries = new ArrayList<LoadApi.LoadLibrary>();
 //	    loadLibraries.add(LoadLibrary.ADSENSE);
-	    loadLibraries.add(LoadLibrary.DRAWING);		// need this api to draw overlays on the map
+	    loadLibraries.add(LoadLibrary.DRAWING);		// need this api to draw overlays/markers on the map
 //	    loadLibraries.add(LoadLibrary.GEOMETRY);
 //	    loadLibraries.add(LoadLibrary.PANORAMIO);
 //	    loadLibraries.add(LoadLibrary.PLACES);
