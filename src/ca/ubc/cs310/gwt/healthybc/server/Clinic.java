@@ -32,4 +32,7 @@ public class Clinic {
 	public String getEmail() { return email; }
 	public String getPhone() { return phone; }
 	public String getLanguages() { return lang; }
+	public String getAddress() { return addr; }
+	public String getPostalCode() { return pcode; }
+
 }
