@@ -232,13 +232,13 @@ public class HealthyBC implements EntryPoint {
 			final String desc = clinic.getName();
 			
 			final InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
-			iwOptions.setMaxWidth(350);
 			final InfoWindow infoWindow = InfoWindow.newInstance(iwOptions);
 			
 			ClickMapHandler handler = new ClickMapHandler() {
 				public void onEvent(ClickMapEvent e) {
 					System.out.println(desc);
-					infoWindow.setContent("<span style=\"display:inline-block;height:80px;width:180px;\">" + desc + "</span>");
+//					infoWindow.setContent("<span style=\"display:inline-block;height:80px;width:180px;\">" + desc + "</span>");
+					infoWindow.setContent("<div style=\"max-width:400px; line-height:normal; white-space:nowrap; overflow:auto;\">" + desc + "</div>");
 					infoWindow.open(map, marker);
 				} 
 			};
