@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -63,6 +64,7 @@ public class HealthyBC implements EntryPoint {
 	private LayoutPanel layout;
 	private MapWidget map;
 	private InfoWindow infoWindow;
+	private SimplePanel mapContainer;
 	
 	/**
 	 * This is the entry point method.
@@ -82,6 +84,10 @@ public class HealthyBC implements EntryPoint {
 	private void createUI() {
 		layout = new LayoutPanel();
 		RootLayoutPanel.get().add(layout);
+		
+		mapContainer = new SimplePanel();
+		layout.add(mapContainer);
+		layout.setWidgetLeftRight(mapContainer, 50, Unit.PCT, 0, Unit.PCT);
 	}
 	
 	private void createTable() {
@@ -112,7 +118,6 @@ public class HealthyBC implements EntryPoint {
 		
 		map = new MapWidget(options);
 		map.setSize("100%", "100%");
-		map.triggerResize();
 //		map.getElement().setId("mapWidget");
 		
 		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
@@ -122,8 +127,9 @@ public class HealthyBC implements EntryPoint {
 		
 		displayClinics(map, clinics);
 		
-		layout.add(map);
-		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
+		mapContainer.add(map);
+//		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
+		map.triggerResize();
 	}
 	
 	private void displayClinics(final MapWidget map, ArrayList<MapInfo> clinics) {
