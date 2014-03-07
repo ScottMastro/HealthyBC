@@ -1,6 +1,8 @@
-
 *.prefs
 /test-classes
 gwt-unitCache/
 *.class
 .metadata/
+/war/WEB-INF/classes/
+/war/WEB-INF/deploy/
+/war/healthybc/
