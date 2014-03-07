@@ -14,6 +14,11 @@ public class MapInfo implements Serializable {
 	private String name;
 	private Location loc;
 	
+	public MapInfo(String name, Location loc) {
+		this.name = name;
+		this.loc = loc;
+	}
+	
 	public String getName() { return name; }
 	public Location getLocation() { return loc; }
 
