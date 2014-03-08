@@ -3,37 +3,44 @@ package ca.ubc.cs310.gwt.healthybc.client;
 import java.io.Serializable;
 
 public class MapInfo implements Serializable {
-
+	
 	/**
 	 * for serialization 
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
-	private double lat;
-	private double lng;
+	private double latitude;
+	private double longitude;
 	
-	public MapInfo(String name, double lat, double lng) {
-		this.name = name;
-		this.lat = lat;
-		this.lng = lng;
+	/**
+	 * Don't delete this; GWT needs this constructor to be here.
+	 */
+	public MapInfo() {
 	}
+	
+	public MapInfo(String name, double latitude, double longitude) {
+		this.name = name;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	
 	public String getName() { return this.name; }
-	public double getLat() { return this.lat; }
-	public double getLng() { return this.lng; }
-
+	public double getLatitude() { return this.latitude; }
+	public double getLongitude() { return this.longitude; }
+	
 	public MapInfo setName(String n) {
 		name = n;
 		return this;
 	}
 	
-	public MapInfo setLat(double l) {
-		this.lat = l;
+	public MapInfo setLatitude(double l) {
+		this.latitude = l;
 		return this;
 	}
 	
-	public MapInfo setLng(double l) {
-		this.lng = l;
+	public MapInfo setLongitude(double l) {
+		this.longitude = l;
 		return this;
 	}
 }

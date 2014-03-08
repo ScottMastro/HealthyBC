@@ -13,6 +13,12 @@ public class TableInfo implements Serializable {
 	private String addr;
 	private String email;
 	
+	/**
+	 * Don't delete this; GWT needs this constructor to be here.
+	 */
+	public TableInfo() {
+	}
+	
 	public TableInfo(String name, String address, String email) {
 		this.name = name;
 		this.addr = address;

@@ -11,6 +11,12 @@ public class Clinic {
 	private String phone;
 	private String lang;
 	
+	/**
+	 * Don't delete this; GWT needs this constructor to be here.
+	 */
+	public Clinic() {
+	}
+	
 	public Clinic(String refID, String name, ClinicHours hours, Location loc, String addr, String pcode,
 					String email, String phone, String lang) {
 		this.refID = refID;

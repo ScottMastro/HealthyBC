@@ -94,11 +94,9 @@ public class HealthyBC implements EntryPoint {
 	private void createTable() {
 		TableBuilder builder = new TableBuilder();
 		//TODO: get real parsed data in here; the following uses mock objects
-		TableInfo tabInfo1 = new TableInfo("Blah Clinic", "123 McKee Place", "blah@blahclinic.ca");
-		TableInfo tabInfo2 = new TableInfo("Random Clinic", "234 Random Street", "rand@randomclinic.ca");
-		TableInfo tabInfo3 = new TableInfo("Superman Clinic", "434 Superman Street", "supes@supermanclinic.ca");
+		MockClinicObject clinicParser = new MockClinicObject();
 		
-		CellTable<TableInfo> table = builder.buildTable(tabInfo1, tabInfo2, tabInfo3);
+		CellTable<TableInfo> table = builder.buildTable( (TableInfo[]) clinicParser.MocktableInfo().toArray());
 		
 		layout.add(table);
 		layout.setWidgetLeftRight(table, 0, Unit.PCT, 50, Unit.PCT);
@@ -141,7 +139,7 @@ public class HealthyBC implements EntryPoint {
 			options.setMap(map);
 			options.setClickable(true);
 			options.setTitle(clinic.getName());
-			options.setPosition(LatLng.newInstance(clinic.getLat(), clinic.getLng()));
+			options.setPosition(LatLng.newInstance(clinic.getLatitude(), clinic.getLongitude()));
 
 			final Marker marker = Marker.newInstance(options);
 			final String desc = clinic.getName();
