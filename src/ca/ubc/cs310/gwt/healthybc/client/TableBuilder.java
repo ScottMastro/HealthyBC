@@ -19,7 +19,7 @@ public class TableBuilder {
 		table = new CellTable<TableInfo>();
 	}
 	
-	public CellTable<TableInfo> buildTable(TableInfo... tableInfos) {
+	public CellTable<TableInfo> buildTable(List<TableInfo> tableInfos) {
 		TextColumn<TableInfo> nameColumn = new TextColumn<TableInfo>() {
 			@Override
 			public String getValue(TableInfo tab) {

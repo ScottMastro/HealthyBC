@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.http.conn.routing.RouteInfo.LayerType;
 
+import ca.ubc.cs310.gwt.healthybc.server.ClinicDataParserImpl;
 import ca.ubc.cs310.gwt.healthybc.shared.FieldVerifier;
-import ca.ubc.cs310.gwt.healthybc.test.MockClinicObject;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -91,15 +91,27 @@ public class HealthyBC implements EntryPoint {
 		layout.setWidgetLeftRight(mapContainer, 50, Unit.PCT, 0, Unit.PCT);
 	}
 	
+	private class TableInfoListCallback implements AsyncCallback<ArrayList<TableInfo>> {
+		@Override
+		public void onFailure(Throwable caught) {
+			caught.printStackTrace();
+		}
+		
+		@Override
+		public void onSuccess(ArrayList<TableInfo> result) {
+			CellTable<TableInfo> table = new TableBuilder().buildTable(result);
+			
+			layout.add(table);
+			layout.setWidgetLeftRight(table, 0, Unit.PCT, 50, Unit.PCT);
+		}
+	}
+	
 	private void createTable() {
-		TableBuilder builder = new TableBuilder();
 		//TODO: get real parsed data in here; the following uses mock objects
-		MockClinicObject clinicParser = new MockClinicObject();
+		ClinicDataParserAsync clinicParser = GWT.create(ClinicDataParser.class);
 		
-		CellTable<TableInfo> table = builder.buildTable( (TableInfo[]) clinicParser.MocktableInfo().toArray());
-		
-		layout.add(table);
-		layout.setWidgetLeftRight(table, 0, Unit.PCT, 50, Unit.PCT);
+		TableInfoListCallback callback = new TableInfoListCallback();
+		clinicParser.MocktableInfo(callback);
 	}
 	
 	private void createMap() {
