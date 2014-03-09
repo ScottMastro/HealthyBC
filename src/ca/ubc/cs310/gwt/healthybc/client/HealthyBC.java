@@ -2,23 +2,10 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
-import org.apache.http.conn.routing.RouteInfo.LayerType;
-
-import ca.ubc.cs310.gwt.healthybc.server.ClinicDataParserImpl;
-import ca.ubc.cs310.gwt.healthybc.shared.FieldVerifier;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
+
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.layout.client.Layout;
-import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
@@ -31,18 +18,11 @@ import com.google.gwt.maps.client.overlays.InfoWindowOptions;
 import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

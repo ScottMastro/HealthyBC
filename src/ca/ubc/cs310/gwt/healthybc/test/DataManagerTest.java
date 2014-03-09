@@ -2,12 +2,22 @@ package ca.ubc.cs310.gwt.healthybc.test;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.KeyFactory;
+
+import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+
+
 
 import ca.ubc.cs310.gwt.healthybc.server.Clinic;
 import ca.ubc.cs310.gwt.healthybc.server.ClinicHours;
@@ -18,7 +28,19 @@ public class DataManagerTest {
 
 	private Clinic c;
 	private RemoteDataManager um;
+	private final LocalServiceTestHelper helper =
+		        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
+    @Before
+    public void setUp() {
+        helper.setUp();
+    }
+
+    @After
+    public void tearDown() {
+        helper.tearDown();
+    }
+	
 	@Before
 	public void setup() {
 		um = new RemoteDataManager();
@@ -48,7 +70,8 @@ public class DataManagerTest {
 		//try to retrieve clinic
 		Entity e = um.retrieveFromDatabase(refID);
 		assertFalse(e == null);
-		
+		assertTrue(e.getKey().equals(KeyFactory.createKey("Clinic", "123")));
 	}
 	
 }
+
