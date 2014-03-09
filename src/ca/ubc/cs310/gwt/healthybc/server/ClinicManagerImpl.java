@@ -3,9 +3,11 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import ca.ubc.cs310.gwt.healthybc.client.ClinicManager;
 
-public class ClinicManagerImpl implements ClinicManager {
+public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicManager {
 
 	private List<Clinic> clinics;
 	
@@ -77,5 +79,10 @@ public class ClinicManagerImpl implements ClinicManager {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public Clinic[] getClinicList() {
+		return (Clinic[]) clinics.toArray();
 	}
 }
