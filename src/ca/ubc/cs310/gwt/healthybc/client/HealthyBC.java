@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
@@ -19,9 +18,11 @@ import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 /**
@@ -46,6 +47,7 @@ public class HealthyBC implements EntryPoint {
 	private MapWidget map;
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer;
+	private Button addClinicsButton;
 	
 	/**
 	 * This is the entry point method.
@@ -55,16 +57,19 @@ public class HealthyBC implements EntryPoint {
 	}
 	
 	private void init() {
+		addClinicsButton = new Button("Add Clinics");
+
 		createUI();
 		createTable();
 		loadMapApi();
-
+		
+		RootLayoutPanel.get().add(layout);
+		RootLayoutPanel.get().add(addClinicsButton);
 		RootLayoutPanel.get().forceLayout();
 	}
 	
 	private void createUI() {
 		layout = new LayoutPanel();
-		RootLayoutPanel.get().add(layout);
 		
 		mapContainer = new SimplePanel();
 		layout.add(mapContainer);
@@ -83,6 +88,8 @@ public class HealthyBC implements EntryPoint {
 			
 			layout.add(table);
 			layout.setWidgetLeftRight(table, 0, Unit.PCT, 50, Unit.PCT);
+			layout.add(addClinicsButton);
+			layout.setWidgetLeftRight(addClinicsButton, 50, Unit.PCT, 0, Unit.PCT);
 		}
 	}
 	
