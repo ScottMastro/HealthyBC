@@ -14,7 +14,7 @@ public class Clinic {
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
 	 */
-	public Clinic() {
+	protected Clinic() {
 	}
 	
 	public Clinic(String refID, String name, ClinicHours hours, Location loc, String addr, String pcode,

@@ -16,7 +16,7 @@ public class MapInfo implements Serializable {
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
 	 */
-	public MapInfo() {
+	protected MapInfo() {
 	}
 	
 	public MapInfo(String name, double latitude, double longitude) {

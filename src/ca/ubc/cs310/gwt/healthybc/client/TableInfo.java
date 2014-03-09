@@ -16,7 +16,7 @@ public class TableInfo implements Serializable {
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
 	 */
-	public TableInfo() {
+	protected TableInfo() {
 	}
 	
 	public TableInfo(String name, String address, String email) {

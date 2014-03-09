@@ -7,7 +7,7 @@ public class Location {
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
 	 */
-	public Location() {
+	protected Location() {
 	}
 	
 	public Location(double lat, double lon) {
