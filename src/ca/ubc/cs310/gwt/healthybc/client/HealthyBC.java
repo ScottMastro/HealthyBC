@@ -18,11 +18,13 @@ import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 /**
@@ -44,10 +46,10 @@ public class HealthyBC implements EntryPoint {
 			.create(GreetingService.class);
 
 	private LayoutPanel layout;
+	private VerticalPanel buttonPanel;
 	private MapWidget map;
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer;
-	private FileUpload addClinicsButton;
 	private ClinicManagerAsync clinicManager = GWT.create(ClinicManager.class);
 
 	/**
@@ -65,14 +67,15 @@ public class HealthyBC implements EntryPoint {
 
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(layout);
-		r.add(addClinicsButton);
+		r.add(buttonPanel);
 		r.forceLayout();
 	}
 
 
 	private void createUI() {
 		layout = new LayoutPanel();
-
+		buttonPanel = new VerticalPanel();
+		
 		mapContainer = new SimplePanel();
 		layout.add(mapContainer);
 		layout.setWidgetLeftRight(mapContainer, 50, Unit.PCT, 0, Unit.PCT);
@@ -80,11 +83,18 @@ public class HealthyBC implements EntryPoint {
 
 	private void createButton(){
 		
-		addClinicsButton = new FileUpload();
-		addClinicsButton.setName("Add Clinics");
+		FileUpload clinicFileUpload = new FileUpload();
+		clinicFileUpload.setName("Add Clinics");
+		buttonPanel.add(clinicFileUpload);
 		
+		// Add a 'submit' button.
+	    
+		Button b = new Button("Submit", new CSVClickHandler(clinicFileUpload));
+		buttonPanel.add(b);
+	    
 	}
-
+	
+	
 	private void addClinic() {
 		// Initialize the service proxy
 		clinicManager = GWT.create(ClinicManager.class);
@@ -129,8 +139,8 @@ public class HealthyBC implements EntryPoint {
 
 			layout.add(panel);
 			layout.setWidgetLeftRight(panel, 0, Unit.PCT, 50, Unit.PCT);
-			layout.add(addClinicsButton);
-			layout.setWidgetLeftRight(addClinicsButton, 50, Unit.PCT, 0, Unit.PCT);
+			layout.add(buttonPanel);
+			layout.setWidgetLeftRight(buttonPanel, 50, Unit.PCT, 0, Unit.PCT);
 		}
 	}
 
