@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee">
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>ca.ubc.cs310.gwt.healthybc.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/healthybc/greet</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>HealthyBC.html</welcome-file>
-  </welcome-file-list>
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>greetServlet</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.GreetingServiceImpl
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>clinicParser</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicDataParserImpl
+		</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>clinicManagerImpl</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicManagerImpl
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>clinicManagerImpl</servlet-name>
+		<url-pattern>/healthybc/clinic</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet-mapping>
+		<servlet-name>greetServlet</servlet-name>
+		<url-pattern>/healthybc/greet</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>clinicParser</servlet-name>
+		<url-pattern>/healthybc/parser</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>HealthyBC.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>

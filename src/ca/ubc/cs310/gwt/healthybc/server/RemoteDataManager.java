@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Transaction;
 
 public class RemoteDataManager {
 
@@ -31,7 +32,7 @@ public class RemoteDataManager {
 	 * @param Clinc class to convert to an entity and upload
 	 */	
 	public void addAndUploadClinicEntity(Clinic c){
-		
+				
 		Entity e = this.addClinicEntity(c);
 		this.uploadToDatabase(e);
 		
@@ -65,10 +66,21 @@ public class RemoteDataManager {
 	 * Uploads an Entity to the database
 	 *
 	 * @param Clinc class to convert to an entity 
+	 * @throws Exception 
 	 */		
 	private void uploadToDatabase(Entity e){
-		//TODO: Throws error?
-		datastore.put(e);
+		Transaction txn = datastore.beginTransaction();
+		try {
+			
+		    datastore.put(e);
+
+		    txn.commit();
+		} finally {
+		    if (txn.isActive()) {
+		        txn.rollback();
+		    }
+		}
+
 
 	}
 	

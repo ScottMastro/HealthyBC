@@ -2,6 +2,9 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
+import ca.ubc.cs310.gwt.healthybc.server.ClinicHours;
+import ca.ubc.cs310.gwt.healthybc.server.Location;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -50,99 +53,138 @@ public class HealthyBC implements EntryPoint {
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer;
 	private Button addClinicsButton;
-	
+	private ClinicManagerAsync clinicManager = GWT.create(ClinicManager.class);
+
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		init();
 	}
-	
+
 	private void init() {
 		createUI();
 		createButton();
 		createTable();
 		loadMapApi();
-		
+
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(layout);
 		r.add(addClinicsButton);
 		r.forceLayout();
 	}
-	
+
+
 	private void createUI() {
 		layout = new LayoutPanel();
-		
+
 		mapContainer = new SimplePanel();
 		layout.add(mapContainer);
 		layout.setWidgetLeftRight(mapContainer, 50, Unit.PCT, 0, Unit.PCT);
 	}
-	
+
 	private void createButton(){
-		
+
 		addClinicsButton = new Button("Add Clinics");
 
-	    // Listen for mouse events on click
-	    addClinicsButton.addClickHandler(new AddClinicsClickHandler());
+		// Listen for mouse events on click
+		addClinicsButton.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				addClinic();
+			}
+		
+		});
 
 	}
-	
+
+	private void addClinic() {
+		// Initialize the service proxy
+		clinicManager = GWT.create(ClinicManager.class);
+
+		// Set up the callback object
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			public void onFailure(Throwable caught) {
+				// TODO: Do something with errors
+			}
+
+			public void onSuccess(Boolean result) {
+				System.out.println(result);
+			}
+			
+		};
+		
+		String refID = "123";
+		String name = "False Clinic";
+		double lat = 123.23;
+		double lon = 321.32;
+		String hours = "6AM-8PM weekdays";
+		String address = "123 Whitmore Street";
+		String pcode = "V1A 2B3";
+		String email = "contact@falseclinic.ca";
+		String phone = "1234567";
+		String languages = "English/French/German";
+		
+		clinicManager.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages, callback);
+	}
+
 	private class TableInfoListCallback implements AsyncCallback<ArrayList<TableInfo>> {
 		@Override
 		public void onFailure(Throwable caught) {
 			caught.printStackTrace();
 		}
-		
+
 		@Override
 		public void onSuccess(ArrayList<TableInfo> result) {
 			CellTable<TableInfo> table = new TableBuilder().buildTable(result);
-			
+
 			layout.add(table);
 			layout.setWidgetLeftRight(table, 0, Unit.PCT, 50, Unit.PCT);
 			layout.add(addClinicsButton);
 			layout.setWidgetLeftRight(addClinicsButton, 50, Unit.PCT, 0, Unit.PCT);
 		}
 	}
-	
+
 	private void createTable() {
 		//TODO: get real parsed data in here; the following uses mock objects
 		ClinicDataParserAsync clinicParser = GWT.create(ClinicDataParser.class);
-		
+
 		TableInfoListCallback callback = new TableInfoListCallback();
 		clinicParser.MocktableInfo(callback);
 	}
-	
+
 	private void createMap() {
 		//TODO: implement
-		
+
 		// Vancouver center coordinates
 		LatLng vanCity = LatLng.newInstance(49.2569425,-123.123904);
-		
+
 		InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
 		infoWindow = InfoWindow.newInstance(iwOptions);
-		
+
 		MapOptions options = MapOptions.newInstance();
 		options.setZoom(13);
 		options.setCenter(vanCity);
-		
+
 		map = new MapWidget(options);
 		map.setSize("100%", "100%");
-//		map.getElement().setId("mapWidget");
-		
-//		MockClinicObject mco = new MockClinicObject();
-//		ArrayList<MapInfo> clinics = mco.MockMapInfo();
+		//		map.getElement().setId("mapWidget");
+
+		//		MockClinicObject mco = new MockClinicObject();
+		//		ArrayList<MapInfo> clinics = mco.MockMapInfo();
 		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
 		clinics.add(new MapInfo("Test Clinic 1", 49.265082, -123.244573));
 		clinics.add(new MapInfo("Test Clinic 2", 49.263671, -123.146184));
 		clinics.add(new MapInfo("Test Clinic 3", 48.42349, -123.366963));
 
 		displayClinics(map, clinics);
-		
+
 		mapContainer.add(map);
-//		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
+		//		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
 		map.triggerResize();
 	}
-	
+
 	private void displayClinics(final MapWidget map, ArrayList<MapInfo> clinics) {
 		for (MapInfo clinic : clinics) {
 			MarkerOptions options = MarkerOptions.newInstance();
@@ -153,7 +195,7 @@ public class HealthyBC implements EntryPoint {
 
 			final Marker marker = Marker.newInstance(options);
 			final String desc = clinic.getName();
-			
+
 			ClickMapHandler handler = new ClickMapHandler() {
 				public void onEvent(ClickMapEvent e) {
 					System.out.println(desc);
@@ -164,28 +206,28 @@ public class HealthyBC implements EntryPoint {
 			marker.addClickHandler(handler);
 		}
 	}
-	
+
 	private void loadMapApi() {
 		boolean sensor = false;
-		
-		// Load libraries needed for maps
-	    ArrayList<LoadLibrary> loadLibraries = new ArrayList<LoadApi.LoadLibrary>();
-//	    loadLibraries.add(LoadLibrary.ADSENSE);
-	    loadLibraries.add(LoadLibrary.DRAWING);		// need this api to draw overlays on the map
-//	    loadLibraries.add(LoadLibrary.GEOMETRY);
-//	    loadLibraries.add(LoadLibrary.PANORAMIO);
-//	    loadLibraries.add(LoadLibrary.PLACES);
-//	    loadLibraries.add(LoadLibrary.WEATHER);
-//	    loadLibraries.add(LoadLibrary.VISUALIZATION);
-	    
-	    Runnable onLoad = new Runnable() {
-	        @Override
-	        public void run() {
-	        	// callback on successful api load
-	        	createMap();
-	        }
-	    };
 
-	    LoadApi.go(onLoad, loadLibraries, sensor);
+		// Load libraries needed for maps
+		ArrayList<LoadLibrary> loadLibraries = new ArrayList<LoadApi.LoadLibrary>();
+		//	    loadLibraries.add(LoadLibrary.ADSENSE);
+		loadLibraries.add(LoadLibrary.DRAWING);		// need this api to draw overlays on the map
+		//	    loadLibraries.add(LoadLibrary.GEOMETRY);
+		//	    loadLibraries.add(LoadLibrary.PANORAMIO);
+		//	    loadLibraries.add(LoadLibrary.PLACES);
+		//	    loadLibraries.add(LoadLibrary.WEATHER);
+		//	    loadLibraries.add(LoadLibrary.VISUALIZATION);
+
+		Runnable onLoad = new Runnable() {
+			@Override
+			public void run() {
+				// callback on successful api load
+				createMap();
+			}
+		};
+
+		LoadApi.go(onLoad, loadLibraries, sensor);
 	}
 }

@@ -10,9 +10,11 @@ import ca.ubc.cs310.gwt.healthybc.client.ClinicManager;
 public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicManager {
 
 	private List<Clinic> clinics;
+	private RemoteDataManager dataManager;
 	
 	public ClinicManagerImpl() {
 		clinics = new ArrayList<Clinic>();
+		dataManager= new RemoteDataManager();
 	}
 
 	/**
@@ -37,6 +39,7 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 			String hours, String address, String pcode, String email, String phone,
 			String languages) {
 		
+		
 		if (refID == null || refID.isEmpty()) {
 			return false;
 		}
@@ -47,10 +50,13 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 			}
 		}
 		
+		
 		Location location = new Location(lat, lon);
 
 		ClinicHours newHours = new ClinicHours(hours);
 		Clinic newClinic = new Clinic(refID, name, newHours, location, address, pcode, email, phone, languages);
+				
+		dataManager.addAndUploadClinicEntity(newClinic);
 		
 		return clinics.add(newClinic);
 	}
@@ -81,8 +87,4 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 		return false;
 	}
 
-	@Override
-	public Clinic[] getClinicList() {
-		return (Clinic[]) clinics.toArray();
-	}
 }
