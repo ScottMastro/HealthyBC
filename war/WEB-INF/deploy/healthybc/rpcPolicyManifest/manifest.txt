@@ -1,2 +1,5 @@
 # Module healthybc
 # RPC service class, partial path of RPC policy file
+ca.ubc.cs310.gwt.healthybc.client.GreetingService, 6D2C55B124DDCB13CA56CC49E6317729.gwt.rpc
+ca.ubc.cs310.gwt.healthybc.client.ClinicManager, 62D59C7C67F13CC8E9A79990DEDB6ADD.gwt.rpc
+ca.ubc.cs310.gwt.healthybc.client.ClinicDataParser, EFD5ABEB694B18F8C2D0F7738ADC5463.gwt.rpc
