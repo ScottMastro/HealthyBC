@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
@@ -17,9 +19,13 @@ import com.google.gwt.maps.client.overlays.InfoWindowOptions;
 import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -75,26 +81,69 @@ public class HealthyBC implements EntryPoint {
 	private void createUI() {
 		layout = new LayoutPanel();
 		buttonPanel = new VerticalPanel();
-		
+
 		mapContainer = new SimplePanel();
 		layout.add(mapContainer);
 		layout.setWidgetLeftRight(mapContainer, 50, Unit.PCT, 0, Unit.PCT);
 	}
 
 	private void createButton(){
-		
-		FileUpload clinicFileUpload = new FileUpload();
+
+		// Create a FormPanel and point it at a service
+		final FormPanel form = new FormPanel();
+		form.setAction(GWT.getModuleBaseURL() + "uploadServlet");
+		// set form to use the POST method, and multipart MIME encoding
+		form.setEncoding(FormPanel.ENCODING_MULTIPART);
+		form.setMethod(FormPanel.METHOD_POST);
+		form.setWidget(buttonPanel);
+
+
+		final FileUpload clinicFileUpload = new FileUpload();
 		clinicFileUpload.setName("Add Clinics");
 		buttonPanel.add(clinicFileUpload);
-		
+
 		// Add a 'submit' button.
-	    
-		Button b = new Button("Submit", new CSVClickHandler(clinicFileUpload));
-		buttonPanel.add(b);
-	    
+		Button submit = new Button("Submit");
+		submit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				form.submit();			          			
+			}
+		});
+
+		buttonPanel.add(submit);
+
+		// Add an event handler to the form.
+		form.addSubmitHandler(new FormPanel.SubmitHandler() {
+			public void onSubmit(SubmitEvent event) {
+				// This event is fired just before the form is submitted. We can take
+				// this opportunity to perform validation.
+				if (clinicFileUpload.getFilename().length() == 0) {
+					Window.alert("The text box must not be empty");
+					event.cancel();
+				}
+				else if (!clinicFileUpload.getFilename().endsWith(".csv")){
+					Window.alert("Can only upload .csv files");
+					event.cancel();
+				}
+					
+			}
+		});
+		
+	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+	        public void onSubmitComplete(SubmitCompleteEvent event) {
+	          // When the form submission is successfully completed, this event is
+	          // fired. Assuming the service returned a response of type text/html,
+	          // we can get the result text here (see the FormPanel documentation for
+	          // further explanation).
+	          Window.alert(event.getResults());
+	        }
+	      });
+
 	}
-	
-	
+
+
+
 	private void addClinic() {
 		// Initialize the service proxy
 		clinicManager = GWT.create(ClinicManager.class);
@@ -108,9 +157,9 @@ public class HealthyBC implements EntryPoint {
 			public void onSuccess(Boolean result) {
 				System.out.println(result);
 			}
-			
+
 		};
-		
+
 		String refID = "123";
 		String name = "False Clinic";
 		double lat = 123.23;
@@ -121,7 +170,7 @@ public class HealthyBC implements EntryPoint {
 		String email = "contact@falseclinic.ca";
 		String phone = "1234567";
 		String languages = "English/French/German";
-		
+
 		clinicManager.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages, callback);
 	}
 
