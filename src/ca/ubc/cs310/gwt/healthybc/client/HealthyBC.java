@@ -2,14 +2,9 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
-import ca.ubc.cs310.gwt.healthybc.server.ClinicHours;
-import ca.ubc.cs310.gwt.healthybc.server.Location;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
@@ -23,11 +18,11 @@ import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 /**
@@ -52,7 +47,7 @@ public class HealthyBC implements EntryPoint {
 	private MapWidget map;
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer;
-	private Button addClinicsButton;
+	private FileUpload addClinicsButton;
 	private ClinicManagerAsync clinicManager = GWT.create(ClinicManager.class);
 
 	/**
@@ -84,19 +79,10 @@ public class HealthyBC implements EntryPoint {
 	}
 
 	private void createButton(){
-
-		addClinicsButton = new Button("Add Clinics");
-
-		// Listen for mouse events on click
-		addClinicsButton.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				addClinic();
-			}
 		
-		});
-
+		addClinicsButton = new FileUpload();
+		addClinicsButton.setName("Add Clinics");
+		
 	}
 
 	private void addClinic() {
@@ -138,9 +124,11 @@ public class HealthyBC implements EntryPoint {
 		@Override
 		public void onSuccess(ArrayList<TableInfo> result) {
 			CellTable<TableInfo> table = new TableBuilder().buildTable(result);
+			ScrollPanel panel = new ScrollPanel(table);
+			panel.setAlwaysShowScrollBars(true);
 
-			layout.add(table);
-			layout.setWidgetLeftRight(table, 0, Unit.PCT, 50, Unit.PCT);
+			layout.add(panel);
+			layout.setWidgetLeftRight(panel, 0, Unit.PCT, 50, Unit.PCT);
 			layout.add(addClinicsButton);
 			layout.setWidgetLeftRight(addClinicsButton, 50, Unit.PCT, 0, Unit.PCT);
 		}
