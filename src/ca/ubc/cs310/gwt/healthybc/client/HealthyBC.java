@@ -91,7 +91,7 @@ public class HealthyBC implements EntryPoint {
 
 		// Create a FormPanel and point it at a service
 		final FormPanel form = new FormPanel();
-		form.setAction(GWT.getModuleBaseURL() + "uploadServlet");
+		form.setAction(GWT.getModuleBaseURL() + "healthybc/uploadServlet");
 		// set form to use the POST method, and multipart MIME encoding
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
