@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -73,7 +74,6 @@ public class HealthyBC implements EntryPoint {
 		
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(layout);
-	    r.add(buttonPanel);
 		r.forceLayout();
 	}
 
@@ -90,19 +90,20 @@ public class HealthyBC implements EntryPoint {
 	private void createButton(){
 
 		final FormPanel form = new FormPanel();
-	    form.setMethod(FormPanel.METHOD_POST);
 	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
+	    form.setMethod(FormPanel.METHOD_POST);
 		form.setAction("/healthybc/uploadServlet");
 	    
+		form.setWidget(buttonPanel);
+
 	        // then there's a button they can click which calls form.submit();
-	    form.setWidget(new Button("Submit", (new ClickHandler() {
+	    buttonPanel.add(new Button("Submit", (new ClickHandler() {
 	      @Override
 	      public void onClick(ClickEvent event) {
 	        form.submit();
 	      }
 	    })));
 	    
-	    buttonPanel.add(form);
 		
 	    final FileUpload clinicFileUpload = new FileUpload();
 		clinicFileUpload.setName("Add Clinics");
@@ -137,7 +138,9 @@ public class HealthyBC implements EntryPoint {
 	        }
 	      });
 
+	    RootPanel.get().add(form);
 	}
+
 
 	private void addClinic() {
 		// Initialize the service proxy

@@ -5,20 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
@@ -36,41 +34,32 @@ public class UploadedCSVParser extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
+		 Logger logger = Logger.getLogger("uploadServletLogger");
 
+		InputStream is = null;
+		
 		try{
-			// Create a factory for disk-based file items
-			DiskFileItemFactory factory = new DiskFileItemFactory();
+				if (ServletFileUpload.isMultipartContent(request)) {
 
-			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload(factory);
+				logger.log(Level.SEVERE, "isMultipart");
 
-			// Parse the request
-			List<FileItem> items = upload.parseRequest(request);
+				ServletFileUpload fileUpload = new ServletFileUpload();
+				FileItemIterator items = fileUpload.getItemIterator(request);
 
-			Logger log = Logger.getLogger("Logggg");
-			log.log(Level.SEVERE, "This part ran");
+				int c = 0;
+				while (items.hasNext()) {
+					
+				    logger.log(Level.SEVERE, String.valueOf(c));
+				    c++;
 
-			for (FileItem item : items) {
-				
-				log.log(Level.SEVERE, item.getString());
-
-				
-				if (item.isFormField()) {
-
-					//do nothing
-
-				} else {
-
-					readFile(item);
-
+					FileItemStream item = items.next();
+					if (!item.isFormField()) {
+						is = item.openStream();
+					}
 				}
 			}
-		} catch (FileUploadException e) {
-			throw new ServletException("Cannot parse multipart request.", e);
 		}
-
-
-
+		catch(FileUploadException e){ throw new IOException();	}
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
