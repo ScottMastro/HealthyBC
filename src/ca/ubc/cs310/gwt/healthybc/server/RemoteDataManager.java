@@ -100,6 +100,17 @@ public class RemoteDataManager {
 		}
 
 	}
+	
+	
+	public void testPush(String string){
+		
+		Entity e = new Entity("Other");
+		e.setProperty("info", string);
+		
+		datastore.put(e);
+
+
+	}
 }
 
 

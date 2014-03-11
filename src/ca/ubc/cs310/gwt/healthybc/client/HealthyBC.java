@@ -70,10 +70,10 @@ public class HealthyBC implements EntryPoint {
 		createButton();
 		createTable();
 		loadMapApi();
-
+		
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(layout);
-		r.add(buttonPanel);
+	    r.add(buttonPanel);
 		r.forceLayout();
 	}
 
@@ -89,35 +89,31 @@ public class HealthyBC implements EntryPoint {
 
 	private void createButton(){
 
-		// Create a FormPanel and point it at a service
 		final FormPanel form = new FormPanel();
-		form.setAction(GWT.getModuleBaseURL() + "healthybc/uploadServlet");
-		// set form to use the POST method, and multipart MIME encoding
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setMethod(FormPanel.METHOD_POST);
-		form.setWidget(buttonPanel);
-
-
-		final FileUpload clinicFileUpload = new FileUpload();
+	    form.setMethod(FormPanel.METHOD_POST);
+	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
+		form.setAction("/healthybc/uploadServlet");
+	    
+	        // then there's a button they can click which calls form.submit();
+	    form.setWidget(new Button("Submit", (new ClickHandler() {
+	      @Override
+	      public void onClick(ClickEvent event) {
+	        form.submit();
+	      }
+	    })));
+	    
+	    buttonPanel.add(form);
+		
+	    final FileUpload clinicFileUpload = new FileUpload();
 		clinicFileUpload.setName("Add Clinics");
 		buttonPanel.add(clinicFileUpload);
-
-		// Add a 'submit' button.
-		Button submit = new Button("Submit");
-		submit.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				form.submit();			          			
-			}
-		});
-
-		buttonPanel.add(submit);
 
 		// Add an event handler to the form.
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
 			public void onSubmit(SubmitEvent event) {
 				// This event is fired just before the form is submitted. We can take
 				// this opportunity to perform validation.
+			
 				if (clinicFileUpload.getFilename().length() == 0) {
 					Window.alert("The text box must not be empty");
 					event.cancel();
@@ -131,7 +127,8 @@ public class HealthyBC implements EntryPoint {
 		});
 		
 	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-	        public void onSubmitComplete(SubmitCompleteEvent event) {
+	        @Override
+	    	public void onSubmitComplete(SubmitCompleteEvent event) {
 	          // When the form submission is successfully completed, this event is
 	          // fired. Assuming the service returned a response of type text/html,
 	          // we can get the result text here (see the FormPanel documentation for
@@ -141,8 +138,6 @@ public class HealthyBC implements EntryPoint {
 	      });
 
 	}
-
-
 
 	private void addClinic() {
 		// Initialize the service proxy
