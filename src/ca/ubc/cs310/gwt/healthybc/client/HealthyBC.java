@@ -198,36 +198,40 @@ public class HealthyBC implements EntryPoint {
 		TableInfoListCallback callback = new TableInfoListCallback();
 		clinicParser.MocktableInfo(callback);
 	}
+	
+	private class MapInfoListCallback implements AsyncCallback<ArrayList<MapInfo>> {
+		@Override
+		public void onFailure(Throwable caught) {
+			caught.printStackTrace();
+		}
+		
+		@Override
+		public void onSuccess(ArrayList<MapInfo> result) {
+			// Vancouver center coordinates
+			LatLng vanCity = LatLng.newInstance(49.2569425,-123.123904);
 
+			InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
+			infoWindow = InfoWindow.newInstance(iwOptions);
+
+			MapOptions options = MapOptions.newInstance();
+			options.setZoom(13);
+			options.setCenter(vanCity);
+
+			map = new MapWidget(options);
+			map.setSize("100%", "100%");
+
+			displayClinics(map, result);
+
+			mapContainer.add(map);
+			map.triggerResize();
+		}
+	}
+	
 	private void createMap() {
-		//TODO: implement
-
-		// Vancouver center coordinates
-		LatLng vanCity = LatLng.newInstance(49.2569425,-123.123904);
-
-		InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
-		infoWindow = InfoWindow.newInstance(iwOptions);
-
-		MapOptions options = MapOptions.newInstance();
-		options.setZoom(13);
-		options.setCenter(vanCity);
-
-		map = new MapWidget(options);
-		map.setSize("100%", "100%");
-		//		map.getElement().setId("mapWidget");
-
-		//		MockClinicObject mco = new MockClinicObject();
-		//		ArrayList<MapInfo> clinics = mco.MockMapInfo();
-		ArrayList<MapInfo> clinics = new ArrayList<MapInfo>();
-		clinics.add(new MapInfo("Test Clinic 1", 49.265082, -123.244573));
-		clinics.add(new MapInfo("Test Clinic 2", 49.263671, -123.146184));
-		clinics.add(new MapInfo("Test Clinic 3", 48.42349, -123.366963));
-
-		displayClinics(map, clinics);
-
-		mapContainer.add(map);
-		//		layout.setWidgetLeftRight(map, 50, Unit.PCT, 0, Unit.PCT);
-		map.triggerResize();
+		ClinicDataParserAsync clinicParser = GWT.create(ClinicDataParser.class);
+		
+		MapInfoListCallback callback = new MapInfoListCallback();
+		clinicParser.MockMapInfo(callback);
 	}
 
 	private void displayClinics(final MapWidget map, ArrayList<MapInfo> clinics) {
