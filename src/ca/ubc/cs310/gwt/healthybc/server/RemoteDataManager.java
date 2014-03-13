@@ -86,8 +86,8 @@ public class RemoteDataManager {
 
 			String refID = result.getKey().getName();
 			String name = (String) result.getProperty("name");
-			Double lat = Double.parseDouble((String) result.getProperty("latitude"));
-			Double lon  =  Double.parseDouble((String) result.getProperty("longitude"));
+			Double lat = (Double) result.getProperty("latitude");
+			Double lon  =  (Double) result.getProperty("longitude");
 			String address = (String) result.getProperty("address");
 			String pcode = (String) result.getProperty("pcode");
 			String hours = (String) result.getProperty("hours");
