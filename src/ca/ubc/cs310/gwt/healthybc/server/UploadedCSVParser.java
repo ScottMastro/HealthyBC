@@ -38,44 +38,39 @@ public class UploadedCSVParser extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		Logger logger = Logger.getLogger("uploadServletLogger");
+		String resp = "";
 
-		// process only multipart requests
-		if (ServletFileUpload.isMultipartContent(request)) {
+		ServletFileUpload upload = new ServletFileUpload();
 
-			// Create a factory for disk-based file items
-			FileItemFactory factory = new DiskFileItemFactory();
-
-			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload(factory);
-
-			// Parse the request
-			try {
-				
-				logger.log(Level.WARNING, "enter try");
-				List<FileItem> items = upload.parseRequest(request);
-				for (FileItem item : items) {
-					logger.log(Level.WARNING, "enter iteration");
-
-					// process only file upload - discard other form item types
-					if (item.isFormField()) continue;
-
-					String fileName = item.getName();
-					// get only the file name not whole path
-					if (fileName != null) {
-						fileName = FilenameUtils. getName(fileName);
-					}
-				}
-			} catch (Exception e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-						"An error occurred while parsing the file : " + e.getMessage());
-			}
-
-		} else {
-			response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
-					"Request contents type is not supported by the servlet.");
-		}
-
-		response.setContentType("text/html");
+		try {
+		    FileItemIterator iterator = upload.getItemIterator(request);
+		    
+		    while (iterator.hasNext()) {
+		    	FileItemStream item = iterator.next();
+		    	InputStream stream = item.openStream();
+		    	if (item.isFormField()) {
+		    		logger.warning("Got a form field: " + item.getFieldName());
+		    		resp += "Error: Got a form field "+item.getFieldName()+" <br/>";
+		    	} else {
+		    		
+		    		if(item.getName().endsWith(".csv")){
+		    			// TODO: Parse file here
+		    			resp += "File "+item.getName()+" successfully uploaded<br/>";
+		    			//logger.warning("File: "+item.getName());
+		    		} else {
+		    			logger.warning("File: " + item.getName());
+		    			resp += "Error: File "+item.getName()+" is not a CSV file<br/>";
+		    		}
+		    	}
+	
+		    }
+		} catch (Exception e){
+			logger.warning("Exception occurred");
+			resp += "Error: Exception occurred<br/>";
+		} finally {
+		    
+	    response.setContentType("text/html");
+		
 		PrintWriter out = response.getWriter();
 
 		out.println("<html>");
@@ -85,12 +80,14 @@ public class UploadedCSVParser extends HttpServlet
 		out.println("<body>");
 		out.println("</body>");
 
-		out.println("Servlet was evoked");
+		out.println(resp);
 
 		out.println("</html>");
 		out.close();
-
-	}
+		}
+		
+	} 
+	
 
 
 	private void readFile(FileItem file) throws IOException{

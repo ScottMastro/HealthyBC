@@ -72,7 +72,7 @@ public class HealthyBC implements EntryPoint {
 	private void init() {
 		
 		p = new DockLayoutPanel(Unit.PCT);
-		p.addNorth(new HTML("<b>The Blank Slate</b> - CPSC 310"), 10);
+		p.addNorth(new HTML("<font size='7'><b>The Blank Slate</b> - CPSC 310</font>"), 10);
 		
 		createUI();
 		createButton();
@@ -96,56 +96,10 @@ public class HealthyBC implements EntryPoint {
 
 	private void createButton(){
 
-		final FormPanel form = new FormPanel();
-	    form.setEncoding(FormPanel.ENCODING_MULTIPART);
-	    form.setMethod(FormPanel.METHOD_POST);
-		form.setAction("/healthybc/uploadServlet");
-	    
-		form.setWidget(buttonPanel);
-
-	        // then there's a button they can click which calls form.submit();
-	    buttonPanel.add(new Button("Submit", (new ClickHandler() {
-	      @Override
-	      public void onClick(ClickEvent event) {
-	        form.submit();
-	      }
-	    })));
-	    
-		
-	    final FileUpload clinicFileUpload = new FileUpload();
-		clinicFileUpload.setName("Add Clinics");
-		buttonPanel.add(clinicFileUpload);
-
-		// Add an event handler to the form.
-		form.addSubmitHandler(new FormPanel.SubmitHandler() {
-			public void onSubmit(SubmitEvent event) {
-				// This event is fired just before the form is submitted. We can take
-				// this opportunity to perform validation.
-			
-				if (clinicFileUpload.getFilename().length() == 0) {
-					Window.alert("The text box must not be empty");
-					event.cancel();
-				}
-				else if (!clinicFileUpload.getFilename().endsWith(".csv")){
-					Window.alert("Can only upload .csv files");
-					event.cancel();
-				}
-					
-			}
-		});
-		
-	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-	        @Override
-	    	public void onSubmitComplete(SubmitCompleteEvent event) {
-	          // When the form submission is successfully completed, this event is
-	          // fired. Assuming the service returned a response of type text/html,
-	          // we can get the result text here (see the FormPanel documentation for
-	          // further explanation).
-	          Window.alert(event.getResults());
-	        }
-	      });
-
-	    p.addSouth(form, 10);
+	    p.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
+	    		+ "method='POST' action='/uploadServlet'/>"
+	    		+ "Add new data : <input name='userfile1' type='file' />"
+	    		+ "<input type='submit' value='Submit' /> </form>"), 10);
 	}
 
 
