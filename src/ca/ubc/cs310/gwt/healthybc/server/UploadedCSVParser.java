@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,8 @@ import org.apache.commons.io.FilenameUtils;
 @SuppressWarnings("serial")
 public class UploadedCSVParser extends HttpServlet
 {   
+	Logger logger = Logger.getLogger("uploadServletLogger");
+
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -37,64 +40,69 @@ public class UploadedCSVParser extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		Logger logger = Logger.getLogger("uploadServletLogger");
 		String resp = "";
 
 		ServletFileUpload upload = new ServletFileUpload();
 
 		try {
-		    FileItemIterator iterator = upload.getItemIterator(request);
-		    
-		    while (iterator.hasNext()) {
-		    	FileItemStream item = iterator.next();
-		    	InputStream stream = item.openStream();
-		    	if (item.isFormField()) {
-		    		logger.warning("Got a form field: " + item.getFieldName());
-		    		resp += "Error: Got a form field "+item.getFieldName()+" <br/>";
-		    	} else {
-		    		
-		    		if(item.getName().endsWith(".csv")){
-		    			// TODO: Parse file here
-		    			resp += "File "+item.getName()+" successfully uploaded<br/>";
-		    			//logger.warning("File: "+item.getName());
-		    		} else {
-		    			logger.warning("File: " + item.getName());
-		    			resp += "Error: File "+item.getName()+" is not a CSV file<br/>";
-		    		}
-		    	}
-	
-		    }
+			FileItemIterator iterator = upload.getItemIterator(request);
+
+			while (iterator.hasNext()) {
+
+				FileItemStream item = iterator.next();
+
+				if (item.isFormField()) {
+					logger.warning("Got a form field: " + item.getFieldName());
+					resp += "Error: Got a form field "+ item.getFieldName()+" <br/>";
+				} else {
+
+					if(item.getName().endsWith(".csv")){
+
+						resp += readfile(item);
+
+						resp += "<br><b>File "+item.getName()+" successfully uploaded</b><br/>";
+						//logger.warning("File: "+item.getName());
+					} else {
+						logger.warning("File: " + item.getName());
+						resp += "<br><b>Error: File "+item.getName()+" is not a CSV file</b><br/>";
+					}
+				}
+
+			}
 		} catch (Exception e){
 			logger.warning("Exception occurred");
-			resp += "Error: Exception occurred<br/>";
+			resp += "Error: Exception occurred<br/>" + e.getMessage();
 		} finally {
-		    
-	    response.setContentType("text/html");
-		
-		PrintWriter out = response.getWriter();
 
-		out.println("<html>");
-		out.println("<head>");
-		out.println("<title> uploadServlet</title>");
-		out.println("</head>");
-		out.println("<body>");
-		out.println("</body>");
+			response.setContentType("text/html");
 
-		out.println(resp);
+			PrintWriter out = response.getWriter();
 
-		out.println("</html>");
-		out.close();
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<title>Server Response</title>");
+			out.println("</head>");
+			out.println("<body>");
+			out.println("</body>");
+
+			out.println(resp);
+
+			out.println("</html>");
+			out.close();
 		}
-		
+
 	} 
-	
 
 
-	private void readFile(FileItem file) throws IOException{
+
+	private String readfile(FileItemStream item) throws IOException {
+		String message = "";
 
 		// Process form file field (input type="file").
-		String filename = FilenameUtils.getName(file.getName());
-		InputStream filecontent = file.getInputStream();
+		String filename = FilenameUtils.getName(item.getName());
+
+		InputStream filecontent = item.openStream();
+
 		RemoteDataManager rdm = new RemoteDataManager();
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(filecontent));
@@ -103,11 +111,7 @@ public class UploadedCSVParser extends HttpServlet
 		String cvsSplitBy = ";";
 
 		while ((line = br.readLine()) != null) {			
-
-			rdm.testPush(line);
-
-			/*
-
+			
 			// use semicolon as separator
 			String[] cells = line.split(cvsSplitBy);
 
@@ -133,7 +137,11 @@ public class UploadedCSVParser extends HttpServlet
 			Location newLoc = new Location( Double.parseDouble(latitude), Double.parseDouble(longitude));
 
 			Clinic newClinic = new Clinic(refID, name, newhrs, newLoc, address, pcode, email, phone, languages);
-			 */
-		}
+			rdm.addAndUploadClinicEntity(newClinic);
+			
+			message += "Added new Clinic: " + newClinic.getName() + "<br>";
+		}		
+		br.close();
+		return message;
 	}
 }
