@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,9 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
@@ -34,32 +37,43 @@ public class UploadedCSVParser extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		 Logger logger = Logger.getLogger("uploadServletLogger");
+		Logger logger = Logger.getLogger("uploadServletLogger");
 
-		InputStream is = null;
-		
-		try{
-				if (ServletFileUpload.isMultipartContent(request)) {
+		// process only multipart requests
+		if (ServletFileUpload.isMultipartContent(request)) {
 
-				logger.log(Level.SEVERE, "isMultipart");
+			// Create a factory for disk-based file items
+			FileItemFactory factory = new DiskFileItemFactory();
 
-				ServletFileUpload fileUpload = new ServletFileUpload();
-				FileItemIterator items = fileUpload.getItemIterator(request);
+			// Create a new file upload handler
+			ServletFileUpload upload = new ServletFileUpload(factory);
 
-				int c = 0;
-				while (items.hasNext()) {
-					
-				    logger.log(Level.SEVERE, String.valueOf(c));
-				    c++;
+			// Parse the request
+			try {
+				
+				logger.log(Level.WARNING, "enter try");
+				List<FileItem> items = upload.parseRequest(request);
+				for (FileItem item : items) {
+					logger.log(Level.WARNING, "enter iteration");
 
-					FileItemStream item = items.next();
-					if (!item.isFormField()) {
-						is = item.openStream();
+					// process only file upload - discard other form item types
+					if (item.isFormField()) continue;
+
+					String fileName = item.getName();
+					// get only the file name not whole path
+					if (fileName != null) {
+						fileName = FilenameUtils. getName(fileName);
 					}
 				}
+			} catch (Exception e) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+						"An error occurred while parsing the file : " + e.getMessage());
 			}
+
+		} else {
+			response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
+					"Request contents type is not supported by the servlet.");
 		}
-		catch(FileUploadException e){ throw new IOException();	}
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
