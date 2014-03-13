@@ -22,6 +22,7 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 	}
 	
 	public void refreshFromDatastore(){
+		clinics.clear();
 		dataManager.retrieveAllClinics(this);
 	}
 	
