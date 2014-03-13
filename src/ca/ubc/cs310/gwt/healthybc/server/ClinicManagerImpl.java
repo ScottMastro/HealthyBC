@@ -17,6 +17,14 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 		dataManager= new RemoteDataManager();
 	}
 
+	public List<Clinic> getClinics(){
+		return clinics;
+	}
+	
+	public void refreshFromDatastore(){
+		dataManager.retrieveAllClinics(this);
+	}
+	
 	/**
 	 * Adds a new Clinic to the ArrayList of clinics, with no duplicate (defined as same
 	 * refID) allowed
