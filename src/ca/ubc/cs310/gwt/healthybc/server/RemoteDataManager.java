@@ -53,7 +53,7 @@ public class RemoteDataManager {
 		clinic.setProperty("name", c.getName());
 		clinic.setProperty("latitude", c.getLoc().getLatitude());
 		clinic.setProperty("longitude", c.getLoc().getLongitude());
-		clinic.setProperty("adress", c.getAddress());
+		clinic.setProperty("address", c.getAddress());
 		clinic.setProperty("pcode", c.getPostalCode());
 		clinic.setProperty("hours", c.getHoursString());
 		clinic.setProperty("email", c.getEmail());
