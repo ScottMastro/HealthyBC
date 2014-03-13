@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,14 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
 
 @SuppressWarnings("serial")
+
 public class UploadedCSVParser extends HttpServlet
 {   
 
@@ -34,34 +38,40 @@ public class UploadedCSVParser extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		 Logger logger = Logger.getLogger("uploadServletLogger");
+		Logger logger = Logger.getLogger("uploadServletLogger");
+		String resp = "";
 
-		InputStream is = null;
+		ServletFileUpload upload = new ServletFileUpload();
+
+		try {
+		    FileItemIterator iterator = upload.getItemIterator(request);
+		    
+		    while (iterator.hasNext()) {
+		    	FileItemStream item = iterator.next();
+		    	InputStream stream = item.openStream();
+		    	if (item.isFormField()) {
+		    		logger.warning("Got a form field: " + item.getFieldName());
+		    		resp += "Error: Got a form field "+item.getFieldName()+" <br/>";
+		    	} else {
+		    		
+		    		if(item.getName().endsWith(".csv")){
+		    			// TODO: Parse file here
+		    			resp += "File "+item.getName()+" successfully uploaded<br/>";
+		    			//logger.warning("File: "+item.getName());
+		    		} else {
+		    			logger.warning("File: " + item.getName());
+		    			resp += "Error: File "+item.getName()+" is not a CSV file<br/>";
+		    		}
+		    	}
+	
+		    }
+		} catch (Exception e){
+			logger.warning("Exception occurred");
+			resp += "Error: Exception occurred<br/>";
+		} finally {
+		    
+	    response.setContentType("text/html");
 		
-		try{
-				if (ServletFileUpload.isMultipartContent(request)) {
-
-				logger.log(Level.SEVERE, "isMultipart");
-
-				ServletFileUpload fileUpload = new ServletFileUpload();
-				FileItemIterator items = fileUpload.getItemIterator(request);
-
-				int c = 0;
-				while (items.hasNext()) {
-					
-				    logger.log(Level.SEVERE, String.valueOf(c));
-				    c++;
-
-					FileItemStream item = items.next();
-					if (!item.isFormField()) {
-						is = item.openStream();
-					}
-				}
-			}
-		}
-		catch(FileUploadException e){ throw new IOException();	}
-
-		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
 		out.println("<html>");
@@ -71,58 +81,12 @@ public class UploadedCSVParser extends HttpServlet
 		out.println("<body>");
 		out.println("</body>");
 
-		out.println("Servlet was evoked");
+		out.println(resp);
 
 		out.println("</html>");
 		out.close();
-
-	}
-
-
-	private void readFile(FileItem file) throws IOException{
-
-		// Process form file field (input type="file").
-		String filename = FilenameUtils.getName(file.getName());
-		InputStream filecontent = file.getInputStream();
-		RemoteDataManager rdm = new RemoteDataManager();
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(filecontent));
-
-		String line = "";
-		String cvsSplitBy = ";";
-
-		while ((line = br.readLine()) != null) {			
-
-			rdm.testPush(line);
-
-			/*
-
-			// use semicolon as separator
-			String[] cells = line.split(cvsSplitBy);
-
-			String name = cells[0];
-			String refID = cells[1];
-			String phone = cells[2];
-			String website = cells[3];
-			String email = cells[4];
-			String wc_acess = cells[5];
-			String languages = cells[6];
-			String street_no = cells[7];
-			String street_name = cells[8];
-			String street_type = cells[9];
-			String city = cells[10];
-			String pcode = cells[11];
-			String latitude = cells[12];
-			String longitude = cells[13]; 
-			String desc = cells[14];
-			String hours = cells[15];
-
-			String address = street_no + " " + street_name + " " + street_type + " " + city;
-			ClinicHours newhrs = new ClinicHours(hours);
-			Location newLoc = new Location( Double.parseDouble(latitude), Double.parseDouble(longitude));
-
-			Clinic newClinic = new Clinic(refID, name, newhrs, newLoc, address, pcode, email, phone, languages);
-			 */
 		}
-	}
+		
+	} 
+	
 }
