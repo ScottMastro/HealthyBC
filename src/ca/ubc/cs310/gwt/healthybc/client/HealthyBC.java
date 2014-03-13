@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.maps.client.MapOptions;
@@ -19,18 +17,11 @@ import com.google.gwt.maps.client.overlays.InfoWindowOptions;
 import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -100,37 +91,6 @@ public class HealthyBC implements EntryPoint {
 	    		+ "method='POST' action='/uploadServlet'/>"
 	    		+ "Add new data : <input name='userfile1' type='file' />"
 	    		+ "<input type='submit' value='Submit' /> </form>"), 10);
-	}
-
-
-	private void addClinic() {
-		// Initialize the service proxy
-		clinicManager = GWT.create(ClinicManager.class);
-
-		// Set up the callback object
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-			public void onFailure(Throwable caught) {
-				// TODO: Do something with errors
-			}
-
-			public void onSuccess(Boolean result) {
-				System.out.println(result);
-			}
-
-		};
-
-		String refID = "123";
-		String name = "False Clinic";
-		double lat = 123.23;
-		double lon = 321.32;
-		String hours = "6AM-8PM weekdays";
-		String address = "123 Whitmore Street";
-		String pcode = "V1A 2B3";
-		String email = "contact@falseclinic.ca";
-		String phone = "1234567";
-		String languages = "English/French/German";
-
-		clinicManager.addNewClinic(refID, name, lat, lon, hours, address, pcode, email, phone, languages, callback);
 	}
 
 	private class TableInfoListCallback implements AsyncCallback<ArrayList<TableInfo>> {
