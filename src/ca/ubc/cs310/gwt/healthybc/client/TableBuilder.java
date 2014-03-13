@@ -105,7 +105,7 @@ public class TableBuilder {
 		
 		table.getColumnSortList().push(nameColumn);
 		
-		table.setWidth("50%", false);
+		table.setWidth("100%", false);
 		
 		return table;
 	}

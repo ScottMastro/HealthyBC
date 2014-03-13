@@ -22,10 +22,12 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -58,6 +60,7 @@ public class HealthyBC implements EntryPoint {
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer;
 	private ClinicManagerAsync clinicManager = GWT.create(ClinicManager.class);
+	private DockLayoutPanel p;
 
 	/**
 	 * This is the entry point method.
@@ -67,13 +70,17 @@ public class HealthyBC implements EntryPoint {
 	}
 
 	private void init() {
+		
+		p = new DockLayoutPanel(Unit.PCT);
+		p.addNorth(new HTML("<b>The Blank Slate</b> - CPSC 310"), 10);
+		
 		createUI();
 		createButton();
 		createTable();
 		loadMapApi();
 		
 		RootLayoutPanel r = RootLayoutPanel.get();
-		r.add(layout);
+		r.add(p);
 		r.forceLayout();
 	}
 
@@ -138,7 +145,7 @@ public class HealthyBC implements EntryPoint {
 	        }
 	      });
 
-	    RootPanel.get().add(form);
+	    p.addSouth(form, 10);
 	}
 
 
@@ -183,11 +190,8 @@ public class HealthyBC implements EntryPoint {
 			CellTable<TableInfo> table = new TableBuilder().buildTable(result);
 			ScrollPanel panel = new ScrollPanel(table);
 			panel.setAlwaysShowScrollBars(true);
-
-			layout.add(panel);
-			layout.setWidgetLeftRight(panel, 0, Unit.PCT, 50, Unit.PCT);
-			layout.add(buttonPanel);
-			layout.setWidgetLeftRight(buttonPanel, 50, Unit.PCT, 0, Unit.PCT);
+			
+			p.addWest(panel,35);
 		}
 	}
 
@@ -223,6 +227,7 @@ public class HealthyBC implements EntryPoint {
 			displayClinics(map, result);
 
 			mapContainer.add(map);
+			p.addEast(mapContainer, 65);
 			map.triggerResize();
 		}
 	}
