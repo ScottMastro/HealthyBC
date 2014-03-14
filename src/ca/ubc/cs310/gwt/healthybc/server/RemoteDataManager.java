@@ -11,7 +11,6 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Transaction;
 
 public class RemoteDataManager {
 
@@ -51,8 +50,8 @@ public class RemoteDataManager {
 		Entity clinic = new Entity("Clinic", c.getRefID());
 
 		clinic.setProperty("name", c.getName());
-		clinic.setProperty("latitude", c.getLoc().getLatitude());
-		clinic.setProperty("longitude", c.getLoc().getLongitude());
+		clinic.setProperty("latitude", c.getLatitude());
+		clinic.setProperty("longitude", c.getLongitude());
 		clinic.setProperty("address", c.getAddress());
 		clinic.setProperty("pcode", c.getPostalCode());
 		clinic.setProperty("hours", c.getHoursString());
@@ -75,7 +74,7 @@ public class RemoteDataManager {
 		datastore.put(e);
 	}
 
-	public void retrieveAllClinics(ClinicManagerImpl manager){
+	public void retrieveAllClinics(ClinicManager manager){
 		// Use class Query to assemble a query
 		Query q = new Query("Clinic");
 

@@ -9,16 +9,12 @@ import org.junit.Test;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.KeyFactory;
 
-
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-
-
 
 import ca.ubc.cs310.gwt.healthybc.server.Clinic;
 import ca.ubc.cs310.gwt.healthybc.server.ClinicHours;
 import ca.ubc.cs310.gwt.healthybc.server.RemoteDataManager;
-import ca.ubc.cs310.gwt.healthybc.server.Location;
 
 public class DataManagerTest {
 
@@ -49,7 +45,6 @@ public class DataManagerTest {
 		String name = "False Clinic";
 		double lat = 123.23;
 		double lon = 321.32;
-		Location loc = new Location(lat, lon);
 		ClinicHours hours = new ClinicHours("6AM-8PM weekdays");
 		String address = "123 Whitmore Street";
 		String pcode = "V1A 2B3";
@@ -58,7 +53,7 @@ public class DataManagerTest {
 		String languages = "English/French/German";
 		
 		//create test clinic
-		c = new Clinic(refID, name, hours, loc, address, pcode, email, phone, languages);
+		c = new Clinic(refID, name, hours, lat, lon, address, pcode, email, phone, languages);
 		
 		//try to upload clinic
 		um.addAndUploadClinicEntity(c);

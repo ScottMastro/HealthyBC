@@ -4,8 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import ca.ubc.cs310.gwt.healthybc.client.ClinicManager;
-import ca.ubc.cs310.gwt.healthybc.server.ClinicManagerImpl;
+import ca.ubc.cs310.gwt.healthybc.server.ClinicManager;
 
 public class ClinicManagerTest {
 
@@ -13,7 +12,7 @@ public class ClinicManagerTest {
 	
 	@Before
 	public void setup() {
-		cm = new ClinicManagerImpl();
+		cm = ClinicManager.getInstance();
 	}
 	
 	/**

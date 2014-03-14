@@ -3,29 +3,63 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import ca.ubc.cs310.gwt.healthybc.client.MapInfo;
+import ca.ubc.cs310.gwt.healthybc.client.TableInfo;
 
-import ca.ubc.cs310.gwt.healthybc.client.ClinicManager;
 
-public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicManager {
+public class ClinicManager {
 
 	private List<Clinic> clinics;
+	private ArrayList<MapInfo> mapInfo;
+	private ArrayList<TableInfo> tableInfo;
+
 	private RemoteDataManager dataManager;
-	
-	public ClinicManagerImpl() {
+
+	private static ClinicManager singleton;
+
+	public static ClinicManager getInstance(){
+		if(singleton == null)
+			singleton = new ClinicManager();
+
+		return singleton;
+	}
+
+	private ClinicManager() {
 		clinics = new ArrayList<Clinic>();
+		tableInfo = new ArrayList<TableInfo>();
+		mapInfo = new ArrayList<MapInfo>();
+
 		dataManager= new RemoteDataManager();
+		initalizeClinicData();
+	}
+
+	private void initalizeClinicData(){
+		dataManager.retrieveAllClinics(this);
+
+		for(Clinic clinic : clinics) {
+			TableInfo newTableInfo = new TableInfo(clinic.getName(), clinic.getAddressString(), clinic.getEmail());
+			MapInfo newMapInfo = new MapInfo(clinic.getName(), clinic.getLatitude(), clinic.getLongitude());
+
+			tableInfo.add(newTableInfo);
+			mapInfo.add(newMapInfo);			
+
+		}
+
 	}
 
 	public List<Clinic> getClinics(){
+
+		if(clinics.isEmpty())
+			refreshFromDatastore();		
+
 		return clinics;
 	}
-	
+
 	public void refreshFromDatastore(){
 		clinics.clear();
 		dataManager.retrieveAllClinics(this);
 	}
-	
+
 	/**
 	 * Adds a new Clinic to the ArrayList of clinics, with no duplicate (defined as same
 	 * refID) allowed
@@ -43,30 +77,29 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 	 * 
 	 * @return true if clinic is successfully added
 	 */
-	@Override
 	public boolean addNewClinic(String refID, String name, Double lat, Double lon,
 			String hours, String address, String pcode, String email, String phone,
 			String languages) {
-		
-		
+
+
 		if (refID == null || refID.isEmpty()) {
 			return false;
 		}
-		
+
 		for (Clinic c : clinics) {
 			if (c.getRefID().equals(refID)) {
 				return false;
 			}
 		}
-		
-		
-		Location location = new Location(lat, lon);
+
 
 		ClinicHours newHours = new ClinicHours(hours);
-		Clinic newClinic = new Clinic(refID, name, newHours, location, address, pcode, email, phone, languages);
-				
+		Clinic newClinic = new Clinic(refID, name, newHours, lat, lon, address, pcode, email, phone, languages);
+
 		dataManager.addAndUploadClinicEntity(newClinic);
-		
+
+		//#TODO: ADD CLINIC TO MAP/TABLE INFO
+
 		return clinics.add(newClinic);
 	}
 
@@ -76,8 +109,10 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 	 * @param refID 	ID of the clinic to be removed; if null or empty, return false
 	 * @return true if clinic with corresponding refID is removed
 	 */
-	@Override
 	public boolean removeClinic(String refID) {
+
+		//#TODO: REMOVE CLINIC TO MAP/TABLE INFO
+
 		if (refID == null || refID.isEmpty()) {
 			return false;
 		}
@@ -92,8 +127,16 @@ public class ClinicManagerImpl extends RemoteServiceServlet implements ClinicMan
 				}
 			}
 		}
-		
+
 		return false;
+	}
+
+	public ArrayList<MapInfo> getMapInfo() {
+		return mapInfo;		
+	}
+
+	public ArrayList<TableInfo> getTableInfo() {
+		return tableInfo;
 	}
 
 }

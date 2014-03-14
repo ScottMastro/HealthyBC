@@ -5,22 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
@@ -127,16 +120,15 @@ public class UploadedCSVParser extends HttpServlet
 			String street_type = cells[9];
 			String city = cells[10];
 			String pcode = cells[11];
-			String latitude = cells[12];
-			String longitude = cells[13]; 
+			Double lat = Double.parseDouble(cells[12]);
+			Double lon = Double.parseDouble(cells[13]); 
 			String desc = cells[14];
 			String hours = cells[15];
 
 			String address = street_no + " " + street_name + " " + street_type + " " + city;
 			ClinicHours newhrs = new ClinicHours(hours);
-			Location newLoc = new Location( Double.parseDouble(latitude), Double.parseDouble(longitude));
 
-			Clinic newClinic = new Clinic(refID, name, newhrs, newLoc, address, pcode, email, phone, languages);
+			Clinic newClinic = new Clinic(refID, name, newhrs, lat, lon, address, pcode, email, phone, languages);
 			rdm.addAndUploadClinicEntity(newClinic);
 			
 			message += "Added new Clinic: " + newClinic.getName() + "<br>";

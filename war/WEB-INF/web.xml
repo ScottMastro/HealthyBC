@@ -5,17 +5,8 @@
 
 	<!-- Servlets -->
 	<servlet>
-		<servlet-name>greetServlet</servlet-name>
-		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.GreetingServiceImpl</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>clinicParser</servlet-name>
-		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicDataParserImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>clinicManagerImpl</servlet-name>
-		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicManagerImpl</servlet-class>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicDataFetcherImpl</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -26,17 +17,6 @@
 	<servlet-mapping>
 		<servlet-name>uploadedCSVParser</servlet-name>
 		<url-pattern>/uploadServlet</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>clinicManagerImpl</servlet-name>
-		<url-pattern>/healthybc/clinic</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet-mapping>
-		<servlet-name>greetServlet</servlet-name>
-		<url-pattern>/healthybc/greet</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

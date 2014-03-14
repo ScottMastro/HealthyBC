@@ -6,8 +6,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("parser")
-public interface ClinicDataParser extends RemoteService {
-	public ArrayList<MapInfo> MockMapInfo();
+public interface ClinicDataFetcher extends RemoteService {
+	public ArrayList<MapInfo> mapInfo();
 	
-	public ArrayList<TableInfo> MocktableInfo();
+	public ArrayList<TableInfo> tableInfo();
 }
