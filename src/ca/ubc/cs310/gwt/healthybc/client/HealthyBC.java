@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
-
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -26,6 +24,7 @@ public class HealthyBC implements EntryPoint {
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
 	 */
+	@SuppressWarnings("unused")
 	private static final String SERVER_ERROR = "An error occurred while "
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";

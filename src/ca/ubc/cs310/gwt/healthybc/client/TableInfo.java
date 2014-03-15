@@ -2,13 +2,9 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class TableInfo implements Serializable {
 
-	/**
-	 * for serialization 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	private String name;
 	private String addr;
 	private String email;

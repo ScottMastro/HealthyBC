@@ -2,7 +2,6 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.base.LatLng;
@@ -13,12 +12,10 @@ import com.google.gwt.maps.client.overlays.InfoWindowOptions;
 import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 	
-	private LayoutPanel mapLayout;
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer = new SimplePanel();
 	private MapWidget map;

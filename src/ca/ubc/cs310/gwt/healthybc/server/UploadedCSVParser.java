@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FilenameUtils;
 
 
 @SuppressWarnings("serial")
@@ -91,9 +90,6 @@ public class UploadedCSVParser extends HttpServlet
 	private String readfile(FileItemStream item) throws IOException {
 		String message = "";
 
-		// Process form file field (input type="file").
-		String filename = FilenameUtils.getName(item.getName());
-
 		InputStream filecontent = item.openStream();
 
 		RemoteDataManager rdm = new RemoteDataManager();
@@ -111,9 +107,9 @@ public class UploadedCSVParser extends HttpServlet
 			String name = cells[0];
 			String refID = cells[1];
 			String phone = cells[2];
-			String website = cells[3];
+			//String website = cells[3];
 			String email = cells[4];
-			String wc_acess = cells[5];
+			//String wc_acess = cells[5];
 			String languages = cells[6];
 			String street_no = cells[7];
 			String street_name = cells[8];
@@ -122,7 +118,7 @@ public class UploadedCSVParser extends HttpServlet
 			String pcode = cells[11];
 			Double lat = Double.parseDouble(cells[12]);
 			Double lon = Double.parseDouble(cells[13]); 
-			String desc = cells[14];
+			//String desc = cells[14];
 			String hours = cells[15];
 
 			String address = street_no + " " + street_name + " " + street_type + " " + city;
