@@ -3,6 +3,7 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 /**
  * Encapsulates a registered user of the application
@@ -44,11 +45,9 @@ public class User {
 			return false;
 		}
 		
-		MessageDigest digest = getDigest();
+		byte[] hashedResult = attemptHash(getDigest(), password + salt);
 		
-		byte[] hashedResult = attemptHash(digest, password + salt);
-		
-		if (hashedResult.equals(passwordHash)) {
+		if (Arrays.equals(hashedResult, passwordHash)) {
 			//this means newly entered password is the same as the old password
 			return false;
 		}
@@ -115,10 +114,9 @@ public class User {
 			return false;
 		}
 		
-		MessageDigest digest = getDigest();
-		byte[] hashResult = attemptHash(digest, password + salt);
+		byte[] hashedResult = attemptHash(getDigest(), password + salt);
 		
-		return hashResult.equals(passwordHash);
+		return Arrays.equals(hashedResult, passwordHash);
 	}
 	
 	public String getUserName() { return userName; }
