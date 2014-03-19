@@ -8,4 +8,5 @@ public interface ClinicDataFetcherAsync {
 	public void mapInfo(AsyncCallback<ArrayList<MapInfo>> callback);
 	
 	public void tableInfo(AsyncCallback<ArrayList<TableInfo>> callback);
+	
 }

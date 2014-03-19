@@ -1,4 +1,5 @@
-package ca.ubc.cs310.gwt.healthybc.server;
+package ca.ubc.cs310.gwt.healthybc.client;
+
 
 public class Clinic {
 	private String refID;

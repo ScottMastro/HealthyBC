@@ -10,6 +10,7 @@ public class MapInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private String refID;
 	private String name;
 	private double latitude;
 	private double longitude;
@@ -20,30 +21,18 @@ public class MapInfo implements Serializable {
 	protected MapInfo() {
 	}
 	
-	public MapInfo(String name, double latitude, double longitude) {
+	public MapInfo(String refID, String name, double latitude, double longitude) {
+		this.refID = refID;
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 	
+	public String getRefID() { return this.refID; }
 	public String getName() { return this.name; }
 	public double getLatitude() { return this.latitude; }
 	public double getLongitude() { return this.longitude; }
-	
-	public MapInfo setName(String n) {
-		name = n;
-		return this;
-	}
-	
-	public MapInfo setLatitude(double l) {
-		this.latitude = l;
-		return this;
-	}
-	
-	public MapInfo setLongitude(double l) {
-		this.longitude = l;
-		return this;
-	}
+
 	
 	public boolean equals(String clinicName, Double lat, Double lon){
 		boolean match1 = clinicName.equals(name);

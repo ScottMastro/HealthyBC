@@ -3,6 +3,8 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ubc.cs310.gwt.healthybc.client.Clinic;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;

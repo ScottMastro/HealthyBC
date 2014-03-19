@@ -16,6 +16,9 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import ca.ubc.cs310.gwt.healthybc.client.Clinic;
+import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;
+
 
 @SuppressWarnings("serial")
 public class UploadedCSVParser extends HttpServlet

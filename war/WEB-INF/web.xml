@@ -5,13 +5,21 @@
 
 	<!-- Servlets -->
 	<servlet>
-		<servlet-name>clinicParser</servlet-name>
-		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicDataFetcherImpl</servlet-class>
+		<servlet-name>dataFetch</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.ClinicDataFetcherImpl
+		</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>tabFetch</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.TabFetcherImpl
+		</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>uploadedCSVParser</servlet-name>
-		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.UploadedCSVParser</servlet-class>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.UploadedCSVParser
+		</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -20,8 +28,13 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>clinicParser</servlet-name>
-		<url-pattern>/healthybc/parser</url-pattern>
+		<servlet-name>dataFetch</servlet-name>
+		<url-pattern>/healthybc/dataFetch</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>tabFetch</servlet-name>
+		<url-pattern>/healthybc/tabFetch</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->

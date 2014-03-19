@@ -15,6 +15,8 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 
 /**
@@ -56,14 +58,14 @@ public class HealthyBC implements EntryPoint {
 		tabs.add(new HTML("this content"), "this");
 		tabs.add(new HTML("that content"), "that");
 		tabs.add(new HTML("the other content"), "the other");
-		
+
 		createMap();
 		createTable();
 		createUploadForm();
 
 		dock.addWest(mapTableDock, 35);
 		dock.addEast(tabs, 65);
-		
+
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
 		r.forceLayout();
@@ -161,6 +163,20 @@ public class HealthyBC implements EntryPoint {
 		@Override
 		public void onSuccess(ArrayList<TableInfo> result) {
 			CellTable<TableInfo> table = new TableBuilder().buildTable(result);
+
+			final SingleSelectionModel<TableInfo> ssm = new SingleSelectionModel<TableInfo>();
+			table.setSelectionModel(ssm);
+
+			ssm.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+				@Override
+				public void onSelectionChange(final SelectionChangeEvent event)
+				{
+					final TableInfo selected = ssm.getSelectedObject();
+					System.out.println(selected.getName());
+
+				}
+			});
+
 			ScrollPanel panel = new ScrollPanel(table);
 			panel.setAlwaysShowScrollBars(true);
 
@@ -182,4 +198,13 @@ public class HealthyBC implements EntryPoint {
 				+ "Add new data : <input name='userfile1' type='file' />"
 				+ "<input type='submit' value='Submit' /> </form>"), 10);
 	}
+
+
+	// --------------------------------------------------------------
+	// Create Tabs
+	// --------------------------------------------------------------
+
+	
+	
 }
+

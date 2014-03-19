@@ -5,6 +5,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class TableInfo implements Serializable {
 
+	private String refID;
 	private String name;
 	private String addr;
 	private String email;
@@ -15,30 +16,18 @@ public class TableInfo implements Serializable {
 	protected TableInfo() {
 	}
 	
-	public TableInfo(String name, String address, String email) {
+	public TableInfo(String refID, String name, String address, String email) {
+		this.refID = refID;
 		this.name = name;
 		this.addr = address;
 		this.email = email;
 	}
-
+	
+	public String getRefID() { return refID; }
 	public String getName() { return name; }
 	public String getAddress() { return addr; }
 	public String getEmail() { return email; }
 	
-	public TableInfo setName(String n) {
-		name = n;
-		return this;
-	}
-	
-	public TableInfo setAddress(String a) {
-		addr = a;
-		return this;
-	}
-	
-	public TableInfo setEmail(String e) {
-		email = e;
-		return this;
-	}
 	
 	public boolean equals(String clinicName, String clinicAddress, String clinicEmail){
 		boolean match1 = clinicName.equals(name);

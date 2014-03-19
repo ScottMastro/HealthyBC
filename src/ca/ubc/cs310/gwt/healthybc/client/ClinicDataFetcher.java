@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-@RemoteServiceRelativePath("parser")
+@RemoteServiceRelativePath("dataFetch")
 public interface ClinicDataFetcher extends RemoteService {
 	public ArrayList<MapInfo> mapInfo();
 	
 	public ArrayList<TableInfo> tableInfo();
+	
 }

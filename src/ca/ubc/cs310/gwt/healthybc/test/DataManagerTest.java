@@ -8,12 +8,11 @@ import org.junit.Test;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.KeyFactory;
-
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
-import ca.ubc.cs310.gwt.healthybc.server.Clinic;
-import ca.ubc.cs310.gwt.healthybc.server.ClinicHours;
+import ca.ubc.cs310.gwt.healthybc.client.Clinic;
+import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;
 import ca.ubc.cs310.gwt.healthybc.server.RemoteDataManager;
 
 public class DataManagerTest {

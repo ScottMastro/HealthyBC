@@ -16,8 +16,9 @@ public class TableBuilder {
 	private CellTable<TableInfo> table;
 	
 	public TableBuilder() {
-		table = new CellTable<TableInfo>();
-	}
+		table = new CellTable<TableInfo>(400);
+		}
+	
 	
 	public CellTable<TableInfo> buildTable(List<TableInfo> tableInfos) {
 		TextColumn<TableInfo> nameColumn = new TextColumn<TableInfo>() {

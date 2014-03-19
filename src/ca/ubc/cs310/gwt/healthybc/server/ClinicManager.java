@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ca.ubc.cs310.gwt.healthybc.client.Clinic;
+import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;
+import ca.ubc.cs310.gwt.healthybc.client.ClinicTabInfo;
 import ca.ubc.cs310.gwt.healthybc.client.MapInfo;
 import ca.ubc.cs310.gwt.healthybc.client.TableInfo;
 
@@ -46,8 +49,10 @@ public class ClinicManager {
 		dataManager.retrieveAllClinics(this);
 
 		for(Clinic clinic : clinics) {
-			TableInfo newTableInfo = new TableInfo(clinic.getName(), clinic.getAddressString(), clinic.getEmail());
-			MapInfo newMapInfo = new MapInfo(clinic.getName(), clinic.getLatitude(), clinic.getLongitude());
+			TableInfo newTableInfo = new TableInfo(clinic.getRefID(),
+					clinic.getName(), clinic.getAddressString(), clinic.getEmail());
+			MapInfo newMapInfo = new MapInfo(clinic.getRefID(),
+					clinic.getName(), clinic.getLatitude(), clinic.getLongitude());
 
 			tableInfo.add(newTableInfo);
 			mapInfo.add(newMapInfo);			
@@ -55,15 +60,15 @@ public class ClinicManager {
 		}
 
 	}
-	
+
 	private void RemoveAllData(){
 		for (Clinic c : clinics){
 			this.removeClinic(c.getRefID());
 		}
-		
-	    Logger logger = Logger.getLogger("NameOfYourLogger");
-	    logger.log(Level.SEVERE, String.valueOf(tableInfo.size()));
-	    logger.log(Level.SEVERE, String.valueOf(mapInfo.size()));
+
+		Logger logger = Logger.getLogger("NameOfYourLogger");
+		logger.log(Level.SEVERE, String.valueOf(tableInfo.size()));
+		logger.log(Level.SEVERE, String.valueOf(mapInfo.size()));
 	}
 
 	/**
@@ -127,12 +132,12 @@ public class ClinicManager {
 
 		dataManager.addAndUploadClinicEntity(newClinic);
 
-		TableInfo newTableInfo = new TableInfo(name, address, email);
-		MapInfo newMapInfo = new MapInfo(name, lat, lon);
-		
+		TableInfo newTableInfo = new TableInfo(refID, name, address, email);
+		MapInfo newMapInfo = new MapInfo(refID, name, lat, lon);
+
 		tableInfo.add(newTableInfo);
 		mapInfo.add(newMapInfo);
-		
+
 		return clinics.add(newClinic);
 	}
 
@@ -144,31 +149,31 @@ public class ClinicManager {
 	 * or
 	 */
 	public boolean removeClinic(String refID) {
-			
+
 		if (refID == null || refID.isEmpty()) {
 			return false;
 		}
 
 		//TODO: Test to make sure this works properly
-		
+
 		for(Clinic clinic : clinics) {
 			if(clinic.getRefID().equals(refID)) {
-				
+
 				for(MapInfo mi : mapInfo){
 					if (mi.equals(clinic.getName(), clinic.getLatitude(), clinic.getLongitude())){
 						mapInfo.remove(mi);
 						continue;
 					}
 				}
-				
+
 				for(TableInfo ti : tableInfo){
 					if (ti.equals(clinic.getName(), clinic.getAddress(), clinic.getEmail())){
 						tableInfo.remove(ti);
 						continue;
 					}
 				}
-				
-				
+
+
 				clinics.remove(clinic);
 				return true;
 			}
@@ -185,4 +190,18 @@ public class ClinicManager {
 		return tableInfo;
 	}
 
+	public ClinicTabInfo getClinicTabInfo(TableInfo ti) {
+
+		for(Clinic clinic : clinics) {
+
+			if(ti.getRefID().equals(clinic.getRefID())){
+				
+				return new ClinicTabInfo(clinic);
+				
+			}
+		}
+		
+		return null;
+
+	}
 }

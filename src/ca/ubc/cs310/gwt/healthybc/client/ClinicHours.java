@@ -1,4 +1,4 @@
-package ca.ubc.cs310.gwt.healthybc.server;
+package ca.ubc.cs310.gwt.healthybc.client;
 
 public class ClinicHours {
 	private String hours;
