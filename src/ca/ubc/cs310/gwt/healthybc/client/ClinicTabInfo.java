@@ -5,24 +5,53 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class ClinicTabInfo implements Serializable {
 
-	private Clinic clinic;
+	//note: it makes more sense to have a Clinic member in this class
+	//however it is not serializable and therefore will not work in the RPC
+	//so don't try to use it here
+
+	private String refID;
+	private String name;
+	private String hours;
+	private Double latitude;
+	private Double longitude;
+	private String addr;
+	private String pcode;
+	private String email;
+	private String phone;
+	private String lang;
 
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
 	 */
 	protected ClinicTabInfo() {}
 
-	public ClinicTabInfo(Clinic clinic){
-		this.clinic = clinic;
+	public ClinicTabInfo(String refID, String name, String hours, Double lat,
+			Double lon, String addr, String pcode, String email, String phone, String lang){
+		this.refID = refID;
+		this.name = name;
+		this.hours = hours;
+		this.latitude = lat;
+		this.longitude = lon;
+		this.addr = addr;
+		this.pcode = pcode;
+		this.email = email;
+		this.phone = phone;
+		this.lang = lang;
 	}
 
-	public Clinic getClinic() { return clinic; }
+	public String getRefID() { return refID; }
+	public String getName() { return name; }
+	public String getHours() { return hours; }
+	public String getAddressString() { return addr + pcode; }
+	public Double getLatitude() { return latitude; }
+	public Double getLongitude() { return longitude; }
+	public String getEmail() { return email; }
+	public String getPhone() { return phone; }
+	public String getLanguages() { return lang; }
+	public String getAddress() { return addr; }
+	public String getPostalCode() { return pcode; }
 
-
-	public boolean equals(Clinic c){
-		return c.getRefID().equals(clinic.getRefID());
+	public boolean equals(String refID){
+		return refID.equals(this.refID);
 	}
 }
-
-
-

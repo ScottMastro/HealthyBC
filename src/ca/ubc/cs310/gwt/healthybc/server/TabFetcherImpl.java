@@ -1,5 +1,7 @@
 package ca.ubc.cs310.gwt.healthybc.server;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import ca.ubc.cs310.gwt.healthybc.client.ClinicTabInfo;
@@ -14,7 +16,7 @@ public class TabFetcherImpl extends RemoteServiceServlet implements TabFetcher {
 	}
 
 	
-	public ClinicTabInfo clinicTabInfo(TableInfo ti){
+	public ArrayList<ClinicTabInfo> clinicTabInfo(TableInfo ti){
 		return ClinicManager.getInstance().getClinicTabInfo(ti);
 	}
 

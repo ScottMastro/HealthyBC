@@ -190,13 +190,29 @@ public class ClinicManager {
 		return tableInfo;
 	}
 
-	public ClinicTabInfo getClinicTabInfo(TableInfo ti) {
+	public ArrayList<ClinicTabInfo> getClinicTabInfo(TableInfo ti) {
 
 		for(Clinic clinic : clinics) {
 
 			if(ti.getRefID().equals(clinic.getRefID())){
 				
-				return new ClinicTabInfo(clinic);
+				String refID = clinic.getRefID();
+				String name = clinic.getName();
+				String hours = clinic.getHoursString();
+				Double latitude = clinic.getLatitude();
+				Double longitude = clinic.getLatitude();
+				String addr = clinic.getAddress();
+				String pcode = clinic.getPostalCode();
+				String email = clinic.getEmail();
+				String phone = clinic.getPhone();
+				String lang = clinic.getLanguages();
+				
+				ClinicTabInfo cti = new ClinicTabInfo(refID, name, hours, latitude,
+						longitude, addr, pcode, email, phone, lang);
+				
+				ArrayList<ClinicTabInfo> a = new ArrayList<ClinicTabInfo>();
+				a.add(cti);
+				return a;
 				
 			}
 		}
@@ -205,3 +221,5 @@ public class ClinicManager {
 
 	}
 }
+
+

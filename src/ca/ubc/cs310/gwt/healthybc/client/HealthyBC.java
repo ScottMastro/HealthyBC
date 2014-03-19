@@ -199,10 +199,10 @@ public class HealthyBC implements EntryPoint {
 	 * On successful API load, retrieves data and constructs map
 	 */
 	private void buildMap() {
-		ClinicDataFetcherAsync clinicParser = GWT.create(ClinicDataFetcher.class);
+		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
 		MapBuilder callback = new MapBuilder(this);
-		clinicParser.mapInfo(callback);
+		clinicFetcher.mapInfo(callback);
 	}
 
 	/**
@@ -255,9 +255,9 @@ public class HealthyBC implements EntryPoint {
 				@Override
 				public void onSelectionChange(final SelectionChangeEvent event)
 				{
+					
 					final TableInfo selected = ssm.getSelectedObject();
-					System.out.println(selected.getName());
-
+					getTabFromTableInfo(selected);
 				}
 			});
 
@@ -288,7 +288,47 @@ public class HealthyBC implements EntryPoint {
 	// Create Tabs
 	// --------------------------------------------------------------
 
-	
-	
-}
+	private void getTabFromTableInfo(TableInfo ti){
+		TabFetcherAsync tabFetcher = GWT.create(TabFetcher.class);
+		
+		ClinicTabCallback callback = new ClinicTabCallback();
+		tabFetcher.clinicTabInfo(ti, callback);
+	}
 
+	/**
+	 * Calls the server to retrieve data
+	 */
+	private class ClinicTabCallback implements AsyncCallback<ArrayList<ClinicTabInfo>> {
+		@Override
+		public void onFailure(Throwable caught) {
+			caught.printStackTrace();
+			
+		}
+
+		@Override
+		public void onSuccess(ArrayList<ClinicTabInfo> result) {
+
+			if(result == null){
+				Window.alert("Could not find information about this clinic");				
+			}
+			else{
+				
+				ClinicTabInfo t = result.get(0);
+				
+				tabs.add(new HTML("<h2 ALIGN='LEFT'>Name</h2>"
+								+ t.getName()
+								+ "<h2 ALIGN='LEFT'>Hours</h2>"
+								+ t.getHours()
+								+ "<h2 ALIGN='LEFT'>Address</h2>"
+								+ t.getAddress() + " " + t.getPostalCode()
+								+ "<h2 ALIGN='LEFT'>Available Languages</h2>"
+								+ t.getLanguages()	
+								+ "<h2 ALIGN='LEFT'>Contact Info</h2>"
+								+ t.getPhone() + "<br>" + t.getEmail()  			
+								), "Clinic");
+
+
+			}
+		}
+	}
+}

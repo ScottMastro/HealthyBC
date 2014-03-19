@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import ca.ubc.cs310.gwt.healthybc.client.ClinicTabInfo;
 import ca.ubc.cs310.gwt.healthybc.client.MapInfo;
 import ca.ubc.cs310.gwt.healthybc.client.ClinicDataFetcher;
 import ca.ubc.cs310.gwt.healthybc.client.TableInfo;
