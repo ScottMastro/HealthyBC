@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 
 /**
@@ -31,6 +32,8 @@ public class HealthyBC implements EntryPoint {
 
 
 	private DockLayoutPanel dock;
+	private DockLayoutPanel mapTableDock;
+	private TabLayoutPanel tabs;
 
 	/**
 	 * This is the entry point method.
@@ -45,13 +48,22 @@ public class HealthyBC implements EntryPoint {
 	private void init() {
 
 		dock = new DockLayoutPanel(Unit.PCT);
+		mapTableDock = new DockLayoutPanel(Unit.PCT);
 		//add title
 		dock.addNorth(new HTML("<font size='7'><b>The Blank Slate</b> - CPSC 310</font>"), 10);
 
+		tabs = new TabLayoutPanel(2.5, Unit.EM);
+		tabs.add(new HTML("this content"), "this");
+		tabs.add(new HTML("that content"), "that");
+		tabs.add(new HTML("the other content"), "the other");
+		
 		createMap();
 		createTable();
 		createUploadForm();
 
+		dock.addWest(mapTableDock, 35);
+		dock.addEast(tabs, 65);
+		
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
 		r.forceLayout();
@@ -112,7 +124,7 @@ public class HealthyBC implements EntryPoint {
 	 * @param mapContainer is the map to display
 	 */
 	public void addMap(SimplePanel mapContainer){
-		dock.addEast(mapContainer, 65);
+		mapTableDock.addNorth(mapContainer, 50);
 	}
 
 
@@ -152,7 +164,7 @@ public class HealthyBC implements EntryPoint {
 			ScrollPanel panel = new ScrollPanel(table);
 			panel.setAlwaysShowScrollBars(true);
 
-			dock.addWest(panel,35);
+			mapTableDock.addSouth(panel,50);
 		}
 	}
 
