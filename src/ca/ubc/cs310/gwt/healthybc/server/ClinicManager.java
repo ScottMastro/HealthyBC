@@ -2,6 +2,8 @@ package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ca.ubc.cs310.gwt.healthybc.client.MapInfo;
 import ca.ubc.cs310.gwt.healthybc.client.TableInfo;
@@ -17,6 +19,10 @@ public class ClinicManager {
 
 	private static ClinicManager singleton;
 
+	/**
+	 * Singleton method
+	 * @return single instance of ClinicManager
+	 */
 	public static ClinicManager getInstance(){
 		if(singleton == null)
 			singleton = new ClinicManager();
@@ -24,6 +30,9 @@ public class ClinicManager {
 		return singleton;
 	}
 
+	/**
+	 * private constructor (singleton)
+	 */
 	private ClinicManager() {
 		clinics = new ArrayList<Clinic>();
 		tableInfo = new ArrayList<TableInfo>();
@@ -46,7 +55,23 @@ public class ClinicManager {
 		}
 
 	}
+	
+	private void RemoveAllData(){
+		for (Clinic c : clinics){
+			this.removeClinic(c.getRefID());
+		}
+		
+	    Logger logger = Logger.getLogger("NameOfYourLogger");
+	    logger.log(Level.SEVERE, String.valueOf(tableInfo.size()));
+	    logger.log(Level.SEVERE, String.valueOf(mapInfo.size()));
+	}
 
+	/**
+	 * Returns list of clinics stored in this class,
+	 * fetches all clinics from datastore if list is empty
+	 *
+	 * @return list of clinics stored in class
+	 */
 	public List<Clinic> getClinics(){
 
 		if(clinics.isEmpty())
@@ -55,6 +80,9 @@ public class ClinicManager {
 		return clinics;
 	}
 
+	/**
+	 * Replaces the list of clinics stored in this class with all clinics in the datastore
+	 */
 	public void refreshFromDatastore(){
 		clinics.clear();
 		dataManager.retrieveAllClinics(this);
@@ -75,7 +103,8 @@ public class ClinicManager {
 	 * @param phone		phone number of the clinic to be constructed
 	 * @param languages	languages understood by the clinic to be constructed
 	 * 
-	 * @return true if clinic is successfully added
+	 * @return true if clinic is successfully added, false if clinic is already in the list
+	 * or if ID is null/empty
 	 */
 	public boolean addNewClinic(String refID, String name, Double lat, Double lon,
 			String hours, String address, String pcode, String email, String phone,
@@ -98,33 +127,50 @@ public class ClinicManager {
 
 		dataManager.addAndUploadClinicEntity(newClinic);
 
-		//#TODO: ADD CLINIC TO MAP/TABLE INFO
-
+		TableInfo newTableInfo = new TableInfo(name, address, email);
+		MapInfo newMapInfo = new MapInfo(name, lat, lon);
+		
+		tableInfo.add(newTableInfo);
+		mapInfo.add(newMapInfo);
+		
 		return clinics.add(newClinic);
 	}
 
 	/**
-	 * Removes clinic from the ArrayList of clinics
+	 * Removes clinic from the ArrayList of clinics and from MapInfo and TableInfo arrays
 	 *
 	 * @param refID 	ID of the clinic to be removed; if null or empty, return false
-	 * @return true if clinic with corresponding refID is removed
+	 * @return true if clinic with corresponding refID is removed, false if clinic is not in list
+	 * or
 	 */
 	public boolean removeClinic(String refID) {
-
-		//#TODO: REMOVE CLINIC TO MAP/TABLE INFO
-
+			
 		if (refID == null || refID.isEmpty()) {
 			return false;
 		}
 
+		//TODO: Test to make sure this works properly
+		
 		for(Clinic clinic : clinics) {
 			if(clinic.getRefID().equals(refID)) {
-				if (clinics.remove(clinic)) {
-					return true;
+				
+				for(MapInfo mi : mapInfo){
+					if (mi.equals(clinic.getName(), clinic.getLatitude(), clinic.getLongitude())){
+						mapInfo.remove(mi);
+						continue;
+					}
 				}
-				else {
-					throw new RuntimeException("Not supposed to happen!");
+				
+				for(TableInfo ti : tableInfo){
+					if (ti.equals(clinic.getName(), clinic.getAddress(), clinic.getEmail())){
+						tableInfo.remove(ti);
+						continue;
+					}
 				}
+				
+				
+				clinics.remove(clinic);
+				return true;
 			}
 		}
 

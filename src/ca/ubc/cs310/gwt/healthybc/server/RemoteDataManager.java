@@ -20,16 +20,12 @@ public class RemoteDataManager {
 
 	// Constructor
 	public RemoteDataManager(){
-
 		clinicEntities = new ArrayList<Entity>();
 		datastore = DatastoreServiceFactory.getDatastoreService();
-
 	}
-
 
 	/**
 	 * Creates a clinic Entity from a Clinic class and then uploads it to the database
-	 *
 	 * @param Clinc class to convert to an entity and upload
 	 */	
 	public void addAndUploadClinicEntity(Clinic c){
@@ -102,14 +98,15 @@ public class RemoteDataManager {
 	/**
 	 * Retrieves an Entity from the database
 	 *
-	 * @param refID of clinic to retrieve
+	 * @param entityType to retrieve (ex. Clinic)
+	 * @param key of entity to retrieve
 	 * @return Entity version of clinic, returns null if could not find entity with given key
 	 */		
-	public Entity retrieveFromDatabase(String refID){
+	public Entity retrieveEntityFromDatabase(String entityType, String key){
 
-		Key key = KeyFactory.createKey("Clinic", refID);
+		Key k = KeyFactory.createKey(entityType, key);
 
-		try { return datastore.get(key);}
+		try { return datastore.get(k); }
 		catch (EntityNotFoundException e) {
 			return null;
 		}
@@ -117,13 +114,17 @@ public class RemoteDataManager {
 	}
 
 
+	/**
+	 * Pushes a simple string to datastore, used for testing
+	 * TODO: remove before final demo
+	 * @param string to push
+	 */		
 	public void testPush(String string){
 
 		Entity e = new Entity("Other");
 		e.setProperty("info", string);
 
 		datastore.put(e);
-
 
 	}
 }

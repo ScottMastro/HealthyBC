@@ -59,7 +59,7 @@ public class DataManagerTest {
 		um.addAndUploadClinicEntity(c);
 		
 		//try to retrieve clinic
-		Entity e = um.retrieveFromDatabase(refID);
+		Entity e = um.retrieveEntityFromDatabase("Clinc", refID);
 		assertFalse(e == null);
 		assertTrue(e.getKey().equals(KeyFactory.createKey("Clinic", "123")));
 	}

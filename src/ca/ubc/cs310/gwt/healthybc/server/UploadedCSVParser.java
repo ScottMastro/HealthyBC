@@ -22,13 +22,20 @@ public class UploadedCSVParser extends HttpServlet
 {   
 	Logger logger = Logger.getLogger("uploadServletLogger");
 
-
+	
+	/**
+	 * Pushes the request to POST
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		doPost(request, response);
 	}
 
+	/**
+	 * Receives form and CSV file as a request
+	 * @return response: HTML listing parse result
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
@@ -85,8 +92,11 @@ public class UploadedCSVParser extends HttpServlet
 
 	} 
 
-
-
+	/**
+	 * Parses each line in CSV file
+	 * @param .CSV file to parse
+	 * @return parse result in a String
+	 */
 	private String readfile(FileItemStream item) throws IOException {
 		String message = "";
 

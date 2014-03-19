@@ -39,4 +39,12 @@ public class TableInfo implements Serializable {
 		email = e;
 		return this;
 	}
+	
+	public boolean equals(String clinicName, String clinicAddress, String clinicEmail){
+		boolean match1 = clinicName.equals(name);
+		boolean match2 = clinicAddress.equals(addr);
+		boolean match3 = clinicEmail.equals(email);
+		
+		return match1 && match2 && match3;
+	}
 }

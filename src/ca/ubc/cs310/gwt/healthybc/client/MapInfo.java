@@ -2,6 +2,7 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.io.Serializable;
 
+
 public class MapInfo implements Serializable {
 	
 	/**
@@ -42,5 +43,13 @@ public class MapInfo implements Serializable {
 	public MapInfo setLongitude(double l) {
 		this.longitude = l;
 		return this;
+	}
+	
+	public boolean equals(String clinicName, Double lat, Double lon){
+		boolean match1 = clinicName.equals(name);
+		boolean match2 = lat.equals(latitude);
+		boolean match3 = lon.equals(longitude);
+		
+		return match1 && match2 && match3;
 	}
 }
