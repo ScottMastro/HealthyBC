@@ -142,16 +142,13 @@ public class HealthyBC implements EntryPoint {
 
 		dock = new DockLayoutPanel(Unit.PCT);
 		mapTableDock = new DockLayoutPanel(Unit.PCT);
-		//add title
-		dock.addNorth(new HTML("<font size='7'><b>The Blank Slate</b> - CPSC 310</font>"), 10);
 
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
 		tabNames = new ArrayList<String>();
 
+		// add home page
 		tabs.add(new HTML("Content"), "Home");
 		tabNames.add("Home");
-
-
 
 		createMap();
 		createTable();
@@ -165,6 +162,7 @@ public class HealthyBC implements EntryPoint {
 		r.forceLayout();
 	}
 
+	
 	// --------------------------------------------------------------
 	// Create Map
 	// --------------------------------------------------------------
@@ -289,14 +287,14 @@ public class HealthyBC implements EntryPoint {
 		if (showAdminTools == true ){
 			dock.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
 				+ "method='POST' action='/uploadServlet'/>"
-				+ "Add data from URL <input name='urlstring' type='text' /><br/>"
-				+ "Add CSV data : <input name='userfile1' type='file' /> (Optional)"
-				+ "<input type='submit' value='Submit' /> </form>"), 10);
+				+ "Upload data from URL <input name='urlstring' type='text' /><br/>"
+				+ "Upload CSV data : <input name='userfile1' type='file' /><br/>"
+				+ "<input type='submit' value='Submit' /> </form>"), 15);
 		} else{
-			dock.addSouth(new HTML("<b> &copy; 2014 The Blank Slate (Team) </b> <br/>"
-					+ "<b>Team Members:</b> Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
-					+ "<b>Contact Us:</b> "
-					+ "<a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a>"), 10);
+			dock.addSouth(new HTML("&copy; 2014 The Blank Slate (Team) <br/>"
+					+ "Team Members: Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
+					+ "Contact Us: "
+					+ "<a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a>"), 15);
 		}
 	}
 
