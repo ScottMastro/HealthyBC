@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * Encapsulates a registered user of the application
@@ -17,12 +18,15 @@ public class User {
 	private static final String HASH_ALGORITHM = "SHA-256";
 	private static final String ENCODING_CHARSET = "UTF-8";
 	
+	public static final int MAX_NAME_LENGTH = 20;
+	
 	/**
-	 * construct a User and generate a (not necessarily unique but probably unique) salt
+	 * construct a User and generate a (not necessarily unique but probably unique) salt;
+	 * not publicly accessible
 	 * 
 	 * @param name username
 	 */
-	public User(String name) {
+	private User(String name) {
 		userName = name;
 		
 		//TODO: try to load password hash from database
@@ -31,6 +35,78 @@ public class User {
 		//TODO: try to load salt from database, and only generate new salt if user doesn't exist in database 
 		salt = StringGenerator.getInstance().generateString(20, 25, true, true);
 		//TODO: store salt in database
+	}
+	
+	/**
+	 * attempt to fetch a user with input name from data store; returning null if
+	 * name does not exist or if name is illegal
+	 * 
+	 * @param name input name
+	 * @return user with corresponding username; null if none exists or illegal name
+	 */
+	public static User getUser(String name) {
+		if (isAcceptableName(name)) {
+			return null;
+		}
+		
+		//TODO: attempt to fetch user from data store
+		return null;
+	}
+	
+	/**
+	 * attempt to create a new user with input name; return null if user with same
+	 * name already exists or if name is illegal
+	 * 
+	 * @param name input name
+	 * @return new user; null if name clash is detected or if name is illegal
+	 */
+	public static User createUser(String name) {
+		if (isAcceptableName(name)) {
+			return null;
+		}
+		
+		//TODO: check against data store for name clash
+		return new User(name);
+	}
+	
+	/**
+	 * sanity-check an input string to check if it's an allowable name 
+	 * 
+	 * @param input input string
+	 * @return true if name is acceptable according to our criteria
+	 */
+	public static boolean isAcceptableName(String input) {
+		//TODO: formalize username criteria
+		if (input == null) {
+			return false;
+		}
+		
+		//check if string is too long
+		if (input.length() > MAX_NAME_LENGTH) {
+			return false;
+		}
+		
+		//check if string contains white space using regex
+		Pattern pattern = Pattern.compile("\\s");
+		if (pattern.matcher(input).find()) {
+			return false;
+		}
+		
+		//check if string starts with a number
+		if (Character.isDigit(input.charAt(0))) {
+			return false;
+		}
+		
+		//check if string contains non-ASCII characters
+		char eachChar;
+		for (int i = 0; i < input.length(); ++i) {
+			eachChar = input.charAt(i);
+			if (Character.UnicodeBlock.of(eachChar) != Character.UnicodeBlock.BASIC_LATIN) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	/**
