@@ -31,12 +31,23 @@ public class User {
 	private static final RemoteDataManager dataManager = new RemoteDataManager();
 	
 	/**
-	 * construct a User and generate a (not necessarily unique but probably unique) salt;
+	 * construct a User and if it is new, generate a (not necessarily unique but probably unique) salt;
 	 * not publicly accessible
 	 * 
 	 * @param name username
 	 */
 	private User(String name) {
+		this(name, null);
+	}
+	
+	/**
+	 * construct a User and if it is new, generate a (not necessarily unique but probably unique) salt;
+	 * not publicly accessible
+	 * 
+	 * @param name username
+	 * @param email email, ignored if user already exists
+	 */
+	private User(String name, String email) {
 		userName = name;
 		
 		Entity userEntity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
@@ -44,12 +55,13 @@ public class User {
 		if (userEntity != null) {
 			passwordHash = (byte[]) userEntity.getProperty(PROPERTY_HASH);
 			salt = (String) userEntity.getProperty(PROPERTY_SALT);
-			email = (String) userEntity.getProperty(PROPERTY_EMAIL);
+			this.email = (String) userEntity.getProperty(PROPERTY_EMAIL);
 		}
 		else {
 			passwordHash = null; 
 			salt = StringGenerator.getInstance().generateString(20, 25, true, true);
 			dataManager.uploadUserEntity(this);
+			this.email = email;
 		}
 	}
 	
@@ -78,9 +90,10 @@ public class User {
 	 * name already exists or if name is illegal
 	 * 
 	 * @param name input name
+	 * @param email email for user
 	 * @return new user; null if name clash is detected or if name is illegal
 	 */
-	public static User createUser(String name) {
+	public static User createUser(String name, String email) {
 		if (isAcceptableName(name)) {
 			return null;
 		}
@@ -90,7 +103,7 @@ public class User {
 			return null;
 		}
 		
-		return new User(name);
+		return new User(name, email);
 	}
 	
 	/**
