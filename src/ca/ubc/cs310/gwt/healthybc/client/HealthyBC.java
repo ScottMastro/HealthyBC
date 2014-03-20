@@ -218,7 +218,7 @@ public class HealthyBC implements EntryPoint {
 	 * @param mapContainer is the map to display
 	 */
 	public void addMap(SimplePanel mapContainer){
-		mapTableDock.addNorth(mapContainer, 50);
+		mapTableDock.addSouth(mapContainer, 50);
 	}
 
 
@@ -272,7 +272,7 @@ public class HealthyBC implements EntryPoint {
 			ScrollPanel panel = new ScrollPanel(table);
 			panel.setAlwaysShowScrollBars(true);
 
-			mapTableDock.addSouth(panel,50);
+			mapTableDock.addNorth(panel,50);
 		}
 	}
 
@@ -286,15 +286,14 @@ public class HealthyBC implements EntryPoint {
 	private void createUploadForm(){
 		if (showAdminTools == true ){
 			dock.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
-				+ "method='POST' action='/uploadServlet'/>"
+				+ "method='POST' action='/uploadServlet'/><br/>"
 				+ "Upload data from URL <input name='urlstring' type='text' /><br/>"
 				+ "Upload CSV data : <input name='userfile1' type='file' /><br/>"
 				+ "<input type='submit' value='Submit' /> </form>"), 15);
 		} else{
-			dock.addSouth(new HTML("&copy; 2014 The Blank Slate (Team) <br/>"
-					+ "Team Members: Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
-					+ "Contact Us: "
-					+ "<a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a>"), 15);
+			dock.addSouth(new HTML("<br/> Team Members: Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
+					+ "<br/> Contact Us: <a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a> <br/>"
+					+ "<br/> &copy; 2014 The Blank Slate (Team) <br/>"), 15);
 		}
 	}
 
