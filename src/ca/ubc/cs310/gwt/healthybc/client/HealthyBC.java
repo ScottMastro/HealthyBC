@@ -154,8 +154,8 @@ public class HealthyBC implements EntryPoint {
 		createTable();
 		createUploadForm();
 
-		dock.addWest(mapTableDock, 35);
-		dock.addEast(tabs, 65);
+		dock.addWest(mapTableDock, 30);
+		dock.addEast(tabs, 70);
 
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
