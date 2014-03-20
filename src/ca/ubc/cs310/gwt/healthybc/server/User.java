@@ -15,6 +15,7 @@ import com.google.appengine.api.datastore.Entity;
 public class User {
 	private String userName;
 	private byte[] passwordHash;
+	private String email;
 	private String salt;
 	
 	private static final String HASH_ALGORITHM = "SHA-256";
@@ -22,6 +23,7 @@ public class User {
 	
 	private static final String ENTITY_USER = "User";
 	private static final String PROPERTY_HASH = "hash";
+	private static final String PROPERTY_EMAIL = "email";
 	private static final String PROPERTY_SALT = "salt";
 	
 	public static final int MAX_NAME_LENGTH = 20;
@@ -42,6 +44,7 @@ public class User {
 		if (userEntity != null) {
 			passwordHash = (byte[]) userEntity.getProperty(PROPERTY_HASH);
 			salt = (String) userEntity.getProperty(PROPERTY_SALT);
+			email = (String) userEntity.getProperty(PROPERTY_EMAIL);
 		}
 		else {
 			passwordHash = null; 
@@ -219,4 +222,10 @@ public class User {
 	public String getUserName() { return userName; }
 	public byte[] getPasswordHash() { return passwordHash; }
 	public String getSalt() { return salt; }
+	public String getEmail() { return email; }
+	public User setEmail(String s) {
+		email = s;
+		dataManager.uploadUserEntity(this);
+		return this;
+	}
 }

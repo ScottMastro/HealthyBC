@@ -35,6 +35,7 @@ public class RemoteDataManager {
 		e.setProperty("username", user.getUserName());
 		e.setProperty("hash", user.getPasswordHash());
 		e.setProperty("salt", user.getSalt());
+		e.setProperty("email", user.getEmail());
 		
 		uploadToDatabase(e);
 	}
