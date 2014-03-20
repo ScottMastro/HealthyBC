@@ -15,26 +15,37 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
 public class RemoteDataManager {
-
-
 	private DatastoreService datastore;
 	private List<Entity> clinicEntities;
 
 	// Constructor
-	public RemoteDataManager(){
+	public RemoteDataManager() {
 		clinicEntities = new ArrayList<Entity>();
 		datastore = DatastoreServiceFactory.getDatastoreService();
+	}
+	
+	/**
+	 * upload a user to the datastore, updating existing entry if it exists
+	 * 
+	 * @param user user to add to datastore
+	 */
+	public void uploadUserEntity(User user) {
+		Entity e = new Entity("User", user.getUserName());
+		
+		e.setProperty("username", user.getUserName());
+		e.setProperty("hash", user.getPasswordHash());
+		e.setProperty("salt", user.getSalt());
+		
+		uploadToDatabase(e);
 	}
 
 	/**
 	 * Creates a clinic Entity from a Clinic class and then uploads it to the database
 	 * @param Clinc class to convert to an entity and upload
 	 */	
-	public void addAndUploadClinicEntity(Clinic c){
-
+	public void addAndUploadClinicEntity(Clinic c) {
 		Entity e = this.addClinicEntity(c);
 		this.uploadToDatabase(e);
-
 	}
 
 	/**
@@ -43,8 +54,7 @@ public class RemoteDataManager {
 	 * @param Clinc class to convert to an entity 
 	 * @return Entity version of Clinic class
 	 */	
-	private Entity addClinicEntity(Clinic c){
-
+	private Entity addClinicEntity(Clinic c) {
 		Entity clinic = new Entity("Clinic", c.getRefID());
 
 		clinic.setProperty("name", c.getName());
@@ -67,12 +77,11 @@ public class RemoteDataManager {
 	 * @param Clinc class to convert to an entity 
 	 * @throws Exception 
 	 */		
-	private void uploadToDatabase(Entity e){
-
+	private void uploadToDatabase(Entity e) {
 		datastore.put(e);
 	}
 
-	public void retrieveAllClinics(ClinicManager manager){
+	public void retrieveAllClinics(ClinicManager manager) {
 		// Use class Query to assemble a query
 		Query q = new Query("Clinic");
 
@@ -104,15 +113,13 @@ public class RemoteDataManager {
 	 * @param key of entity to retrieve
 	 * @return Entity version of clinic, returns null if could not find entity with given key
 	 */		
-	public Entity retrieveEntityFromDatabase(String entityType, String key){
-
+	public Entity retrieveEntityFromDatabase(String entityType, String key) {
 		Key k = KeyFactory.createKey(entityType, key);
 
 		try { return datastore.get(k); }
 		catch (EntityNotFoundException e) {
 			return null;
 		}
-
 	}
 
 
@@ -121,13 +128,11 @@ public class RemoteDataManager {
 	 * TODO: remove before final demo
 	 * @param string to push
 	 */		
-	public void testPush(String string){
-
+	public void testPush(String string) {
 		Entity e = new Entity("Other");
 		e.setProperty("info", string);
 
 		datastore.put(e);
-
 	}
 }
 
