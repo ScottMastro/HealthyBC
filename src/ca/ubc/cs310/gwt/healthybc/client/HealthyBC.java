@@ -49,6 +49,7 @@ public class HealthyBC implements EntryPoint {
 	private DockLayoutPanel mapTableDock;
 	private TabLayoutPanel tabs;
 	private ArrayList<String> tabNames;
+	private boolean showAdminTools = false; 
 
 	/**
 	 * This is the entry point method.
@@ -118,6 +119,10 @@ public class HealthyBC implements EntryPoint {
 	        // further explanation).
 	    	if (event.getResults().trim().equals("success")){
 	    		RootPanel.get().clear();
+	    		init();
+	    	} else if (event.getResults().trim().equals("admin")){
+	    		RootPanel.get().clear();
+	    		showAdminTools = true;
 	    		init();
 	    	} else {
 	    		Window.alert("Error: Login failed!");
@@ -281,11 +286,17 @@ public class HealthyBC implements EntryPoint {
 	 * Sets up form to browse for and send local file to servlet
 	 */
 	private void createUploadForm(){
-
-		dock.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
+		if (showAdminTools == true ){
+			dock.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
 				+ "method='POST' action='/uploadServlet'/>"
-				+ "Add new data : <input name='userfile1' type='file' />"
+				+ "Add data from URL <input name='urlstring' type='text' /><br/>"
+				+ "Add CSV data : <input name='userfile1' type='file' /> (Optional)"
 				+ "<input type='submit' value='Submit' /> </form>"), 10);
+		} else{
+			dock.addSouth(new HTML("&copy; 2014 The Blank Slate (Team) <br/>"
+					+ "Team members: Alex, Ben, Dhananjay and Scott"
+					+ ""), 10);
+		}
 	}
 
 

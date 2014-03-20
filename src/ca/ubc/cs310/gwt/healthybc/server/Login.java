@@ -38,6 +38,7 @@ public class Login extends HttpServlet
 		
 		resp = "success";	// test successful login
 		// resp = "fail";	// test failed login
+		// resp = "admin"	// test admin login
 		
 		response.setContentType("text/html");
 
