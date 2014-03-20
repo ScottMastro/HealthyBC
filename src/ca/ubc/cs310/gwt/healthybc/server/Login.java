@@ -36,9 +36,9 @@ public class Login extends HttpServlet
 		
 		// TODO: check username and password
 		
-		resp = "success";	// test successful login
+		//resp = "success";	// test successful login
 		// resp = "fail";	// test failed login
-		// resp = "admin"	// test admin login
+		resp = "admin";	// test admin login
 		
 		response.setContentType("text/html");
 
