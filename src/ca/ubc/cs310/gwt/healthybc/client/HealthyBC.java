@@ -5,16 +5,27 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -41,9 +52,82 @@ public class HealthyBC implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		init();
+		login();
 	}
 
+	
+	/**
+	 * Authorizes the user
+	 */
+	private void login(){
+		
+		 final FormPanel form = new FormPanel();
+		 form.setAction("/login");
+		 
+		 form.setEncoding(FormPanel.ENCODING_MULTIPART);
+		 form.setMethod(FormPanel.METHOD_POST);
+		 
+		// Create a panel to hold all of the form widgets.
+		VerticalPanel panel = new VerticalPanel();
+		form.setWidget(panel);
+		
+		panel.add(new HTML("<h2> The Blank Slate - Login Page </h2> <br/>"));
+		
+		panel.add(new HTML("Username : "));
+
+		// Username field
+		final TextBox tb = new TextBox();
+		tb.setName("username");
+		panel.add(tb);
+		 
+		panel.add(new HTML("<br/> Password : "));
+		 
+		// Password field
+		final PasswordTextBox pb = new PasswordTextBox();
+		pb.setName("password");
+		panel.add(pb);
+		 
+		panel.add(new HTML("<br/> <br/>"));
+		 
+		// Add a 'submit' button.
+	    panel.add(new Button("Submit", new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	        form.submit();
+	      }
+	    }));
+	    
+	    // Add an event handler to the form.
+	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
+	      public void onSubmit(SubmitEvent event) {
+	        // This event is fired just before the form is submitted. We can take
+	        // this opportunity to perform validation.
+	        if (tb.getText().length() == 0 || pb.getText().length() == 0) {
+	          Window.alert("The username and password fields must not be empty!");
+	          event.cancel();
+	        }
+	      }
+	    });
+	    
+	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+	      public void onSubmitComplete(SubmitCompleteEvent event) {
+	        // When the form submission is successfully completed, this event is
+	        // fired. Assuming the service returned a response of type text/html,
+	        // we can get the result text here (see the FormPanel documentation for
+	        // further explanation).
+	    	if (event.getResults().trim().equals("success")){
+	    		RootPanel.get().clear();
+	    		init();
+	    	} else {
+	    		Window.alert("Error: Login failed!");
+	    	}
+	      }
+	    });
+
+	    RootPanel.get().add(form, 50, 50);	 
+		
+	}
+	
+	
 	/**
 	 * Sets up the interface for the main page.
 	 */
