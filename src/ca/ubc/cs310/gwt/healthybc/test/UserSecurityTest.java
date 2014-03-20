@@ -13,7 +13,7 @@ public class UserSecurityTest {
 	
 	@Before
 	public void setup() {
-		user = User.createUser("wah123");
+		user = User.createUser("wah123", "wah123@wah.com");
 	}
 	
 	@Test
