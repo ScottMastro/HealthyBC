@@ -47,6 +47,7 @@ public class HealthyBC implements EntryPoint {
 	private DockLayoutPanel dock;
 	private DockLayoutPanel mapTableDock;
 	private TabLayoutPanel tabs;
+	private ArrayList<String> tabNames;
 
 	/**
 	 * This is the entry point method.
@@ -139,9 +140,12 @@ public class HealthyBC implements EntryPoint {
 		dock.addNorth(new HTML("<font size='7'><b>The Blank Slate</b> - CPSC 310</font>"), 10);
 
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
-		tabs.add(new HTML("this content"), "this");
-		tabs.add(new HTML("that content"), "that");
-		tabs.add(new HTML("the other content"), "the other");
+		tabNames = new ArrayList<String>();
+
+		tabs.add(new HTML("Content"), "Home");
+		tabNames.add("Home");
+
+
 
 		createMap();
 		createTable();
@@ -288,6 +292,30 @@ public class HealthyBC implements EntryPoint {
 	// Create Tabs
 	// --------------------------------------------------------------
 
+	private boolean removeTab(String name){
+		
+		for (int i = 0; i <= tabNames.size() -1; i++){
+			if (tabNames.get(i).equals(name)){
+				
+				tabs.remove(i);
+				tabNames.remove(i);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private int findTab(String name){
+		
+		for (int i = 0; i <= tabNames.size() -1; i++){
+			if (tabNames.get(i).equals(name))
+				return i;
+		}
+		
+		return 0;
+	}
+	
 	private void getTabFromTableInfo(TableInfo ti){
 		TabFetcherAsync tabFetcher = GWT.create(TabFetcher.class);
 		
@@ -319,21 +347,27 @@ public class HealthyBC implements EntryPoint {
 				Window.alert("Could not find information about this clinic");				
 			}
 			else{
+				
 				ClinicTabInfo t = result.get(0);
+
+				removeTab("Clinic");
 				
 				tabs.add(new HTML("<h2 ALIGN='LEFT'>Name</h2>"
-								+ t.getName()
-								+ "<h2 ALIGN='LEFT'>Hours</h2>"
-								+ t.getHours()
-								+ "<h2 ALIGN='LEFT'>Address</h2>"
-								+ t.getAddress() + " " + t.getPostalCode()
-								+ "<h2 ALIGN='LEFT'>Available Languages</h2>"
-								+ t.getLanguages()	
-								+ "<h2 ALIGN='LEFT'>Contact Info</h2>"
-								+ t.getPhone() + "<br>" + t.getEmail()  			
-								), "Clinic");
-
-
+						+ t.getName()
+						+ "<h2 ALIGN='LEFT'>Hours</h2>"
+						+ t.getHours()
+						+ "<h2 ALIGN='LEFT'>Address</h2>"
+						+ t.getAddress() + " " + t.getPostalCode()
+						+ "<h2 ALIGN='LEFT'>Available Languages</h2>"
+						+ t.getLanguages()	
+						+ "<h2 ALIGN='LEFT'>Contact Info</h2>"
+						+ t.getPhone() + "<br>" + t.getEmail()  			
+						), "Clinic");
+				
+				tabNames.add(tabs.getWidgetCount() -1, "Clinic");
+				tabs.selectTab(findTab("Clinic"));
+				
+				
 			}
 		}
 	}
