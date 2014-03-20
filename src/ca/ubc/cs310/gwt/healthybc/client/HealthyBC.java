@@ -361,7 +361,7 @@ public class HealthyBC implements EntryPoint {
 				
 				ClinicTabInfo t = result.get(0);
 
-				removeTab("Clinic");
+				removeTab("Clinic Information");
 				
 				tabs.add(new HTML("<h2 ALIGN='LEFT'>Name</h2>"
 						+ t.getName()
@@ -373,12 +373,14 @@ public class HealthyBC implements EntryPoint {
 						+ t.getLanguages()	
 						+ "<h2 ALIGN='LEFT'>Contact Info</h2>"
 						+ t.getPhone() + "<br>" + t.getEmail()  			
-						), "Clinic");
+						), "Clinic Information");
 				
-				tabNames.add(tabs.getWidgetCount() -1, "Clinic");
-				tabs.selectTab(findTab("Clinic"));
+				tabNames.add(tabs.getWidgetCount() -1, "Clinic Information");
+				tabs.selectTab(findTab("Clinic Information"));
 				
-				tabs.add(new Rating(3,5), "Ratings");
+				removeTab("View Ratings");
+				tabs.add(new Rating(3,5), "View Ratings");
+				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 				
 				
 			}
