@@ -294,6 +294,13 @@ public class HealthyBC implements EntryPoint {
 		ClinicTabCallback callback = new ClinicTabCallback();
 		tabFetcher.clinicTabInfo(ti, callback);
 	}
+	
+	public void getTabFromMapInfo(MapInfo mi){
+		TabFetcherAsync tabFetcher = GWT.create(TabFetcher.class);
+		
+		ClinicTabCallback callback = new ClinicTabCallback();
+		tabFetcher.clinicTabInfo(mi, callback);
+	}
 
 	/**
 	 * Calls the server to retrieve data
@@ -312,7 +319,6 @@ public class HealthyBC implements EntryPoint {
 				Window.alert("Could not find information about this clinic");				
 			}
 			else{
-				
 				ClinicTabInfo t = result.get(0);
 				
 				tabs.add(new HTML("<h2 ALIGN='LEFT'>Name</h2>"

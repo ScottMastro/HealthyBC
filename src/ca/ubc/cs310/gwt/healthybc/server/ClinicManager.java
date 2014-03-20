@@ -191,12 +191,25 @@ public class ClinicManager {
 	}
 
 	public ArrayList<ClinicTabInfo> getClinicTabInfo(TableInfo ti) {
+		return getClinicTabInfoFromRefID(ti.getRefID());
+	}
 
-		for(Clinic clinic : clinics) {
+	public ArrayList<ClinicTabInfo> getClinicTabInfo(MapInfo mi) {
+		return getClinicTabInfoFromRefID(mi.getRefID());
+	}
 
-			if(ti.getRefID().equals(clinic.getRefID())){
-				
-				String refID = clinic.getRefID();
+	/**
+	 * Finds clinic with given refID and creates ClinicTabInfo object to return
+	 *
+	 * @param refID of desired clinic
+	 * @return a list of the single desired ClinicTabInfo object
+	 */
+	private ArrayList<ClinicTabInfo> getClinicTabInfoFromRefID(String refID){
+
+		for (Clinic clinic : clinics) {
+
+			if(refID.equals(clinic.getRefID())){
+
 				String name = clinic.getName();
 				String hours = clinic.getHoursString();
 				Double latitude = clinic.getLatitude();
@@ -206,19 +219,18 @@ public class ClinicManager {
 				String email = clinic.getEmail();
 				String phone = clinic.getPhone();
 				String lang = clinic.getLanguages();
-				
+
 				ClinicTabInfo cti = new ClinicTabInfo(refID, name, hours, latitude,
 						longitude, addr, pcode, email, phone, lang);
-				
+
 				ArrayList<ClinicTabInfo> a = new ArrayList<ClinicTabInfo>();
 				a.add(cti);
 				return a;
-				
+
 			}
 		}
 		
 		return null;
-
 	}
 }
 

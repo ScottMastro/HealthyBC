@@ -10,4 +10,6 @@ public interface TabFetcher extends RemoteService {
 	
 	public ArrayList<ClinicTabInfo> clinicTabInfo(TableInfo ti);
 
+	public ArrayList<ClinicTabInfo> clinicTabInfo(MapInfo mi);
+
 }

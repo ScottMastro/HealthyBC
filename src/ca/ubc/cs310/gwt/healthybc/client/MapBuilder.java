@@ -68,15 +68,18 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 			options.setClickable(true);
 			options.setTitle(clinic.getName());
 			options.setPosition(LatLng.newInstance(clinic.getLatitude(), clinic.getLongitude()));
+			options.setTitle(clinic.getRefID());
 
 			final Marker marker = Marker.newInstance(options);
 			final String desc = clinic.getName();
+			final MapInfo mi = clinic;
 
 			ClickMapHandler handler = new ClickMapHandler() {
 				public void onEvent(ClickMapEvent e) {
 					System.out.println(desc);
 					infoWindow.setContent("<div class=\"markerContent\" style=\"line-height:normal; white-space:nowrap;\">" + desc + "</div>");
 					infoWindow.open(map, marker);
+					main.getTabFromMapInfo(mi);
 				} 
 			};
 			marker.addClickHandler(handler);
