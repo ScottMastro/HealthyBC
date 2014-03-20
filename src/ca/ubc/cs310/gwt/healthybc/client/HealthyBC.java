@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import org.cobogw.gwt.user.client.ui.Rating;
 
 
 /**
@@ -366,6 +367,8 @@ public class HealthyBC implements EntryPoint {
 				
 				tabNames.add(tabs.getWidgetCount() -1, "Clinic");
 				tabs.selectTab(findTab("Clinic"));
+				
+				tabs.add(new Rating(3,5), "Ratings");
 				
 				
 			}
