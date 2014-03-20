@@ -286,14 +286,15 @@ public class HealthyBC implements EntryPoint {
 	private void createUploadForm(){
 		if (showAdminTools == true ){
 			dock.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
-				+ "method='POST' action='/uploadServlet'/><br/>"
+				+ "method='POST' action='/uploadServlet'/>"
 				+ "Upload data from URL <input name='urlstring' type='text' /><br/>"
 				+ "Upload CSV data : <input name='userfile1' type='file' /><br/>"
 				+ "<input type='submit' value='Submit' /> </form>"), 15);
 		} else{
-			dock.addSouth(new HTML("<br/> Team Members: Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
-					+ "<br/> Contact Us: <a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a> <br/>"
-					+ "<br/> &copy; 2014 The Blank Slate (Team) <br/>"), 15);
+			dock.addSouth(new HTML("<div style='padding:20px;'> "
+					+ "<b>Team Members:</b> Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
+					+ "<br/> <b>Contact Us:</b> <a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a> <br/>"
+					+ "<br/> &copy; 2014 The Blank Slate Team</div>"), 15);
 		}
 	}
 
