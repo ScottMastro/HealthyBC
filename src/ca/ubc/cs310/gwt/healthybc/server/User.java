@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import com.google.appengine.api.datastore.Entity;
+
 /**
  * Encapsulates a registered user of the application
  *
@@ -18,7 +20,13 @@ public class User {
 	private static final String HASH_ALGORITHM = "SHA-256";
 	private static final String ENCODING_CHARSET = "UTF-8";
 	
+	private static final String ENTITY_USER = "User";
+	private static final String PROPERTY_HASH = "hash";
+	private static final String PROPERTY_SALT = "salt";
+	
 	public static final int MAX_NAME_LENGTH = 20;
+	
+	private static final RemoteDataManager dataManager = new RemoteDataManager();
 	
 	/**
 	 * construct a User and generate a (not necessarily unique but probably unique) salt;
@@ -29,12 +37,17 @@ public class User {
 	private User(String name) {
 		userName = name;
 		
-		//TODO: try to load password hash from database
-		passwordHash = null;
+		Entity userEntity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
 		
-		//TODO: try to load salt from database, and only generate new salt if user doesn't exist in database 
-		salt = StringGenerator.getInstance().generateString(20, 25, true, true);
-		//TODO: store salt in database
+		if (userEntity != null) {
+			passwordHash = (byte[]) userEntity.getProperty(PROPERTY_HASH);
+			salt = (String) userEntity.getProperty(PROPERTY_SALT);
+		}
+		else {
+			passwordHash = null; 
+			salt = StringGenerator.getInstance().generateString(20, 25, true, true);
+			dataManager.uploadUserEntity(this);
+		}
 	}
 	
 	/**
@@ -49,8 +62,12 @@ public class User {
 			return null;
 		}
 		
-		//TODO: attempt to fetch user from data store
-		return null;
+		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
+		if (entity == null) {
+			return null;
+		}
+		
+		return new User(name);
 	}
 	
 	/**
@@ -65,7 +82,11 @@ public class User {
 			return null;
 		}
 		
-		//TODO: check against data store for name clash
+		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
+		if (entity != null) {
+			return null;
+		}
+		
 		return new User(name);
 	}
 	
@@ -130,7 +151,7 @@ public class User {
 		
 		passwordHash = hashedResult;
 		
-		//TODO: store new hash in database
+		dataManager.uploadUserEntity(this);
 		
 		return true;
 	}
@@ -196,4 +217,6 @@ public class User {
 	}
 	
 	public String getUserName() { return userName; }
+	public byte[] getPasswordHash() { return passwordHash; }
+	public String getSalt() { return salt; }
 }
