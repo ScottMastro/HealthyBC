@@ -13,7 +13,7 @@ public class UserSecurityTest {
 	
 	@Before
 	public void setup() {
-		user = new User("wah123");
+		user = User.createUser("wah123");
 	}
 	
 	@Test
