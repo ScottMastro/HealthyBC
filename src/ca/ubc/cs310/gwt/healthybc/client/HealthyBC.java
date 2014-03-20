@@ -293,9 +293,10 @@ public class HealthyBC implements EntryPoint {
 				+ "Add CSV data : <input name='userfile1' type='file' /> (Optional)"
 				+ "<input type='submit' value='Submit' /> </form>"), 10);
 		} else{
-			dock.addSouth(new HTML("&copy; 2014 The Blank Slate (Team) <br/>"
-					+ "Team members: Alex, Ben, Dhananjay and Scott"
-					+ ""), 10);
+			dock.addSouth(new HTML("<b> &copy; 2014 The Blank Slate (Team) </b> <br/>"
+					+ "<b>Team Members:</b> Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
+					+ "<b>Contact Us:</b> "
+					+ "<a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a>"), 10);
 		}
 	}
 
