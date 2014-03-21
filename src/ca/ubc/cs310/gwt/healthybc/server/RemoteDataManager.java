@@ -1,7 +1,8 @@
 package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
 
@@ -13,14 +14,14 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Transaction;
 
 public class RemoteDataManager {
 	private DatastoreService datastore;
-	private List<Entity> clinicEntities;
+	Logger logger = Logger.getLogger("Datastore Logger");
 
 	// Constructor
 	public RemoteDataManager() {
-		clinicEntities = new ArrayList<Entity>();
 		datastore = DatastoreServiceFactory.getDatastoreService();
 	}
 	
@@ -68,7 +69,6 @@ public class RemoteDataManager {
 		clinic.setProperty("phone", c.getPhone());
 		clinic.setProperty("language", c.getLanguages());
 
-		clinicEntities.add(clinic);
 		return clinic;
 	}
 
@@ -121,6 +121,83 @@ public class RemoteDataManager {
 		catch (EntityNotFoundException e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * Retrieves a clinic rating from the datastore
+	 *
+	 * @param refID of clinic to get rating for
+	 * @return ArrayList of integers where [0] = rating score and [1] = amount of ratings
+	 */		
+	public ArrayList<Integer> getClinicRating(String refID){
+		
+	    Key key = KeyFactory.createKey("Rating", refID);
+	    Entity existingRating;
+	    ArrayList<Integer> a = new ArrayList<Integer>();
+	    try {
+			existingRating = datastore.get(key);
+		} catch (EntityNotFoundException e) {
+		    
+			logger.log(Level.WARNING, "Unable to find rating for clinic " + refID);
+		    a.add(0);	a.add(0);
+		    return a;
+		
+		}
+	    
+	                //need to do this because of the format the datastore stores the integer
+	    int score = new Integer(existingRating.getProperty("score").toString());
+	    a.add(score);
+	    int amount = new Integer(existingRating.getProperty("amount").toString());
+	    a.add(amount);
+	    
+	    return a;
+
+	}
+	
+	/**
+	 * Updates rating entity in datstore or creates new entity if no ratings currently exist
+	 *
+	 * @param refID of clinic to rate
+	 * @param rating to give to specific clinic
+	 * @return true if rating was successful, otherwise false
+	 */	
+	public boolean submitClinicRating(String refID, int rating){
+		Transaction txn = datastore.beginTransaction();
+		try {
+		    Key key = KeyFactory.createKey("Rating", refID);
+		    
+		    Entity existingRating = datastore.get(key);
+		    int amount = (int) existingRating.getProperty("amount");
+		    double score = (double) existingRating.getProperty("score");
+		    
+		    score = (score*amount + score)/(amount + 1);
+		    amount += 1;
+
+		    existingRating.setProperty("amount", amount);
+		    existingRating.setProperty("score", score);
+
+		    datastore.put(existingRating);
+		    txn.commit();
+		    
+		} catch(EntityNotFoundException e){
+		    logger.log(Level.INFO, "Unable to find clinic entity " + refID + ", adding new entity");
+		    
+		    Entity newRating = new Entity("Rating", refID);
+		    newRating.setProperty("amount", 1);
+		    newRating.setProperty("score", rating);
+		    
+		    datastore.put(newRating);
+		    txn.commit();  
+		    
+		} finally {
+		    if (txn.isActive()) {
+		        txn.rollback();
+		        return false;
+		    }
+		}
+		
+	    return true;
+
 	}
 
 

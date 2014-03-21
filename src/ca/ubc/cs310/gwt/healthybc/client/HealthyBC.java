@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import org.cobogw.gwt.user.client.ui.Rating;
 
 
 /**
@@ -237,10 +236,10 @@ public class HealthyBC implements EntryPoint {
 	 * Retrieves data and constructs the table
 	 */
 	private void buildTable() {
-		ClinicDataFetcherAsync clinicParser = GWT.create(ClinicDataFetcher.class);
+		ClinicDataFetcherAsync tableFetcher = GWT.create(ClinicDataFetcher.class);
 
 		TableInfoListCallback callback = new TableInfoListCallback();
-		clinicParser.tableInfo(callback);
+		tableFetcher.tableInfo(callback);
 	}
 
 	/**
@@ -379,7 +378,8 @@ public class HealthyBC implements EntryPoint {
 				tabs.selectTab(findTab("Clinic Information"));
 				
 				removeTab("View Ratings");
-				tabs.add(new Rating(3,5), "View Ratings");
+				StarRating rating = new StarRating(t.getRefID());
+				tabs.add(rating.getStarRating(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 				
 				
