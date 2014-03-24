@@ -73,10 +73,6 @@ public class User {
 	 * @return user with corresponding username; null if none exists or illegal name
 	 */
 	public static User getUser(String name) {
-		if (isAcceptableName(name)) {
-			return null;
-		}
-		
 		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		if (entity == null) {
 			return null;
@@ -115,6 +111,11 @@ public class User {
 	public static boolean isAcceptableName(String input) {
 		//TODO: formalize username criteria
 		if (input == null) {
+			return false;
+		}
+		
+		//"admin" is reserved
+		if (input.equalsIgnoreCase("admin")) {
 			return false;
 		}
 		

