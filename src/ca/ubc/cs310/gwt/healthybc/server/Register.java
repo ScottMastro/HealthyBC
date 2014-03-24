@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @SuppressWarnings("serial")
-public class Login extends HttpServlet
+public class Register extends HttpServlet
 {   
 	Logger logger = Logger.getLogger("uploadServletLogger");
 
@@ -35,9 +35,8 @@ public class Login extends HttpServlet
 		
 		// TODO: check username and password
 		
-		//resp = "success";	// test successful login
-		// resp = "fail";	// test failed login
-		resp = "admin";	// test admin login
+		resp = "success";	// test successful registration
+		// resp = "fail";	// test failed registration
 		
 		response.setContentType("text/html");
 
