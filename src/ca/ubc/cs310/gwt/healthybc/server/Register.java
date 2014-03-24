@@ -33,10 +33,17 @@ public class Register extends HttpServlet
 	{
 		String resp = "";
 		
-		// TODO: check username and password
-		
-		resp = "success";	// test successful registration
-		// resp = "fail";	// test failed registration
+		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		User user = User.createUser(username, email);
+		if (user != null) {
+			resp = "success";
+			user.setPassword(password);
+		}
+		else {
+			resp = "fail";
+		}
 		
 		response.setContentType("text/html");
 

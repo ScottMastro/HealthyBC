@@ -50,7 +50,7 @@ public class User {
 	private User(String name, String email) {
 		userName = name;
 		
-		Entity userEntity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
+		Entity userEntity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		
 		if (userEntity != null) {
 			passwordHash = (byte[]) userEntity.getProperty(PROPERTY_HASH);
@@ -77,7 +77,7 @@ public class User {
 			return null;
 		}
 		
-		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
+		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		if (entity == null) {
 			return null;
 		}
@@ -98,7 +98,7 @@ public class User {
 			return null;
 		}
 		
-		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name);
+		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		if (entity != null) {
 			return null;
 		}

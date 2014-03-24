@@ -3,6 +3,7 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,12 +33,20 @@ public class Login extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		String resp = "";
+
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 		
-		// TODO: check username and password
-		
-		//resp = "success";	// test successful login
-		// resp = "fail";	// test failed login
-		resp = "admin";	// test admin login
+		User user = User.getUser(username);
+		if (user != null && user.checkPassword(password)) {
+			if (username.equalsIgnoreCase("admin")) {
+				resp = "admin";
+			}
+			resp = "success";
+		}
+		else {
+			resp = "fail";
+		}
 		
 		response.setContentType("text/html");
 
