@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -63,17 +65,45 @@ public class HealthyBC implements EntryPoint {
 	 */
 	private void login(){
 		
-		 final FormPanel form = new FormPanel();
-		 form.setAction("/login");
+		VerticalPanel rtpanel = new VerticalPanel();
+		
+		rtpanel.add(new HTML("<h2> Healthy BC : Walk-in Clinics </h2> <br/>"));
+		
+		HorizontalPanel hpanel = new HorizontalPanel();
+		hpanel.setHeight("520px");
+		
+		// Create Login form
+	    hpanel.add(createLoginForm());
+	    
+	    // Create registration form
+	    hpanel.add(createRegisterForm());
+	    
+	    rtpanel.add(hpanel);
+	    rtpanel.add(new HTML("Created by: The Blank Slate Team (CPSC 310)"));
+	    
+	    RootPanel.get().add(rtpanel, 20, 20);	 
+		
+	}
+	
+	/**
+	 * Create a login form
+	 */
+	private final FormPanel createLoginForm(){
+		
+		final FormPanel form = new FormPanel();
+		form.setAction("/login");
 		 
-		 form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		 form.setMethod(FormPanel.METHOD_POST);
+		form.setEncoding(FormPanel.ENCODING_MULTIPART);
+		form.setMethod(FormPanel.METHOD_POST);
 		 
 		// Create a panel to hold all of the form widgets.
 		VerticalPanel panel = new VerticalPanel();
-		form.setWidget(panel);
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		panel.setSize("400px", "400px");
 		
-		panel.add(new HTML("<h2> The Blank Slate - Login Page </h2> <br/>"));
+		panel.add(new HTML("<h2> Login </h2><br/>"));
+		
+		form.setWidget(panel);
 		
 		panel.add(new HTML("Username : "));
 
@@ -128,9 +158,96 @@ public class HealthyBC implements EntryPoint {
 	    	}
 	      }
 	    });
-
-	    RootPanel.get().add(form, 50, 50);	 
+		 
+		return form;
+	}
+	
+	/**
+	 * Create Registration form
+	 */
+	private final FormPanel createRegisterForm(){
 		
+		final FormPanel form = new FormPanel();
+		form.setAction("/register");
+		 
+		form.setEncoding(FormPanel.ENCODING_MULTIPART);
+		form.setMethod(FormPanel.METHOD_POST);
+		 
+		// Create a panel to hold all of the form widgets.
+		VerticalPanel panel = new VerticalPanel();
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		panel.setSize("400px", "500px");
+		
+		panel.add(new HTML("<h2> Register </h2><br/>"));
+		
+		form.setWidget(panel);
+		
+		panel.add(new HTML("Name : "));
+
+		// Name field
+		final TextBox name = new TextBox();
+		name.setName("name");
+		panel.add(name);
+		
+		panel.add(new HTML("<br/> EMail : "));
+
+		// EMail field
+		final TextBox email = new TextBox();
+		email.setName("email");
+		panel.add(email);
+		
+		panel.add(new HTML("<br/> Username : "));
+
+		// Username field
+		final TextBox tb = new TextBox();
+		tb.setName("username");
+		panel.add(tb);
+		 
+		panel.add(new HTML("<br/> Password : "));
+		 
+		// Password field
+		final PasswordTextBox pb = new PasswordTextBox();
+		pb.setName("password");
+		panel.add(pb);
+		 
+		panel.add(new HTML("<br/> <br/>"));
+		 
+		// Add a 'submit' button.
+	    panel.add(new Button("Submit", new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	        form.submit();
+	      }
+	    }));
+	    
+	    // Add an event handler to the form.
+	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
+	      public void onSubmit(SubmitEvent event) {
+	        // This event is fired just before the form is submitted. We can take
+	        // this opportunity to perform validation.
+	        if (tb.getText().length() == 0 || pb.getText().length() == 0) {
+	          Window.alert("Username or password cannot be empty.");
+	          event.cancel();
+	        }
+	      }
+	    });
+	    
+	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+	      public void onSubmitComplete(SubmitCompleteEvent event) {
+	        // When the form submission is successfully completed, this event is
+	        // fired. Assuming the service returned a response of type text/html,
+	        // we can get the result text here (see the FormPanel documentation for
+	        // further explanation).
+	    	if (event.getResults().trim().equals("success")){
+	    		Window.alert("New user created.");
+	    		RootPanel.get().clear();
+	    		init();
+	    	} else {
+	    		Window.alert("Error: Could not create user.");
+	    	}
+	      }
+	    });
+		 
+		return form;
 	}
 	
 	
