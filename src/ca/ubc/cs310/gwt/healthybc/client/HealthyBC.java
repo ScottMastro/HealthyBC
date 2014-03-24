@@ -90,55 +90,7 @@ public class HealthyBC implements EntryPoint {
 	 */
 	private final FormPanel createLoginForm(){
 		
-		final FormPanel form = new FormPanel();
-		form.setAction("/login");
-		 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setMethod(FormPanel.METHOD_POST);
-		 
-		// Create a panel to hold all of the form widgets.
-		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		panel.setSize("400px", "400px");
-		
-		panel.add(new HTML("<h2> Login </h2><br/>"));
-		
-		form.setWidget(panel);
-		
-		panel.add(new HTML("Username : "));
-
-		// Username field
-		final TextBox tb = new TextBox();
-		tb.setName("username");
-		panel.add(tb);
-		 
-		panel.add(new HTML("<br/> Password : "));
-		 
-		// Password field
-		final PasswordTextBox pb = new PasswordTextBox();
-		pb.setName("password");
-		panel.add(pb);
-		 
-		panel.add(new HTML("<br/> <br/>"));
-		 
-		// Add a 'submit' button.
-	    panel.add(new Button("Submit", new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        form.submit();
-	      }
-	    }));
-	    
-	    // Add an event handler to the form.
-	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
-	      public void onSubmit(SubmitEvent event) {
-	        // This event is fired just before the form is submitted. We can take
-	        // this opportunity to perform validation.
-	        if (tb.getText().length() == 0 || pb.getText().length() == 0) {
-	          Window.alert("The username and password fields must not be empty!");
-	          event.cancel();
-	        }
-	      }
-	    });
+		final FormPanel form = FormBuilder.createLoginForm();
 	    
 	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 	      public void onSubmitComplete(SubmitCompleteEvent event) {
@@ -167,69 +119,7 @@ public class HealthyBC implements EntryPoint {
 	 */
 	private final FormPanel createRegisterForm(){
 		
-		final FormPanel form = new FormPanel();
-		form.setAction("/register");
-		 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setMethod(FormPanel.METHOD_POST);
-		 
-		// Create a panel to hold all of the form widgets.
-		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		panel.setSize("400px", "500px");
-		
-		panel.add(new HTML("<h2> Register </h2><br/>"));
-		
-		form.setWidget(panel);
-		
-		panel.add(new HTML("Name : "));
-
-		// Name field
-		final TextBox name = new TextBox();
-		name.setName("name");
-		panel.add(name);
-		
-		panel.add(new HTML("<br/> EMail : "));
-
-		// EMail field
-		final TextBox email = new TextBox();
-		email.setName("email");
-		panel.add(email);
-		
-		panel.add(new HTML("<br/> Username : "));
-
-		// Username field
-		final TextBox tb = new TextBox();
-		tb.setName("username");
-		panel.add(tb);
-		 
-		panel.add(new HTML("<br/> Password : "));
-		 
-		// Password field
-		final PasswordTextBox pb = new PasswordTextBox();
-		pb.setName("password");
-		panel.add(pb);
-		 
-		panel.add(new HTML("<br/> <br/>"));
-		 
-		// Add a 'submit' button.
-	    panel.add(new Button("Submit", new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        form.submit();
-	      }
-	    }));
-	    
-	    // Add an event handler to the form.
-	    form.addSubmitHandler(new FormPanel.SubmitHandler() {
-	      public void onSubmit(SubmitEvent event) {
-	        // This event is fired just before the form is submitted. We can take
-	        // this opportunity to perform validation.
-	        if (tb.getText().length() == 0 || pb.getText().length() == 0) {
-	          Window.alert("Username or password cannot be empty.");
-	          event.cancel();
-	        }
-	      }
-	    });
+		final FormPanel form = FormBuilder.createRegisterForm();
 	    
 	    form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 	      public void onSubmitComplete(SubmitCompleteEvent event) {
