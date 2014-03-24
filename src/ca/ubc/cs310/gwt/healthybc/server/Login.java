@@ -46,6 +46,9 @@ public class Login extends HttpServlet
 			else if (user.checkPassword(password)) {
 				resp = "success";				
 			}
+			else {
+				resp = "fail";
+			}
 		}
 		else {
 			resp = "fail";
