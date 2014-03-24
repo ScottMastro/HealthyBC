@@ -1,12 +1,18 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -37,18 +43,37 @@ public class HealthyBC implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-
+	private static final long DURATION = 1000 * 60 * 60 * 24;
 	private DockLayoutPanel dock;
 	private DockLayoutPanel mapTableDock;
 	private TabLayoutPanel tabs;
 	private ArrayList<String> tabNames;
 	private boolean showAdminTools = false; 
+	private String username;
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		login();
+		
+		username = Cookies.getCookie("HBC_username");
+		
+		if (username != null){
+			History.newItem("homepage");
+			init();
+		} else {
+			History.newItem("login");
+			login();
+		}
+		
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+			
+			public void onValueChange(ValueChangeEvent<String> event) {
+		        String historyToken = event.getValue();
+		        System.out.println(historyToken);
+			}
+		});
+
 	}
 
 	
@@ -91,11 +116,15 @@ public class HealthyBC implements EntryPoint {
 	        // we can get the result text here (see the FormPanel documentation for
 	        // further explanation).
 	    	if (event.getResults().trim().equals("success")){
+	    		//Date expires = new Date(System.currentTimeMillis() + DURATION);
+	    		//Cookies.setCookie("HBC_username", username, expires, null, "/", false);
 	    		RootPanel.get().clear();
+	    		History.newItem("homepage");
 	    		init();
 	    	} else if (event.getResults().trim().equals("admin")){
 	    		RootPanel.get().clear();
 	    		showAdminTools = true;
+	    		History.newItem("homepage");
 	    		init();
 	    	} else {
 	    		Window.alert("Error: Login failed!");
@@ -122,6 +151,7 @@ public class HealthyBC implements EntryPoint {
 	    	if (event.getResults().trim().equals("success")){
 	    		Window.alert("New user created.");
 	    		RootPanel.get().clear();
+	    		History.newItem("homepage");
 	    		init();
 	    	} else {
 	    		Window.alert("Error: Could not create user.");
@@ -144,8 +174,9 @@ public class HealthyBC implements EntryPoint {
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
 		tabNames = new ArrayList<String>();
 
-		// add home page
+		// add home page & logout button
 		tabs.add(new HTML("Content"), "Home");
+		
 		tabNames.add("Home");
 
 		createMap();
