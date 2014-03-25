@@ -2,6 +2,9 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -18,12 +21,20 @@ public class FormBuilder {
  * Create a login form
  */
 public static final FormPanel createLoginForm(){
-	
 	final FormPanel form = new FormPanel();
 	form.setAction("/login");
  
 	form.setEncoding(FormPanel.ENCODING_MULTIPART);
 	form.setMethod(FormPanel.METHOD_POST);
+	
+	KeyDownHandler formKeypressCallback = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			boolean isEnter = KeyCodes.KEY_ENTER == event.getNativeKeyCode();
+			if (isEnter)
+				form.submit();
+		}
+	};
  
 	// Create a panel to hold all of the form widgets.
 	VerticalPanel panel = new VerticalPanel();
@@ -39,6 +50,7 @@ public static final FormPanel createLoginForm(){
 	// Username field
 	final TextBox tb = new TextBox();
 	tb.setName("username");
+	tb.addKeyDownHandler(formKeypressCallback);
 	panel.add(tb);
  
 	panel.add(new HTML("<br/> Password : "));
@@ -46,6 +58,7 @@ public static final FormPanel createLoginForm(){
 	// Password field
 	final PasswordTextBox pb = new PasswordTextBox();
 	pb.setName("password");
+	pb.addKeyDownHandler(formKeypressCallback);
 	panel.add(pb);
 	 
 	panel.add(new HTML("<br/> <br/>"));
