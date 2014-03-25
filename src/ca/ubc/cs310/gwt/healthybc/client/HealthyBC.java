@@ -162,27 +162,6 @@ public class HealthyBC implements EntryPoint {
 		return form;
 	}
 	
-	private final HorizontalPanel createSocialLoginPanel() {
-		HorizontalPanel container = new HorizontalPanel();
-		
-		String fbKey = "your_app_id";
-	    String fbSecret = "your_api_secret";
-	    String gpKey = "";
-	    String gpSecret = "";
-	    String twKey = "";
-	    String twSecret = "";
-	    
-//	    OAuthService service = new ServiceBuilder()
-//	                                  .provider(FacebookApi.class)
-//	                                  .apiKey(apiKey)
-//	                                  .apiSecret(apiSecret)
-//	                                  .callback("http://www.example.com/oauth_callback/")
-//	                                  .build();
-		
-		return container;
-	}
-	
-	
 	/**
 	 * Sets up the interface for the main page.
 	 */
