@@ -206,6 +206,45 @@ public class RemoteDataManager {
 		return true;
 
 	}
+	
+	/**
+	 * Updates review entity in datstore or creates new entity if no review currently exist
+	 *
+	 * @param refID of clinic to review
+	 * @param review to give to specific clinic (less than 500 characters)
+	 * @return true if rating was successful, otherwise false
+	 */	
+	public String submitClinicReview(String refID, String review){
+		Transaction txn = datastore.beginTransaction();
+		String result = "";
+		
+		try {
+			//TODO: CHANGE KEY TO userID and refID
+			Key key = KeyFactory.createKey("Review", refID);
+			datastore.get(key);
+			
+			result = "Sorry, but you have already reviewed this clinic.";
+
+			
+			
+		} catch(EntityNotFoundException e){
+
+			Entity newReview = new Entity("Review", refID);
+			newReview.setProperty("review", review);
+
+			datastore.put(newReview);
+			txn.commit();  
+			
+			result = "Thank you for the review.";
+
+		} finally {
+			if (txn.isActive()) 
+				txn.rollback();
+			
+		}
+		
+		return result;
+	}
 
 
 	/**

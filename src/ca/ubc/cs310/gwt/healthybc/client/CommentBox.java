@@ -19,11 +19,13 @@ public class CommentBox {
 	private Button submit;
 	private VerticalPanel panel;
 	private boolean initialState;
+	private String refID;
 	
 	private final String DEFAULT_TEXT = "Click here to review Clinic";
 	
-	public CommentBox(){
+	public CommentBox(String refID){
 		initialState = true;
+		this.refID = refID;
 		
 		box = new TextArea();
 		box.addStyleName("commentBoxBefore");
@@ -80,28 +82,32 @@ public class CommentBox {
 			return;
 		}
 		
-
+		submit.setEnabled(false);
 		
 		RatingHandlerAsync ratingHandler = GWT.create(RatingHandler.class);
 
 		AddReviewCallback callback = new AddReviewCallback();
 		
-		ratingHandler.addReview(review, callback);
+		ratingHandler.addReview(refID, review, callback);
 	}
 	
 	/**
 	 * Response from server after requesting rating
 	 */
-	private class AddReviewCallback implements AsyncCallback<ArrayList<Boolean>> {
+	private class AddReviewCallback implements AsyncCallback<ArrayList<String>> {
 		@Override
 		public void onFailure(Throwable caught) {
 			caught.printStackTrace();
+			submit.setEnabled(true);
+			Window.alert("Problem connecting to datastore.");
+
 		}
 
 		@Override
-		public void onSuccess(ArrayList<Boolean> result) {
+		public void onSuccess(ArrayList<String> result) {
 			
-			Window.alert("Thank you for the review.");
+			if(result != null && !result.isEmpty())
+				Window.alert(result.get(0));
 
 
 		}

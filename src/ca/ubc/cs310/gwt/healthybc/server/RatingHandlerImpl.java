@@ -32,11 +32,14 @@ public class RatingHandlerImpl extends RemoteServiceServlet implements RatingHan
 
 	}
 	
-	public ArrayList<Boolean> addReview(String review){
+	public ArrayList<String> addReview(String refID, String review){
 		
-		//TODO: something
-		return null;
+		RemoteDataManager rdm = new RemoteDataManager();		
+		String response = rdm.submitClinicReview(refID, review);
+		ArrayList<String> a = new ArrayList<String>();
+		a.add(response);
 		
+		return a;		
 	}
 
 
