@@ -32,3 +32,16 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+  /* CommentBox before */
+.commentBoxBefore {
+  color: #C0C0C0;
+  resize: none;
+  font-style: italic;
+}
+
+/* CommentBox after */
+.commentBoxAfter {
+  color: black;
+  resize: none;
+}
