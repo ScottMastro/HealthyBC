@@ -3,6 +3,7 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.util.ArrayList;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import ca.ubc.cs310.gwt.healthybc.client.RatingHandler;
 
 
@@ -30,5 +31,13 @@ public class RatingHandlerImpl extends RemoteServiceServlet implements RatingHan
 		return a;
 
 	}
+	
+	public ArrayList<Boolean> addReview(String review){
+		
+		//TODO: something
+		return null;
+		
+	}
+
 
 }

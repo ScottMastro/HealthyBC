@@ -1,9 +1,14 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
+import java.util.ArrayList;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -15,12 +20,14 @@ public class CommentBox {
 	private VerticalPanel panel;
 	private boolean initialState;
 	
+	private final String DEFAULT_TEXT = "Click here to review Clinic";
+	
 	public CommentBox(){
 		initialState = true;
 		
 		box = new TextArea();
 		box.addStyleName("commentBoxBefore");
-		box.setText("Enter review of Clinic");
+		box.setText(DEFAULT_TEXT);
 		
 		box.setWidth("300px");
 		box.setHeight("150px");		
@@ -61,7 +68,42 @@ public class CommentBox {
 	}
 
 	private void submit() {
-		// TODO Auto-generated method stub
 		
+		String review = box.getText();
+		if(review == null || review.isEmpty() || review.equals(DEFAULT_TEXT)){
+			Window.alert("Please enter a review before submitting.");
+			return;
+		}
+		
+		if(review.length() >= 500){
+			Window.alert("Review should be less than 500 characters.");
+			return;
+		}
+		
+
+		
+		RatingHandlerAsync ratingHandler = GWT.create(RatingHandler.class);
+
+		AddReviewCallback callback = new AddReviewCallback();
+		
+		ratingHandler.addReview(review, callback);
+	}
+	
+	/**
+	 * Response from server after requesting rating
+	 */
+	private class AddReviewCallback implements AsyncCallback<ArrayList<Boolean>> {
+		@Override
+		public void onFailure(Throwable caught) {
+			caught.printStackTrace();
+		}
+
+		@Override
+		public void onSuccess(ArrayList<Boolean> result) {
+			
+			Window.alert("Thank you for the review.");
+
+
+		}
 	}
 }
