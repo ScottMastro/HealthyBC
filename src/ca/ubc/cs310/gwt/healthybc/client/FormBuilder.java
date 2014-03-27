@@ -5,6 +5,8 @@ import org.scribe.builder.api.*;
 import org.scribe.model.*;
 import org.scribe.oauth.*;
 
+import ca.ubc.cs310.gwt.healthybc.server.SocialSettings;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -161,37 +163,4 @@ public class FormBuilder {
 
 		return form;
 	}
-
-	/*
-	 * Create social login button panel
-	 */
-	final static void createSocialLoginPanel() {
-		
-		HorizontalPanel container = new HorizontalPanel();
-		Token EMPTY_TOKEN = null;
-		
-		// Facebook
-		String fbKey = "742561872429487";									// App ID
-		String fbSecret = "b7317134051ad46347f68a6bb7baea81";				// App secret
-		// Google Plus
-		String gpKey = "426934140323.apps.googleusercontent.com";			// Client ID
-		String gpSecret = "6RcRY0q-jpl2216Rp_VY2olx";						// Client Secret
-		// Twitter
-		String twKey = "8WvNyhgdDgaFDyQY3KCssA";							// API Key
-		String twSecret = "sEWSOVfFLUUpoeYURj56y11gD9BgfAYPDsnVMzmuvm4";	// API Secret
-
-		// Facebook Auth
-	    OAuthService service = new ServiceBuilder()
-	                                  .provider(FacebookApi.class)
-	                                  .apiKey(fbKey)
-	                                  .apiSecret(fbSecret)
-	                                  .callback("healthybc/oauth.html")
-	                                  .build();
-	    String authorizationUrl = service.getAuthorizationUrl(EMPTY_TOKEN);
-	    
-	    System.out.println(authorizationUrl);
-	    
-//		return container;
-	}
-
 }
