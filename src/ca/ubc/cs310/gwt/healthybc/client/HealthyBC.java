@@ -313,9 +313,12 @@ public class HealthyBC implements EntryPoint {
 	 */
 	private void createUploadForm(){
 		if (showAdminTools == true ){
-			dock.addSouth(new HTML("<form style='padding:20px;' enctype='multipart/form-data' "
+			dock.addSouth(new HTML("<form style='padding:10px;' enctype='multipart/form-data' "
+				+ "method='POST' action='/uploadURL'/>"
+				+ "Upload data from URL: <input name='urlstring' type='text' /> &nbsp;"
+				+ "<input type='submit' value='Submit' /> </form><br/>"
+				+ "<form style='padding:10px;' enctype='multipart/form-data' "
 				+ "method='POST' action='/uploadServlet'/>"
-				+ "Upload data from URL <input name='urlstring' type='text' /><br/>"
 				+ "Upload CSV data : <input name='userfile1' type='file' /><br/>"
 				+ "<input type='submit' value='Submit' /> </form>"), 15);
 		} else{

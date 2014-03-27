@@ -21,6 +21,12 @@
 		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.UploadedCSVParser
 		</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>uploadedURLParser</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.UploadedURLParser
+		</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>login</servlet-name>
@@ -48,6 +54,11 @@
 	<servlet-mapping>
 		<servlet-name>uploadedCSVParser</servlet-name>
 		<url-pattern>/uploadServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>uploadedURLParser</servlet-name>
+		<url-pattern>/uploadURL</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
