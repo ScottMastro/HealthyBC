@@ -12,6 +12,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -77,7 +78,8 @@ public class HealthyBC implements EntryPoint {
 		singleton = this;
 
 		handleRedirect();
-		username = SocialLogin.getUsernameFromCookie();
+		username = Cookies.getCookie("HBC_username");
+//		username = SocialLogin.getUsernameFromCookie();
 
 		logoutAnchor = SocialLogin.createLogoutPanel();
 		loginPanel = SocialLogin.createLoginPanel();
@@ -313,7 +315,7 @@ public class HealthyBC implements EntryPoint {
 		tabNames = new ArrayList<String>();
 
 		// add home page & logout button
-		tabs.add(new HTML("Content"), "Home");
+		tabs.add(welcomeLabel, "Home");
 		tabs.add(logoutAnchor, "Account");
 		
 		tabNames.add("Home");
