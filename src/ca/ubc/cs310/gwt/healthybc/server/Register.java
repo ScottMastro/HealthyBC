@@ -38,7 +38,9 @@ public class Register extends HttpServlet
 		String username = request.getParameter("username");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		User user = User.createUser(username, email);
+		String name = request.getParameter("name");
+		
+		User user = User.createUser(username, email, name);
 		if (user != null) {
 			resp = "success";
 			user.setPassword(password);
