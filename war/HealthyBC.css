@@ -45,3 +45,18 @@ h1 {
   color: black;
   resize: none;
 }
+
+.socialIcon {
+	padding: 1px;
+}
+
+.socialIcon:hover {
+	cursor: pointer;
+}
+
+.busy-PopupPanel {
+	margin: 1px;
+	border: 1px solid Black;
+	background-color: #ffffff;
+	margin: 0 auto;
+}

@@ -32,7 +32,8 @@ public class RemoteDataManager {
 	 */
 	public void uploadUserEntity(User user) {
 		Entity e = new Entity("User", user.getUserName());
-
+		
+		e.setProperty("realname", user.getRealName());
 		e.setProperty("username", user.getUserName());
 		e.setProperty("hash", user.getPasswordHash());
 		e.setProperty("salt", user.getSalt());

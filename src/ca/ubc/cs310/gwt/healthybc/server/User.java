@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Entity;
  *
  */
 public class User {
+	private String realName;
 	private String userName;
 	private byte[] passwordHash;
 	private String email;
@@ -22,13 +23,14 @@ public class User {
 	private static final String ENCODING_CHARSET = "UTF-8";
 	
 	private static final String ENTITY_USER = "User";
+	private static final String PROPERTY_REALNAME = "realname";
 	private static final String PROPERTY_HASH = "hash";
 	private static final String PROPERTY_EMAIL = "email";
 	private static final String PROPERTY_SALT = "salt";
 	
 	public static final int MAX_NAME_LENGTH = 20;
 	
-	private static final RemoteDataManager dataManager = new RemoteDataManager();
+	private static RemoteDataManager dataManager;
 	
 	/**
 	 * construct a User and if it is new, generate a (not necessarily unique but probably unique) salt;
@@ -37,9 +39,9 @@ public class User {
 	 * @param name username
 	 */
 	private User(String name) {
-		this(name, null);
+		this(name, null, null);
 	}
-	
+
 	/**
 	 * construct a User and if it is new, generate a (not necessarily unique but probably unique) salt;
 	 * not publicly accessible
@@ -48,20 +50,35 @@ public class User {
 	 * @param email email, ignored if user already exists
 	 */
 	private User(String name, String email) {
+		this(name, email, null);
+	}
+	
+	/**
+	 * construct a User and if it is new, generate a (not necessarily unique but probably unique) salt;
+	 * not publicly accessible
+	 * 
+	 * @param name username
+	 * @param email email, ignored if user already exists
+	 * @param realName real name, ignored if user already exists
+	 */
+	private User(String name, String email, String realName) {
 		userName = name;
 		
-		Entity userEntity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
+		Entity userEntity = getDataManager().retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		
 		if (userEntity != null) {
+			realName = (String) userEntity.getProperty(PROPERTY_REALNAME);
 			passwordHash = (byte[]) userEntity.getProperty(PROPERTY_HASH);
 			salt = (String) userEntity.getProperty(PROPERTY_SALT);
 			this.email = (String) userEntity.getProperty(PROPERTY_EMAIL);
 		}
 		else {
+			this.realName = realName;
 			passwordHash = null; 
 			salt = StringGenerator.getInstance().generateString(20, 25, true, true);
-			dataManager.uploadUserEntity(this);
 			this.email = email;
+			
+			getDataManager().uploadUserEntity(this);
 		}
 	}
 	
@@ -73,7 +90,7 @@ public class User {
 	 * @return user with corresponding username; null if none exists or illegal name
 	 */
 	public static User getUser(String name) {
-		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
+		Entity entity = getDataManager().retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		if (entity == null) {
 			return null;
 		}
@@ -87,19 +104,20 @@ public class User {
 	 * 
 	 * @param name input name
 	 * @param email email for user
-	 * @return new user; null if name clash is detected or if name is illegal
+	 * @param realName real name for user
+	 * @return new user; null if username clash is detected or if username is illegal
 	 */
-	public static User createUser(String name, String email) {
+	public static User createUser(String name, String email, String realName) {
 		if (isAcceptableName(name)) {
 			return null;
 		}
 		
-		Entity entity = dataManager.retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
+		Entity entity = getDataManager().retrieveEntityFromDatabase(ENTITY_USER, name.toLowerCase());
 		if (entity != null) {
 			return null;
 		}
 		
-		return new User(name, email);
+		return new User(name, email, realName);
 	}
 	
 	/**
@@ -168,9 +186,22 @@ public class User {
 		
 		passwordHash = hashedResult;
 		
-		dataManager.uploadUserEntity(this);
+		getDataManager().uploadUserEntity(this);
 		
 		return true;
+	}
+	
+	/**
+	 * internal helper method to ensure data manager is initialized
+	 * 
+	 * @return initialized data manager
+	 */
+	private static RemoteDataManager getDataManager() {
+		if (dataManager == null) {
+			dataManager = new RemoteDataManager();
+		}
+		
+		return dataManager;
 	}
 	
 	/**
@@ -233,13 +264,20 @@ public class User {
 		return Arrays.equals(hashedResult, passwordHash);
 	}
 	
+	public String getRealName() { return realName; }
 	public String getUserName() { return userName; }
 	public byte[] getPasswordHash() { return passwordHash; }
 	public String getSalt() { return salt; }
 	public String getEmail() { return email; }
+	public User setRealName(String name) {
+		realName = name;
+		getDataManager().uploadUserEntity(this);
+		return this;
+	}
+	
 	public User setEmail(String s) {
 		email = s;
-		dataManager.uploadUserEntity(this);
+		getDataManager().uploadUserEntity(this);
 		return this;
 	}
 }
