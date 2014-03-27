@@ -32,7 +32,6 @@ public class FormBuilder {
 		final FormPanel form = new FormPanel();
 		form.setAction("/login");
 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
 		KeyDownHandler formKeypressCallback = new KeyDownHandler() {
@@ -101,7 +100,6 @@ public class FormBuilder {
 		final FormPanel form = new FormPanel();
 		form.setAction("/register");
 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
 		// Create a panel to hold all of the form widgets.
