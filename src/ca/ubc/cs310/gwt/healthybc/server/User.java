@@ -191,6 +191,11 @@ public class User {
 		return true;
 	}
 	
+	/**
+	 * internal helper method to ensure data manager is initialized
+	 * 
+	 * @return initialized data manager
+	 */
 	private static RemoteDataManager getDataManager() {
 		if (dataManager == null) {
 			dataManager = new RemoteDataManager();
