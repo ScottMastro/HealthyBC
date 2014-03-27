@@ -1,4 +1,5 @@
 package ca.ubc.cs310.gwt.healthybc.client;
+
 import java.util.ArrayList;
 
 import org.cobogw.gwt.user.client.ui.Rating;
@@ -8,13 +9,15 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 public class StarRating {
 
-	private Rating rating;
+	private Rating netRating;
+	private Rating myRating;
 	private String refID;
-	private boolean isRated = false;
 	private int score;
 	private int amount;
 
@@ -23,27 +26,29 @@ public class StarRating {
 		score = 0;
 		amount = 0;
 
-		getStoredRatings();
-		rating = new Rating(score,10);
+		//temporary until getStoredRating() gets real ratings
+		netRating = new Rating(0, 10);
+		netRating.setReadOnly(true);
+		
+		//TODO: store rating with user, get later
+		myRating = new Rating(0, 10);
 
+
+		getStoredRatings();
 		setClickListener();
 	}
 
 
 	private void setClickListener(){
-		rating.addClickHandler(new ClickHandler(){
+		myRating.addClickHandler(new ClickHandler(){
 
 			public void onClick(ClickEvent event) {
 
-				if(!isRated){
 					RatingHandlerAsync ratingHandler = GWT.create(RatingHandler.class);
 
 					AddRatingCallback callback = new AddRatingCallback();
-					ratingHandler.setRating(refID, rating.getValue(), callback);
-
-					isRated = true;
-				}
-
+					ratingHandler.setRating(refID, myRating.getValue(), callback);
+					
 			}
 		});
 	}
@@ -55,17 +60,15 @@ public class StarRating {
 		@Override
 		public void onFailure(Throwable caught) {
 			caught.printStackTrace();
-			isRated = false;
 		}
 
 		@Override
 		public void onSuccess(ArrayList<Boolean> result) {
 			if(result.get(0)){
-				amount += 1;						
-				isRated = true;
+				amount += 1;
+				getStoredRatings();
 			}
 			else{
-				isRated = false;
 				Window.alert("Unable to send rating");
 			}
 		}
@@ -90,13 +93,27 @@ public class StarRating {
 
 		@Override
 		public void onSuccess(ArrayList<Integer> result) {
+			
 			score = result.get(0);
 			amount = result.get(1);
+
+			netRating.setValue(score);
+			netRating.setTitle("Out of " + String.valueOf(amount) + " ratings.");
 
 		}
 	}
 
-	public Rating getStarRating(){
-		return rating;
+	public VerticalPanel getStarRating(){
+		VerticalPanel vp = new VerticalPanel();
+		
+		Label netLabel = new Label("Total Rating:");
+		vp.add(netLabel);
+		vp.add(netRating);
+		
+		Label myLabel = new Label("My Rating:");
+		vp.add(myLabel);
+		vp.add(myRating);
+		
+		return vp;
 	}
 }

@@ -24,7 +24,7 @@ public class RemoteDataManager {
 	public RemoteDataManager() {
 		datastore = DatastoreServiceFactory.getDatastoreService();
 	}
-	
+
 	/**
 	 * upload a user to the datastore, updating existing entry if it exists
 	 * 
@@ -32,12 +32,12 @@ public class RemoteDataManager {
 	 */
 	public void uploadUserEntity(User user) {
 		Entity e = new Entity("User", user.getUserName());
-		
+
 		e.setProperty("username", user.getUserName());
 		e.setProperty("hash", user.getPasswordHash());
 		e.setProperty("salt", user.getSalt());
 		e.setProperty("email", user.getEmail());
-		
+
 		uploadToDatabase(e);
 	}
 
@@ -122,7 +122,7 @@ public class RemoteDataManager {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Retrieves a clinic rating from the datastore
 	 *
@@ -130,30 +130,37 @@ public class RemoteDataManager {
 	 * @return ArrayList of integers where [0] = rating score and [1] = amount of ratings
 	 */		
 	public ArrayList<Integer> getClinicRating(String refID){
-		
-	    Key key = KeyFactory.createKey("Rating", refID);
-	    Entity existingRating;
-	    ArrayList<Integer> a = new ArrayList<Integer>();
-	    try {
+
+		Key key = KeyFactory.createKey("Rating", refID);
+		Entity existingRating;
+		ArrayList<Integer> a = new ArrayList<Integer>();
+		try {
 			existingRating = datastore.get(key);
 		} catch (EntityNotFoundException e) {
-		    
+
 			logger.log(Level.WARNING, "Unable to find rating for clinic " + refID);
-		    a.add(0);	a.add(0);
-		    return a;
-		
+			a.add(0);	a.add(0);
+			return a;
+
 		}
-	    
-	                //need to do this because of the format the datastore stores the integer
-	    int score = new Integer(existingRating.getProperty("score").toString());
-	    a.add(score);
-	    int amount = new Integer(existingRating.getProperty("amount").toString());
-	    a.add(amount);
-	    
-	    return a;
+
+		//need to do this because of the format the datastore stores the integer
+		int score = new Integer(existingRating.getProperty("score").toString());
+		int amount = new Integer(existingRating.getProperty("amount").toString());
+		
+		//just in case
+		if(amount == 0)
+			amount = 1;
+		
+		score = score/amount;
+				
+		a.add(score);
+		a.add(amount);
+
+		return a;
 
 	}
-	
+
 	/**
 	 * Updates rating entity in datstore or creates new entity if no ratings currently exist
 	 *
@@ -164,39 +171,39 @@ public class RemoteDataManager {
 	public boolean submitClinicRating(String refID, int rating){
 		Transaction txn = datastore.beginTransaction();
 		try {
-		    Key key = KeyFactory.createKey("Rating", refID);
-		    
-		    Entity existingRating = datastore.get(key);
-		    int amount = (int) existingRating.getProperty("amount");
-		    double score = (double) existingRating.getProperty("score");
-		    
-		    score = (score*amount + score)/(amount + 1);
-		    amount += 1;
+			Key key = KeyFactory.createKey("Rating", refID);
 
-		    existingRating.setProperty("amount", amount);
-		    existingRating.setProperty("score", score);
+			Entity existingRating = datastore.get(key);
+			long amount = (long) existingRating.getProperty("amount");
+			long score = (long) existingRating.getProperty("score");
 
-		    datastore.put(existingRating);
-		    txn.commit();
-		    
+			score += rating;
+			amount += 1;
+			
+			existingRating.setProperty("amount", amount);
+			existingRating.setProperty("score", score);
+
+			datastore.put(existingRating);
+			txn.commit();
+
 		} catch(EntityNotFoundException e){
-		    logger.log(Level.INFO, "Unable to find clinic entity " + refID + ", adding new entity");
-		    
-		    Entity newRating = new Entity("Rating", refID);
-		    newRating.setProperty("amount", 1);
-		    newRating.setProperty("score", rating);
-		    
-		    datastore.put(newRating);
-		    txn.commit();  
-		    
+			logger.log(Level.INFO, "Unable to find clinic entity " + refID + ", adding new entity");
+
+			Entity newRating = new Entity("Rating", refID);
+			newRating.setProperty("amount", 1);
+			newRating.setProperty("score", rating);
+
+			datastore.put(newRating);
+			txn.commit();  
+
 		} finally {
-		    if (txn.isActive()) {
-		        txn.rollback();
-		        return false;
-		    }
+			if (txn.isActive()) {
+				txn.rollback();
+				return false;
+			}
 		}
-		
-	    return true;
+
+		return true;
 
 	}
 
