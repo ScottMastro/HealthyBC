@@ -552,8 +552,15 @@ public class HealthyBC implements EntryPoint {
 				tabs.selectTab(findTab("Clinic Information"));
 
 				removeTab("View Ratings");
+				
+				VerticalPanel panel = new VerticalPanel();
 				StarRating rating = new StarRating(t.getRefID());
-				tabs.add(rating.getStarRating(), "View Ratings");
+				CommentBox box = new CommentBox(t.getRefID());
+				
+				panel.add(rating.getStarRating());
+				panel.add(box.getBox());
+				
+				tabs.add(panel, "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 
 
