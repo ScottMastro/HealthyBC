@@ -32,3 +32,18 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+.socialIcon {
+	padding: 1px;
+}
+
+.socialIcon:hover {
+	cursor: pointer;
+}
+
+.busy-PopupPanel {
+	margin: 1px;
+	border: 1px solid Black;
+	background-color: #ffffff;
+	margin: 0 auto;
+}

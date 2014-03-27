@@ -40,6 +40,11 @@
 		</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<servlet-name>OAuthLoginService</servlet-name>
+		<servlet-class>ca.ubc.cs310.gwt.healthybc.server.OAuthLoginServiceImpl</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>rating</servlet-name>
 		<url-pattern>/healthybc/rating</url-pattern>
@@ -68,6 +73,11 @@
 	<servlet-mapping>
 		<servlet-name>tabFetch</servlet-name>
 		<url-pattern>/healthybc/tabFetch</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>OAuthLoginService</servlet-name>
+		<url-pattern>/healthybc/OAuthLoginService</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->
