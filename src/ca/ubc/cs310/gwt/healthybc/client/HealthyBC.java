@@ -115,13 +115,13 @@ public class HealthyBC implements EntryPoint {
 	        // fired. Assuming the service returned a response of type text/html,
 	        // we can get the result text here (see the FormPanel documentation for
 	        // further explanation).
-	    	if (event.getResults().trim().equals("success")){
+	    	if (event.getResults().trim().startsWith("success")){
 	    		//Date expires = new Date(System.currentTimeMillis() + DURATION);
 	    		//Cookies.setCookie("HBC_username", username, expires, null, "/", false);
 	    		RootPanel.get().clear();
 	    		History.newItem("homepage");
 	    		init();
-	    	} else if (event.getResults().trim().equals("admin")){
+	    	} else if (event.getResults().trim().startsWith("admin")){
 	    		RootPanel.get().clear();
 	    		showAdminTools = true;
 	    		History.newItem("homepage");
