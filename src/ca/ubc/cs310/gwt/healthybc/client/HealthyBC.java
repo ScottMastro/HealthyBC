@@ -89,7 +89,13 @@ public class HealthyBC implements EntryPoint {
                 loginPanel = SocialLogin.createLoginPanel();
                
                 if (username != null){
-                	currentUser = username;
+                	currentUser = username.trim();
+                	if (currentUser.equalsIgnoreCase("admin")) {
+                		showAdminTools = true;
+                	}
+                	else {
+                		showAdminTools = false;
+                	}
                         //History.newItem("homepage");
                         init();
                 } else {
@@ -269,6 +275,9 @@ public class HealthyBC implements EntryPoint {
                         //History.newItem("homepage");
                         init();
                 } else if (event.getResults().trim().startsWith("admin")){
+                    Date expires = new Date(System.currentTimeMillis() + DURATION);
+                    String user = event.getResults().split(":")[1];
+                    Cookies.setCookie("HBC_username", user, expires, null, "/", false);
                         RootPanel.get().clear();
                         showAdminTools = true;
                         //History.newItem("homepage");
