@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("tabFetch")
-public interface TabHandler extends RemoteService {
+public interface TabFetcher extends RemoteService {
 	
 	public ArrayList<ClinicTabInfo> clinicTabInfo(TableInfo ti);
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface TabHandlerAsync {
+public interface TabFetcherAsync {
 	
 	public void clinicTabInfo(TableInfo ti, AsyncCallback<ArrayList<ClinicTabInfo>> callback);
 
