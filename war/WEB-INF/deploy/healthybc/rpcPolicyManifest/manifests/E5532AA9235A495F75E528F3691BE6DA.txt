@@ -1,0 +1,2 @@
+serviceClass: ca.ubc.cs310.gwt.healthybc.client.GreetingService
+path: 6D2C55B124DDCB13CA56CC49E6317729.gwt.rpc
