@@ -82,7 +82,7 @@ public class HealthyBC implements EntryPoint {
         public void onModuleLoad() {
                 singleton = this;
  
-                handleRedirect();
+//                handleRedirect();
                 String username = Cookies.getCookie("HBC_username");
                
                 if (username != null){
