@@ -12,4 +12,5 @@ public interface TabFetcher extends RemoteService {
 
 	public ArrayList<ClinicTabInfo> clinicTabInfo(MapInfo mi);
 
+	public ArrayList<Boolean> sendEmail(String text, String emailAddress, String title);
 }

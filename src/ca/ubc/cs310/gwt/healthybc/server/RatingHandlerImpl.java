@@ -2,9 +2,11 @@ package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
 
+import ca.ubc.cs310.gwt.healthybc.client.RatingHandler;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import ca.ubc.cs310.gwt.healthybc.client.RatingHandler;
+
 
 
 @SuppressWarnings("serial")
@@ -32,12 +34,14 @@ public class RatingHandlerImpl extends RemoteServiceServlet implements RatingHan
 
 	}
 	
-	public ArrayList<Boolean> addReview(String review){
+	public ArrayList<String> addReview(String refID, String review){
 		
-		//TODO: something
-		return null;
+		RemoteDataManager rdm = new RemoteDataManager();		
+		String response = rdm.submitClinicReview(refID, review);
+		ArrayList<String> a = new ArrayList<String>();
+		a.add(response);
 		
+		return a;		
 	}
-
 
 }

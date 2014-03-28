@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -32,7 +33,6 @@ public class FormBuilder {
 		final FormPanel form = new FormPanel();
 		form.setAction("/login");
 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
 		KeyDownHandler formKeypressCallback = new KeyDownHandler() {
@@ -101,7 +101,6 @@ public class FormBuilder {
 		final FormPanel form = new FormPanel();
 		form.setAction("/register");
 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
 		// Create a panel to hold all of the form widgets.

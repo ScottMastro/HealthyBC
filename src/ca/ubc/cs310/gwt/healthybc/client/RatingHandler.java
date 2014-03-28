@@ -13,7 +13,5 @@ public interface RatingHandler extends RemoteService {
 	
 	public ArrayList<Boolean> setRating(String refID, int score);
 	
-	public ArrayList<Boolean> addReview(String review);
-
-
+	public ArrayList<String> addReview(String refID, String review);
 }
