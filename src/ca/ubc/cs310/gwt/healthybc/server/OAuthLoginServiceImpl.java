@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi20;
-import org.scribe.builder.api.TwitterApi;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
@@ -49,35 +48,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuthLoginService
 {
-    //private final String SESSION                = "GWTOAuthLoginDemo_session";
-    private final String SESSION_ID             = "GWTOAuthLoginDemo_sessionid";
-    private final String SESSION_REQUEST_TOKEN  = "GWTOAuthLoginDemo_request_token";
-    private final String SESSION_NONCE          = "GWTOAuthLoginDemo_nonce";
-    private final String SESSION_PROTECTED_URL  = "GWTOAuthLoginDemo_protected_url";
-    private final String SESSION_ACCESS_TOKEN   = "GWTOAuthLoginDemo_access_token";
-    private final String SESSION_AUTH_PROVIDER = "GWTOAuthLoginDemo_auth_provider";
-    
-    private final String DEFAULT_USERNAME = "test";
-    private final String DEFAULT_PASSWORD = "secret";
-    private final String DEFAULT_JSON = "{" +
-                           "\n" +
-                           "  \":username:\" " + "\"" + DEFAULT_USERNAME + "\""+
-                           "\n" +
-                           "}";
- 
-    private String getDefaultUsername()
-    {
-        return DEFAULT_USERNAME;
-    }
-    private String getDefaultPassword()
-    {
-        return DEFAULT_PASSWORD;
-    }
-    
-    private String getDefaultJson()
-    {
-        return DEFAULT_JSON;
-    }
+    private final String SESSION_ID             		= "HBC_sessionid";
+    private final String SESSION_FACEBOOK_REQUEST_TOKEN = "HBC_facebook_request_token";
+    private final String SESSION_GOOGLE_REQUEST_TOKEN 	= "HBC_google_request_token";
+    private final String SESSION_NONCE          		= "HBC_nonce";
+    private final String SESSION_PROTECTED_URL  		= "HBC_protected_url";
+    private final String SESSION_ACCESS_TOKEN   		= "HBC_access_token";
+    private final String SESSION_AUTH_PROVIDER 			= "HBC_auth_provider";
 
     private final static Log logger=LogFactory .getLog(OAuthLoginServiceImpl.class);
 
@@ -110,17 +87,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
                 break;
             }
             
-            case SocialLogin.TWITTER:
-            {
-                service = new ServiceBuilder()
-                    .provider(TwitterApi.class)
-                    .apiKey(SocialSettings.TWITTER_APP_ID)
-                    .apiSecret(SocialSettings.TWITTER_APP_SECRET)
-                    .callback(SocialLogin.getCallbackUrl())
-                    .build();
-                break;
-            }
-            
             default:
             {
                 return null;
@@ -129,7 +95,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
         }
         return service;
     }
-    
 
     @Override
     public String getAuthorizationUrl(Credential credential) throws LoginAuthException
@@ -145,27 +110,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
         {
             throw new LoginAuthException("Could not build OAuthService");
         }
-        
-        
-        if (authProvider == SocialLogin.TWITTER)
-        {
-            String authProviderName = SocialLogin.getAuthProviderName(authProvider);
-            logger.info(authProviderName + " requires Request token first.. obtaining..");
-            try
-            {
-                requestToken = service.getRequestToken();
-                logger.info("Got request token: " + requestToken);
-                // we must save in the session. It will be required to
-                // get the access token
-                saveRequestTokenToSession(requestToken);
-            }
-            catch(Exception e)
-            {
-                String stackTrace = stackTraceToString(e);
-                throw new LoginAuthException("Could not get request token for " + authProvider + " " + stackTrace);
-            }
-            
-        }
  
         logger.info("Getting Authorization url...");
         try
@@ -176,7 +120,7 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
             // We'll use it
             if (authProvider == SocialLogin.FACEBOOK)
             {
-                String state=makeRandomString();
+                String state = makeRandomString();
                 authorizationUrl+="&state=" + state;
                 saveStateToSession(state);
             }
@@ -211,14 +155,24 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
         return sb.toString();
     }    
     
-    private void saveRequestTokenToSession(Token requestToken) throws LoginAuthException
+    private void saveRequestTokenToSession(Token requestToken, int authProvider) throws LoginAuthException
     {
         HttpSession session = getHttpSession();
         if (session == null)
         {
             throw new LoginAuthException(SocialLogin.SESSION_EXPIRED_MESSAGE);
         }
-        session.setAttribute(SESSION_REQUEST_TOKEN,requestToken);
+        switch (authProvider) {
+        	case SocialLogin.FACEBOOK: 
+        	{
+        		session.setAttribute(SESSION_FACEBOOK_REQUEST_TOKEN,requestToken);
+        	}
+        	case SocialLogin.GOOGLE:
+        	{
+        		session.setAttribute(SESSION_GOOGLE_REQUEST_TOKEN,requestToken);
+        	}
+        }
+        
     }
 
     private void saveSessionIdToSession(String sessionId) throws LoginAuthException
@@ -292,14 +246,25 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
         return sessionId;
     }
     
-    private Token getRequestTokenFromSession() throws LoginAuthException
+    private Token getRequestTokenFromSession(int authProvider) throws LoginAuthException
     {
         HttpSession session = getHttpSession();
         if (session == null)
         {
             throw new LoginAuthException(SocialLogin.SESSION_EXPIRED_MESSAGE);
         }
-        return (Token) session.getAttribute(SESSION_REQUEST_TOKEN);
+        switch (authProvider) 
+        {
+        	case SocialLogin.FACEBOOK:
+        	{
+        		return (Token) session.getAttribute(SESSION_FACEBOOK_REQUEST_TOKEN);
+        	}
+        	case SocialLogin.GOOGLE:
+        	{
+        		return (Token) session.getAttribute(SESSION_GOOGLE_REQUEST_TOKEN);
+        	}
+        }
+		return null;
     }
 
     private String makeRandomString()
@@ -341,7 +306,7 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
         }  
         
         /* if there is any request token in session, get it */
-        requestToken = getRequestTokenFromSession();
+        requestToken = getRequestTokenFromSession(authProvider);
         
         OAuthService service = null;
         Verifier verifier    = null;
@@ -372,36 +337,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
             logger.info(" Token: " + accessToken.getToken());
             logger.info(" Secret: " + accessToken.getSecret());
             logger.info(" Raw: " + accessToken.getRawResponse());
-        }
-        else
-        {
-            /*
-            ** Default provider.
-            ** The info will probably come from database. Password will 
-            ** probably some kind of salted hash. We're just hard coding
-            ** "test" and "secret" for the demo.
-            */
-            logger.info("Handing default login..");
-            String username = credential.getLoginName();
-            String password = credential.getPassword();
-            if (username == null)
-            {
-                throw new LoginAuthException("Default username can not be empty");
-            }
-            if (password == null)
-            {
-                throw new LoginAuthException("Default password not be empty");
-            }
-            if (username.equals(getDefaultUsername()) && password.equals(getDefaultPassword()))
-            {
-                
-            }
-            else
-            {
-                throw new LoginAuthException("Please use " + getDefaultUsername() + "  and " + getDefaultPassword() + " as Default Credential!");
-            }
-            
-            
         }
         
         // make session id
@@ -443,13 +378,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
                 throw new LoginAuthException("Could not retrieve protected resource: " + e);
             }
         }
-        else
-        {
-            socialUser = new SocialUser();
-            socialUser.setName(getDefaultUsername());
-                         
-            socialUser.setJson(getDefaultJson());
-        }
         socialUser.setSessionId(sessionId);
         
         return socialUser;
@@ -463,16 +391,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
             throw new LoginAuthException(SocialLogin.SESSION_EXPIRED_MESSAGE);
         }
         return (Token) session.getAttribute(SESSION_ACCESS_TOKEN);
-    }
-    
-    private int getAuthProviderFromSession() throws LoginAuthException
-    {
-        HttpSession session = getHttpSession();
-        if (session == null)
-        {
-            throw new LoginAuthException(SocialLogin.SESSION_EXPIRED_MESSAGE);
-        }
-       return (Integer) session.getAttribute(SESSION_AUTH_PROVIDER);
     }
     
     private SocialUser getSocialUserFromJson(String json, int authProvider) throws LoginAuthException
@@ -494,11 +412,7 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
                     JSONObject jsonObj = (JSONObject) obj;
 
                     socialUser.setJson(json);
-                    
                     socialUser.setName((String) jsonObj.get("name"));
-                    socialUser.setFirstName((String) jsonObj.get("first_name"));
-                    socialUser.setLastName((String) jsonObj.get("last_name"));
-                    socialUser.setGender((String)jsonObj.get("gender"));
                     
                     return socialUser;
                 }
@@ -530,56 +444,11 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
                 }
             }
             
-            case SocialLogin.TWITTER:
-            {   
-                try
-                {
-                    obj = jsonParser.parse(json);
-                    JSONObject jsonObj = (JSONObject) obj;
-                
-                    socialUser.setJson(json);
-                
-                    socialUser.setName((String) jsonObj.get("name"));
-                    socialUser.setGender((String)jsonObj.get("gender"));
-                    
-                    return socialUser;
-                }
-                catch (ParseException e)
-                {
-                  throw new LoginAuthException("Could not parse JSON data from " + authProviderName + ":" + e.getMessage());
-                }
-            }
-            
             default:
             {
                 throw new LoginAuthException("Unknown Auth Provider: " + authProviderName);
             }
         }
-        
-       
-        /*
-         * We don't use Gson() anymore as it choked on nested Facebook JSON data
-         * Dec-03-2012
-         */
-        
-        /*
-        // map json to SocialUser
-        try
-        {
-            Gson gson = new Gson();
-            SocialUser user = gson.fromJson(json,SocialUser.class);
-            // pretty print json
-            //gson = new GsonBuilder().setPrettyPrinting().create();
-            //String jsonPretty = gson.toJson(json);
-            user.setJson(json);
-            return user;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new OurException("Could not map userinfo JSON to SocialUser class: " + e);
-        }
-        */
     }
  
     private void verifyState(String state) throws LoginAuthException
@@ -609,17 +478,6 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
         {
             throw new LoginAuthException(SocialLogin.SESSION_EXPIRED_MESSAGE);
         }
-        /*
-        ServersideSession ssSession=getServersideSession();
-        if (ssSession == null)
-        {
-            throw new OurException(ClientUtils.SESSION_EXPIRED_MESSAGE);
-        }
-        if (sessionId.equals(ssSession.getSessionId()))
-        {
-            return session;
-        }
-        */
         String savedSessionId = getSessionIdFromSession();
         if (sessionId.equals(savedSessionId))
         {
@@ -629,32 +487,13 @@ public class OAuthLoginServiceImpl extends RemoteServiceServlet implements OAuth
     }
 
     @Override
-    public void logout(String sessionId) throws LoginAuthException
+    public void logout(String sessionId, int authProvider) throws LoginAuthException
     {
         validateSession(sessionId);
         
-        getHttpSession().invalidate();
+        // getHttpSession().invalidate();
         logger.info("Invalidated HTTP session");
         
-    }
-    
-
-    @Override
-    public SocialUser fetchMe(String sessionId) throws LoginAuthException
-    {
-        validateSession(sessionId);
-        int authProvider = getAuthProviderFromSession();
-        if (authProvider == SocialLogin.DEFAULT)
-        {
-            SocialUser user = new SocialUser();
-            user.setName(getDefaultUsername());
-            user.setJson(getDefaultJson());
-            return user;
-        }
-        Token accessToken = getAccessTokenFromSession();
-        SocialUser user = getSocialUser(accessToken,authProvider);
-        
-        return user;
     }
     
     @Override

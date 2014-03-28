@@ -48,6 +48,7 @@ h1 {
 
 .socialIcon {
 	padding: 1px;
+	vertical-align:middle;
 }
 
 .socialIcon:hover {
@@ -59,4 +60,11 @@ h1 {
 	border: 1px solid Black;
 	background-color: #ffffff;
 	margin: 0 auto;
+}
+
+.iconLabel {
+	display: table-cell;
+	vertical-align: middle;
+	height: 24px;
+	padding-left: 6px;
 }

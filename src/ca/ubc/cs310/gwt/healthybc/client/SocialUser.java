@@ -16,6 +16,9 @@ public class SocialUser implements Serializable
     private String email;
     private String json;
     
+    private String firstName;
+    private String lastName;
+    
     /* must be named exactly as JSON google returns -- starts */
     private String id;
     private String name;        // full name
@@ -25,26 +28,6 @@ public class SocialUser implements Serializable
     private String link;
     private String locale;
     /* must be named exactly as JSON google returns -- ends */
-    
-    /* Yahoo --starts */
-    private String guid; // is it always the same for the user??
-    private String givenName;
-    private String familyName;
-    private String nickname;
-    private String location;
-    private String birthdate;
-    private String timeZone;
-    private String lang;
-    private String relationShipStatus;
-    private int    displayAge;
-    /* Yahoo --ends */
-    
-    /* Linkedin -starts */
-    private String firstName;
-    private String lastName;
-    private String headline;
-    /* Linkedin -starts */
-    
     
     /*
      Google returns JSON like:
@@ -59,35 +42,6 @@ public class SocialUser implements Serializable
           "locale": "en-US"
        }
      */
-    /*
-     * http://developer.yahoo.com/social/rest_api_guide/extended-profile-resource.html#
-     Yahoo returns JSON like:
-{
-  "profile": {
-    "uri": "http:\/\/social.yahooapis.com\/v1\/user\/ECUFIYO7BLY5FOV54XAPEQDC3Y\/profile",
-    "guid": "ECUFIYO7BLY5FOAPEQDC3Y",
-    "birthYear": 1969,
-    "created": "2010-01-23T13:07:10Z",
-    "displayAge": 43,
-    "gender": "M",
-    "image": {
-      "height": 192,
-      "imageUrl": "http:\/\/l.yimg.com\/a\/i\/identity2\/profile_192c.png",
-      "size": "192x192",
-      "width": 192
-    },
-    "location": "Philadelphia, Pennsylvania",
-    "memberSince": "2006-08-04T13:27:58Z",
-    "nickname": "jdoe",
-    "profileUrl": "http:\/\/profile.yahoo.com\/ECUFIYO7BLY5FOV54XAPEQDC3Y",
-    "searchable": false,
-    "updated": "2011-04-16T07:28:00Z",
-    "isConnected": false
-  }
-}
-     */
-    
-    
     
     public String getSessionId()
     {
@@ -169,112 +123,17 @@ public class SocialUser implements Serializable
     {
         this.locale=locale;
     }
-    public String getGuid()
-    {
-        return guid;
+    public String getFirstName() {
+    	return firstName;
     }
-    public void setGuid(String guid)
-    {
-        this.guid=guid;
-    }
-    public String getGivenName()
-    {
-        return givenName;
-    }
-    public void setGivenName(String givenName)
-    {
-        this.givenName=givenName;
-    }
-    public String getFamilyName()
-    {
-        return familyName;
-    }
-    public void setFamilyName(String familyName)
-    {
-        this.familyName=familyName;
-    }
-    public String getNickname()
-    {
-        return nickname;
-    }
-    public void setNickname(String nickname)
-    {
-        this.nickname=nickname;
-    }
-    public String getLocation()
-    {
-        return location;
-    }
-    public void setLocation(String location)
-    {
-        this.location=location;
-    }
-    public String getBirthdate()
-    {
-        return birthdate;
-    }
-    public void setBirthdate(String birthdate)
-    {
-        this.birthdate=birthdate;
-    }
-    public String getTimeZone()
-    {
-        return timeZone;
-    }
-    public void setTimeZone(String timeZone)
-    {
-        this.timeZone=timeZone;
-    }
-    public String getLang()
-    {
-        return lang;
-    }
-    public void setLang(String lang)
-    {
-        this.lang=lang;
-    }
-    public String getRelationShipStatus()
-    {
-        return relationShipStatus;
-    }
-    public void setRelationShipStatus(String relationShipStatus)
-    {
-        this.relationShipStatus=relationShipStatus;
-    }
-    public int getDisplayAge()
-    {
-        return displayAge;
-    }
-    public void setDisplayAge(int displayAge)
-    {
-        this.displayAge=displayAge;
-    }
-    
-    /* linkedin */ 
-    public String getFirstName()
-    {
-        return firstName;
-    }
-    public void setFirstName(String firstName)
-    {
-        this.firstName=firstName;
-    }
-    public String getLastName()
-    {
-        return lastName;
-    }
-    public void setLastName(String lastName)
-    {
-        this.lastName=lastName;
-    }
-    public String getHeadline()
-    {
-        return headline;
-    }
-    public void setHeadline(String headline)
-    {
-        this.headline=headline;
-    }
-    /* linkedin */ 
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 }
 

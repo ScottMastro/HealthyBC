@@ -23,9 +23,8 @@ public interface OAuthLoginService extends RemoteService
 {
     public String     getAuthorizationUrl(Credential credential) throws LoginAuthException;
     public SocialUser verifySocialUser(Credential credential) throws LoginAuthException;
-    public SocialUser fetchMe(String sessionId) throws LoginAuthException;
     public String     getAccessToken(String sessionId) throws LoginAuthException;
-    public void       logout(String sessionId) throws LoginAuthException;
+    public void       logout(String sessionId, int authProvider) throws LoginAuthException;
     /**
      * Utility class for simplifying access to the instance of async service.
      */

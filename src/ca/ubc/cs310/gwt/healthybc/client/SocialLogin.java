@@ -2,16 +2,20 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import org.scribe.oauth.OAuthService;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class SocialLogin {
 
@@ -31,23 +35,20 @@ public class SocialLogin {
 	// Protected Resource URLs
 	private static final String FACEBOOK_PROTECTED_RESOURCE_URL  = "https://graph.facebook.com/me";
     private static final String GOOGLE_PROTECTED_RESOURSE_URL    = "https://www.googleapis.com/oauth2/v1/userinfo";
-    private static final String TWITTER_PROTECTED_RESOURCE_URL   = "https://api.twitter.com/1/account/verify_credentials.json";
     
     private static final String CALLBACK_URL = "https://1-dot-a161527.appspot.com/";
     
-    public static final String SESSION_EXPIRED_MESSAGE = "Session has expired";
+    public static final String SESSION_EXPIRED_MESSAGE = "Session has expired.";
     
     // Cookies
-    private final static String SESSION_ID_COOKIE         = "healthybc_session_id";
-    private final static String AUTH_PROVIDER_COOKIE      = "healthybc_provider";
-    private final static String AUTH_PROVIDER_NAME_COOKIE = "healthybc_provider_name";
-    private final static String USERNAME_COOKIE           = "healthybc_user";
-    private final static String REDIRECT_URL_COOKIE       = "healthybc_redirect_url";
-    
-    // Loading dialog position
-//    public final static int DIALOG_X_POSITION = 600;
-//    public final static int DIALOG_Y_POSITION = 110;
-    
+    private final static String FACEBOOK_ID_COOKIE 		= "HBC_facebook_id";
+    private final static String GOOGLE_ID_COOKIE 		= "HBC_google_id";
+    private final static String FACEBOOK_TOKEN_COOKIE 	= "HBC_facebook_token";
+    private final static String GOOGLE_TOKEN_COOKIE 	= "HBC_google_token";
+    private final static String REDIRECT_URL_COOKIE 	= "HBC_redirect_url";
+    private final static String AUTH_PROVIDER_COOKIE	= "HBC_auth_provider";
+    private final static String SESSION_ID_COOKIE		= "HBC_session_id";
+
 	public static SocialLogin getInstance() {
 		if (singleton == null)
 			singleton = new SocialLogin();
@@ -55,39 +56,66 @@ public class SocialLogin {
 	}
 	
 	// Returns the panel containing buttons for social media logins
-	public static HorizontalPanel createLoginPanel() {
-		HorizontalPanel container = new HorizontalPanel();
+	public static Widget createLoginPanel() {
+		VerticalPanel container = new VerticalPanel();
+		container.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		String imageStyle = "socialIcon";
 		
+		HorizontalPanel fbContainer = new HorizontalPanel();
+		HorizontalPanel gContainer = new HorizontalPanel();
+		fbContainer.setStyleName("socialContainer");
+		gContainer.setStyleName("socialContainer");
+		
+//		HandlerRegistration fbHandlerReg;
+//		HandlerRegistration gHandlerReg;
+		
+		ClickHandler fbCallback = new ClickHandler() 
+		{
+			@Override
+			public void onClick(ClickEvent event) {
+				getAuthorizationUrl(FACEBOOK);
+			}
+		};
+		
+		ClickHandler gCallback = new ClickHandler() 
+		{
+			@Override
+			public void onClick(ClickEvent event) {
+				getAuthorizationUrl(GOOGLE);
+			}	
+		};
+		
+		// Facebook
 		facebookImage = new Image("images/facebook.png");
 		facebookImage.setStyleName(imageStyle);
-		facebookImage.setTitle("Login with Facebook");
-		container.add(facebookImage);
+		facebookImage.setTitle("Connect with Facebook");
+		facebookImage.setPixelSize(24,24);
+		fbContainer.add(facebookImage);
 		
+		Anchor fbLabel = new Anchor("Connect with Facebook");
+		fbLabel.setStyleName("iconLabel");
+		fbContainer.add(new SimplePanel(fbLabel));
+		facebookImage.addClickHandler(fbCallback);
+		fbLabel.addClickHandler(fbCallback);
+
+		
+		// Google
 		googleImage = new Image("images/google.png");
 		googleImage.setStyleName(imageStyle);
-		googleImage.setTitle("Login with Google");
-		container.add(googleImage);
+		googleImage.setTitle("Connect with Google");
+		googleImage.setPixelSize(24,24);
+		gContainer.add(googleImage);
 		
-		facebookImage.addClickHandler(new ClickHandler() 
-		{
-			@Override
-			public void onClick(ClickEvent event) {
-				final int authProvider = FACEBOOK;
-				getAuthorizationUrl(authProvider);
-			}	
-		});
+		Anchor gLabel = new Anchor("Connect with Google");
+		gLabel.setStyleName("iconLabel");
+		gContainer.add(gLabel);
+		googleImage.addClickHandler(gCallback);
+		gLabel.addClickHandler(gCallback);
 		
-		googleImage.addClickHandler(new ClickHandler() 
-		{
-			@Override
-			public void onClick(ClickEvent event) {
-				final int authProvider = GOOGLE;
-				getAuthorizationUrl(authProvider);
-			}	
-		});
+		container.add(fbContainer);
+		container.add(gContainer);
 		
-		return container;
+		return (Widget) container;
 	}
 	
 	public static Anchor createLogoutPanel() {
@@ -110,6 +138,7 @@ public class SocialLogin {
 	public static void logout()
     {
         final String sessionId = getSessionIdFromCookie();
+        final int authProvider = getAuthProviderFromCookieAsInt();
         
         new LoginCallbackAsync<Void>()
         {
@@ -123,15 +152,13 @@ public class SocialLogin {
             @Override
             public void onSuccess(Void result)
             {
-                HealthyBC.get().log("Logged out.. clearing cookies");
-                HealthyBC.get().log("Redirecting to site url");
                 reload();
             }
 
             @Override
             protected void callService(AsyncCallback<Void> cb)
             {
-                OAuthLoginService.Util.getInstance().logout(sessionId,cb);
+                OAuthLoginService.Util.getInstance().logout(sessionId,authProvider,cb);
             }
         }.go("Logging out..");
     }   
@@ -193,6 +220,15 @@ public class SocialLogin {
         }.go("Getting Authorization URL from " + authProviderName + "...");
     }
 	
+	protected static void saveAuthProvider(int authProvider) {
+		Cookies.setCookie(AUTH_PROVIDER_COOKIE, Integer.toString(authProvider));
+	}
+
+	public static void clearCookies() {
+		Cookies.removeCookie(REDIRECT_URL_COOKIE);
+		Cookies.removeCookie(AUTH_PROVIDER_COOKIE);
+	}
+
 	public static String getCallbackUrl() {
 		return CALLBACK_URL;
 	}
@@ -202,8 +238,6 @@ public class SocialLogin {
 			 return "Facebook";
 		 else if (authProvider == GOOGLE)
 			 return "Google";
-		 else if (authProvider == TWITTER)
-			 return "Twitter";
 		 
 		 return "Default";
 	}
@@ -216,22 +250,14 @@ public class SocialLogin {
 		Cookies.setCookie(REDIRECT_URL_COOKIE, url);		
 	}
 
-	private static void saveAuthProvider(int authProvider) {
-		Cookies.setCookie(AUTH_PROVIDER_COOKIE,Integer.toString(authProvider)); 
-		String authProviderName = getAuthProviderName(authProvider);
-		saveAuthProviderName(authProviderName);
+	private static void removeFacebookAccount() {
+		Cookies.removeCookie(FACEBOOK_ID_COOKIE);
+		Cookies.removeCookie(FACEBOOK_TOKEN_COOKIE);
 	}
-
-	private static void saveAuthProviderName(String authProviderName) {
-		Cookies.setCookie(AUTH_PROVIDER_NAME_COOKIE,authProviderName);
-	}
-
-	private static void clearCookies() {
-		Cookies.removeCookie(SESSION_ID_COOKIE);
-        Cookies.removeCookie(AUTH_PROVIDER_COOKIE);
-        Cookies.removeCookie(AUTH_PROVIDER_NAME_COOKIE);
-        Cookies.removeCookie(USERNAME_COOKIE);
-        Cookies.removeCookie(REDIRECT_URL_COOKIE);
+	
+	private static void removeGoogleAccount() {
+		Cookies.removeCookie(GOOGLE_ID_COOKIE);
+		Cookies.removeCookie(GOOGLE_TOKEN_COOKIE);
 	}
 
 	public static void handleException(Throwable caught) {
@@ -255,25 +281,7 @@ public class SocialLogin {
 	}
 
 	private static void showSessionExpired() {
-		Window.alert("Your session seems to have expired!\n" +  "You will be logged out");
-        reload();
-	}
-
-	public static void reload() {
-        String appUrl = getRedirectUrlFromCookie();
-        int savedAuthProvider = getAuthProviderFromCookieAsInt();
-        
-        clearCookies();
-        
-        if (savedAuthProvider == DEFAULT || savedAuthProvider == UNKNOWN)
-        {
-            HealthyBC.updateLoginStatus();
-        }
- 
-        if (appUrl != null)
-        {
-            redirect(appUrl);
-        }
+		Window.alert("Your session seems to have expired!\n" +  "Please re-authorize.");
 	}
 
     private static String getRedirectUrlFromCookie() {
@@ -314,25 +322,12 @@ public class SocialLogin {
                 return GOOGLE_PROTECTED_RESOURSE_URL;
             }
 
-            case TWITTER:
-            {
-                return TWITTER_PROTECTED_RESOURCE_URL;
-            }
-            
             default:
             {
                 return null;
             }
         }
     }
-
-	public static String getAuthProviderNameFromCookie() {
-		return Cookies.getCookie(AUTH_PROVIDER_NAME_COOKIE);
-	}
-
-	public static String getUsernameFromCookie() {
-		return Cookies.getCookie(USERNAME_COOKIE);
-	}
 
     public static boolean redirected()
     {
@@ -344,10 +339,7 @@ public class SocialLogin {
         
         if (Location.getParameter("code") != null) //facebook, google
             return true;
-        
-        if (Location.getParameter("oauth_token") != null) // twitter
-            return true;
-        
+
         String error = Location.getParameter("error");
         if (error != null)
         {
@@ -360,6 +352,19 @@ public class SocialLogin {
         return false;
     }
 
+    public static void reload()
+    {
+        String appUrl = getRedirectUrlFromCookie();
+        int savedAuthProvider = getAuthProviderFromCookieAsInt();
+        
+        clearCookies();
+
+        if (appUrl != null)
+        {
+            redirect(appUrl);
+        }
+   }
+
 	private static String getAuthProviderFromCookie() {
 		return Cookies.getCookie(AUTH_PROVIDER_COOKIE);
 	}
@@ -369,7 +374,8 @@ public class SocialLogin {
         String authProvider = getAuthProviderFromCookie();
         if (authProvider == null)
             return null;
-        int ap = DEFAULT;
+        
+        int ap;
         
         try
         {
@@ -382,12 +388,6 @@ public class SocialLogin {
         
         switch(ap)
         {
-            case DEFAULT:
-            {
-                Credential credential = new Credential();
-                credential.setAuthProvider(ap);
-                return credential;
-            }
             case FACEBOOK:
             {
             	Credential credential = new Credential();
@@ -403,13 +403,6 @@ public class SocialLogin {
                 credential.setVerifier(Location.getParameter("code"));
                 return credential;
             }
-            case TWITTER:
-            {
-                Credential credential = new Credential();
-                credential.setAuthProvider(ap);
-                credential.setVerifier(Location.getParameter("oauth_verifier"));
-                return credential;
-            }
             
             default:
             {
@@ -422,7 +415,21 @@ public class SocialLogin {
 		Cookies.setCookie(SESSION_ID_COOKIE,sessionId);
 	}
 
-	public static void saveUsername(String name) {
-		Cookies.setCookie(USERNAME_COOKIE,name);
+	public static String getAuthProviderNameFromCookie()
+    {
+        return Cookies.getCookie(AUTH_PROVIDER_COOKIE);
+    }
+
+	public static void saveName(String name, int authProvider) {
+		switch (authProvider) {
+			case FACEBOOK:
+			{
+				Cookies.setCookie(FACEBOOK_ID_COOKIE, name);
+			}
+			case GOOGLE:
+			{
+				Cookies.setCookie(GOOGLE_ID_COOKIE, name);
+			}
+		}
 	}
 }

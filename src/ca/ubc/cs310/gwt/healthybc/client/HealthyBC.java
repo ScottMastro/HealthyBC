@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -58,9 +59,9 @@ public class HealthyBC implements EntryPoint {
 	private boolean showAdminTools = false; 
 	private String username;
 
-	// Social Login vars
-	private static HTML welcomeLabel = new HTML();
-	private static HorizontalPanel loginPanel = new HorizontalPanel();
+	// Tab contents
+	private static HTML welcomeLabel;
+	private static Widget socialLoginPanel;
 	private static Anchor logoutAnchor = new Anchor(); 
 
 	public static HealthyBC get() {
@@ -77,20 +78,19 @@ public class HealthyBC implements EntryPoint {
 	public void onModuleLoad() {
 		singleton = this;
 
-		handleRedirect();
 		username = Cookies.getCookie("HBC_username");
-//		username = SocialLogin.getUsernameFromCookie();
 
 		logoutAnchor = SocialLogin.createLogoutPanel();
-		loginPanel = SocialLogin.createLoginPanel();
+		socialLoginPanel = SocialLogin.createLoginPanel();
 		
-		if (username != null){
+//		if (username != null){
 			History.newItem("homepage");
 			init();
-		} else {
-			History.newItem("login");
-			login();
-		}
+			handleRedirect();
+//		} else {
+//			History.newItem("login");
+//			login();
+//		}
 
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
 
@@ -99,7 +99,6 @@ public class HealthyBC implements EntryPoint {
 				System.out.println(historyToken);
 			}
 		});
-
 	}
 
 
@@ -107,16 +106,8 @@ public class HealthyBC implements EntryPoint {
 	{
 		if (SocialLogin.redirected())
 		{
-			if (!SocialLogin.alreadyLoggedIn())
-			{
-				verifySocialUser();
-			}
+			verifySocialUser();
 		}
-		else
-		{
-			//Window.alert("No redirection..");
-		}
-		updateLoginStatus();
 	}
 
 	private void verifySocialUser()
@@ -125,35 +116,8 @@ public class HealthyBC implements EntryPoint {
 		final int authProvider = SocialLogin.getAuthProviderFromCookieAsInt();
 		log("Verifying " + authProviderName + " user ...");
 
-
-		final String userName = "";	// = loginScreen.getUsernameTextBox().getText();
-		final String password = "";	// = loginScreen.getPasswordTextBox().getText();
-
-		/* Default Login Disabled
-		 * Uncomment to enable
-
-        if (authProvider == SocialLogin.DEFAULT)
-        {
-            if (userName.length() == 0)
-            {
-                Window.alert("Username is empty");
-                return;
-            }
-            if (password.length() == 0)
-            {
-                Window.alert("Password is emtpy");
-                return;
-            }
-            else
-            {
-                hideLoginDialog();
-            }
-        }
-		 */
-
 		new LoginCallbackAsync<SocialUser>()
 		{
-
 			@Override
 			public void onSuccess(SocialUser result)
 			{
@@ -163,14 +127,11 @@ public class HealthyBC implements EntryPoint {
 				if (result.getName() != null)
 				{
 					name = result.getName();
+					SocialLogin.saveName(name, authProvider);
 				}
 
-				log(authProviderName + " user '" + name + "' is verified!\n" + result.getJson());
-				
-				Window.alert(result.getJson());
-				
-				SocialLogin.saveUsername(name);
-				updateLoginStatus();
+				// TODO: remove alert in final version
+				Window.alert(result.getJson());				
 			}
 
 			@Override
@@ -184,14 +145,6 @@ public class HealthyBC implements EntryPoint {
 						log("verifySocialUser: Could not get credential for " + authProvider + " user");
 						return;
 					}
-
-					// For regular user/pass login
-					if (authProvider == SocialLogin.DEFAULT)
-					{
-						credential.setLoginName(userName);
-						credential.setPassword(password);
-					}
-
 					OAuthLoginService.Util.getInstance().verifySocialUser(credential,cb);
 				}
 				catch (Exception e)
@@ -225,16 +178,6 @@ public class HealthyBC implements EntryPoint {
 
 		// Create registration form
 		hpanel.add(createRegisterForm());
-
-		// Create social login/logout panel
-		hpanel.add(loginPanel);
-		loginPanel.setVisible(false);
-
-		
-		hpanel.add(logoutAnchor);
-		logoutAnchor.setVisible(false);
-
-		updateLoginStatus();
 
 		rtpanel.add(hpanel);
 		rtpanel.add(new HTML("Created by: The Blank Slate Team (CPSC 310)"));
@@ -314,12 +257,16 @@ public class HealthyBC implements EntryPoint {
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
 		tabNames = new ArrayList<String>();
 
+		socialLoginPanel = SocialLogin.createLoginPanel();
+		welcomeLabel = new HTML(WELCOME_STRING);
+		
 		// add home page & logout button
 		tabs.add(welcomeLabel, "Home");
-		tabs.add(logoutAnchor, "Account");
+		tabs.add(socialLoginPanel, "Account");
 		
 		tabNames.add("Home");
-
+		tabNames.add("Account");
+		
 		createMap();
 		createTable();
 		createUploadForm();
@@ -558,94 +505,6 @@ public class HealthyBC implements EntryPoint {
 
 
 			}
-		}
-	}
-
-	// Controls which of either login or logout panel is visible
-	public static void updateLoginStatus()
-	{
-		// if there is a client side session show, Logout link
-		if (SocialLogin.alreadyLoggedIn())
-		{
-			//log("Already logged in..showing Logout anchor");
-			showLogoutAnchor();
-		}
-		else
-		{
-			//log("Showing Login anchor..");
-			showLoginAnchor();
-		}
-		updateLoginLabel();
-	}
-
-
-	private static void showLoginAnchor() {
-		logoutAnchor.setVisible(false);
-		loginPanel.setVisible(true);
-		welcomeLabel.setHTML(WELCOME_STRING);
-	}
-
-	private static void showLogoutAnchor() {
-		loginPanel.setVisible(false);
-		logoutAnchor.setVisible(true);
-	}
-
-	private static void updateLoginLabel() {
-
-		String name = SocialLogin.getUsernameFromCookie();
-		String authProviderName = SocialLogin.getAuthProviderNameFromCookie();
-		int authProvider = SocialLogin.getAuthProviderFromCookieAsInt();
-
-		String uri = null;
-
-		if (name != null)
-		{
-			String labelStr = "Welcome " + "<font color=\"#006600\">"+ authProviderName + "</font>" + " user " + "<font color=\"#006600\">" + name + "</font>";
-			welcomeLabel.setHTML(labelStr);
-			String tooltip = "You logged in using ";
-			switch(authProvider)
-			{
-			case SocialLogin.FACEBOOK:
-			{
-				uri = "images/facebook.png";
-				tooltip += "Facebook";
-				break;
-			}
-			case SocialLogin.GOOGLE:
-			{
-				uri = "images/google.png";
-				tooltip += "Google";
-				break;
-			}
-			case SocialLogin.TWITTER:
-			{
-				uri = "images/twitter.png";
-				tooltip += "Twitter";
-				break;
-			}
-
-			case SocialLogin.DEFAULT:
-			{
-				// No image
-				break;
-			}
-
-			default:
-			{
-				uri = null;
-				break;
-			}
-			}
-			if (uri != null)
-			{
-				//                appScreen.getAuthProviderImage().setUrl(uri);
-				//                appScreen.getAuthProviderImage().setSize("24px","24px");
-				//                appScreen.getAuthProviderImage().setTitle(tooltip);
-			}
-		}
-		else
-		{
-			welcomeLabel.setHTML(WELCOME_STRING);
 		}
 	}
 }
