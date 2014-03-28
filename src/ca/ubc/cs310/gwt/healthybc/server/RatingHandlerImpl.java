@@ -2,9 +2,11 @@ package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
 
+import ca.ubc.cs310.gwt.healthybc.client.RatingHandler;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import ca.ubc.cs310.gwt.healthybc.client.RatingHandler;
+
 
 
 @SuppressWarnings("serial")
@@ -41,6 +43,5 @@ public class RatingHandlerImpl extends RemoteServiceServlet implements RatingHan
 		
 		return a;		
 	}
-
 
 }
