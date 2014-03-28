@@ -2,7 +2,6 @@ package ca.ubc.cs310.gwt.healthybc.server;
  
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.UUID;
 import java.util.logging.Logger;
  
 import javax.servlet.ServletException;
@@ -66,7 +65,7 @@ public class Login extends HttpServlet
                 response.setContentType("text/html");
  
                 PrintWriter out = response.getWriter();
-                out.print(resp + ":" + UUID.randomUUID().toString());
+                out.print(resp + ":" + StringGenerator.getInstance().generateString(10, 15, false, false);
                 out.close();
         }
        
