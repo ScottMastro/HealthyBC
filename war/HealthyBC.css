@@ -34,14 +34,14 @@ h1 {
 }
 
   /* CommentBox before */
-.commentBoxBefore {
+.boxBefore {
   color: #C0C0C0;
   resize: none;
   font-style: italic;
 }
 
 /* CommentBox after */
-.commentBoxAfter {
+.boxAfter {
   color: black;
   resize: none;
 }
