@@ -210,14 +210,14 @@ public class HealthyBC implements EntryPoint {
                 // further explanation).
                 if (event.getResults().trim().startsWith("success")){
                         Date expires = new Date(System.currentTimeMillis() + DURATION);
-                        String user = event.getResults().split(":")[1];
+                        String user = event.getResults().split(":")[1].trim();
                         Cookies.setCookie("HBC_username", user, expires, null, "/", false);
                         RootPanel.get().clear();
                         //History.newItem("homepage");
                         init();
                 } else if (event.getResults().trim().startsWith("admin")){
                     Date expires = new Date(System.currentTimeMillis() + DURATION);
-                    String user = event.getResults().split(":")[1];
+                    String user = event.getResults().split(":")[1].trim();
                     Cookies.setCookie("HBC_username", user, expires, null, "/", false);
                         RootPanel.get().clear();
                         showAdminTools = true;
@@ -248,7 +248,7 @@ public class HealthyBC implements EntryPoint {
                                 if (event.getResults().trim().startsWith("success")){
                                         Window.alert("New user created.");
                                 Date expires = new Date(System.currentTimeMillis() + DURATION);
-                                String user = event.getResults().split(":")[1];
+                                String user = event.getResults().split(":")[1].trim();
                                 Cookies.setCookie("HBC_username", user, expires, null, "/", false);
                                        
                                         RootPanel.get().clear();
