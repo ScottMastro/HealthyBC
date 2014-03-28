@@ -69,7 +69,7 @@ public class User {
                
                 if (userEntity != null) {
                         realName = (String) userEntity.getProperty(PROPERTY_REALNAME);
-                        passwordHash = longToByteArray((long) userEntity.getProperty(PROPERTY_HASH));
+                        passwordHash = longToByteArray((Long) userEntity.getProperty(PROPERTY_HASH));
                         salt = (String) userEntity.getProperty(PROPERTY_SALT);
                         this.email = (String) userEntity.getProperty(PROPERTY_EMAIL);
                 }

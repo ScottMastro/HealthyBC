@@ -175,8 +175,8 @@ public class RemoteDataManager {
                         Key key = KeyFactory.createKey("Rating", refID);
  
                         Entity existingRating = datastore.get(key);
-                        long amount = (long) existingRating.getProperty("amount");
-                        long score = (long) existingRating.getProperty("score");
+                        long amount = (Long) existingRating.getProperty("amount");
+                        long score = (Long) existingRating.getProperty("score");
  
                         score += rating;
                         amount += 1;
