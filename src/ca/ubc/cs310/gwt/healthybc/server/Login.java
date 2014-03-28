@@ -44,7 +44,7 @@ public class Login extends HttpServlet
                         response.setContentType("text/html");
  
                         PrintWriter out = response.getWriter();
-                        out.println(resp + ":" + UUID.randomUUID().toString());
+                        out.println(resp + ":" + username);
                         out.close();
                         return;
                 }
@@ -65,7 +65,7 @@ public class Login extends HttpServlet
                 response.setContentType("text/html");
  
                 PrintWriter out = response.getWriter();
-                out.print(resp + ":" + StringGenerator.getInstance().generateString(10, 15, false, false);
+                out.print(resp + ":" + username;
                 out.close();
         }
        
