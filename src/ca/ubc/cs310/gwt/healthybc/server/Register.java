@@ -50,7 +50,7 @@ public class Register extends HttpServlet
                 response.setContentType("text/html");
  
                 PrintWriter out = response.getWriter();
-                out.println(resp + ":" + username);
+                out.print(resp + ":" + username);
                 out.close();
         }
        
