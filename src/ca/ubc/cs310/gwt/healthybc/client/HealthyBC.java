@@ -274,6 +274,8 @@ public class HealthyBC implements EntryPoint {
                 tabs = new TabLayoutPanel(2.5, Unit.EM);
                 tabNames = new ArrayList<String>();
  
+                socialLoginPanel = SocialLogin.createLoginPanel();
+                
                 // add home page & logout button
                 tabs.add(welcomeLabel, "Home");
                 tabs.add(socialLoginPanel, "Account");
