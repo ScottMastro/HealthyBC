@@ -28,7 +28,7 @@ public class CommentBox {
 		this.refID = refID;
 
 		box = new TextArea();
-		box.addStyleName("commentBoxBefore");
+		box.addStyleName("boxBefore");
 		box.setText(DEFAULT_TEXT);
 
 		box.setWidth("300px");
@@ -58,8 +58,8 @@ public class CommentBox {
 	}
 
 	private void change(){
-		box.removeStyleName("commentBoxBefore");
-		box.addStyleName("commentBoxAfter");
+		box.removeStyleName("boxBefore");
+		box.addStyleName("boxAfter");
 
 		box.setText("");
 		initialState = false;
