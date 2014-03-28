@@ -66,7 +66,7 @@ public class Login extends HttpServlet
                 response.setContentType("text/html");
  
                 PrintWriter out = response.getWriter();
-                out.println(resp + ":" + UUID.randomUUID().toString());
+                out.print(resp + ":" + UUID.randomUUID().toString());
                 out.close();
         }
        
