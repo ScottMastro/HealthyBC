@@ -161,4 +161,15 @@ public class FormBuilder {
 
 		return form;
 	}
+	
+	public static final VerticalPanel createFooter() {
+		VerticalPanel vp = new VerticalPanel();
+		vp.add(new HTML("<div style='padding:20px;'> "
+				+ "<b>Team Members:</b> Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
+				+ "<br/> <b>Contact Us:</b> <a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a> <br/>"
+				+ "&copy; 2014 The Blank Slate Team<br />"
+				+ "</div>"));
+		
+		return vp;
+	}
 }
