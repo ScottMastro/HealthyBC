@@ -523,14 +523,14 @@ public class HealthyBC implements EntryPoint {
         }
  
         private void getTabFromTableInfo(TableInfo ti){
-                TabHandlerAsync tabFetcher = GWT.create(TabHandler.class);
+                TabFetcherAsync tabFetcher = GWT.create(TabFetcher.class);
  
                 ClinicTabCallback callback = new ClinicTabCallback();
                 tabFetcher.clinicTabInfo(ti, callback);
         }
  
         public void getTabFromMapInfo(MapInfo mi){
-        	TabHandlerAsync tabFetcher = GWT.create(TabHandler.class);
+        	TabFetcherAsync tabFetcher = GWT.create(TabFetcher.class);
  
                 ClinicTabCallback callback = new ClinicTabCallback();
                 tabFetcher.clinicTabInfo(mi, callback);
