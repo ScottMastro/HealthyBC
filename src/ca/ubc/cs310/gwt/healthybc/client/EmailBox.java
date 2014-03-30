@@ -3,6 +3,7 @@ package ca.ubc.cs310.gwt.healthybc.client;
 import java.util.ArrayList;
 
 
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class EmailBox {
 
@@ -25,7 +27,8 @@ public class EmailBox {
 	private boolean titleInitialState;
 	private String email;
 
-	private final String DEFAULT_BOX_TEXT = "Click here to write an email to send to the clinic";
+	private final String DEFAULT_BOX_TEXT = "Click here to write an email to send to the clinic\n\n"
+			+ "Be sure to include your own contact information so the clinic can get back to you.";
 	private final String DEFAULT_TITLE_TEXT = "Add email subject here";
 
 	public EmailBox(String clinicEmail){
@@ -62,6 +65,7 @@ public class EmailBox {
 		title = new TextBox();
 		title.setText(DEFAULT_TITLE_TEXT);
 		title.setStyleName("boxBefore");
+		title.setWidth("300px");
 
 		title.addFocusHandler(new FocusHandler(){
 
@@ -151,7 +155,7 @@ public class EmailBox {
 		title.setEnabled(true);
 	}
 
-	private void disable(){
+	public void disable(){
 		send.setEnabled(false);
 		box.setEnabled(false);
 		title.setEnabled(false);
