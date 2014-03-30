@@ -11,13 +11,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -514,8 +511,6 @@ public class HealthyBC implements EntryPoint {
 				if(hasEmail)
 					emailString = "<LI><b>Email: </b>" + t.getEmail();
 				
-				String indent = "      ";
-
 				HTML info = new HTML("<br>"
 						+ "<h1 style='margin:0px'>" + t.getName() + "</h1>"
 						+ "<font size='4'>"
