@@ -81,8 +81,8 @@ public class HealthyBC implements EntryPoint {
 	 */
 	 public void onModuleLoad() {
 		 singleton = this;
-
-//		 handleRedirect();
+		 
+		 //handleRedirect();
 		 String username = Cookies.getCookie("HBC_username");
 
 		 if (username != null){
@@ -105,7 +105,7 @@ public class HealthyBC implements EntryPoint {
                                 String historyToken = event.getValue();
                                 System.out.println(historyToken);
                         }
-                });*/
+         });*/
 
 	 }
 
@@ -419,8 +419,7 @@ public class HealthyBC implements EntryPoint {
 		 VerticalPanel vp = new VerticalPanel();
 		 vp.getElement().setAttribute("cellpadding", "5");
 		 if (showAdminTools == true ){
-			 vp.add(new HTML("<form enctype='multipart/form-data' "
-					 + "method='POST' action='/uploadURL'/>"
+			 vp.add(new HTML("<form method='POST' action='/uploadURL'/>"
 					 + "Upload data from URL: <input name='urlstring' type='text' /> &nbsp;"
 					 + "<input type='submit' value='Submit' /> </form> <br />"
 					 + "<form enctype='multipart/form-data' "
