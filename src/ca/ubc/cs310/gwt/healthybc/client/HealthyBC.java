@@ -3,9 +3,6 @@ package ca.ubc.cs310.gwt.healthybc.client;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-
-
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -20,12 +17,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -417,31 +414,39 @@ public class HealthyBC implements EntryPoint {
 	 * Sets up form to browse for and send local file to servlet
 	 */
 	private void createUploadForm(){
-		VerticalPanel vp = new VerticalPanel();
-		vp.getElement().setAttribute("cellpadding", "5");
+		HorizontalPanel hp = new HorizontalPanel();
+		hp.getElement().setAttribute("cellpadding", "5");
 		if (showAdminTools == true ){
-			vp.add(new HTML("<form method='POST' action='/uploadURL'/>"
+			HTML uploadForm = new HTML("<form method='POST' action='/uploadURL'/>"
 					+ "Upload data from URL: <input name='urlstring' type='text' /> &nbsp;"
 					+ "<input type='submit' value='Submit' /> </form> <br />"
 					+ "<form enctype='multipart/form-data' "
 					+ "method='POST' action='/uploadServlet'/>"
 					+ "Upload CSV data : <input name='userfile1' type='file' />"
-					+ "<input type='submit' value='Submit' /> </form>"));
+					+ "<input type='submit' value='Submit' /> </form>");
+			hp.add(uploadForm);
+			hp.setCellHorizontalAlignment(uploadForm, HasHorizontalAlignment.ALIGN_LEFT);
 
 		} else {
-			vp.add(new HTML("<b>Team Members:</b> Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
+			HTML footer = new HTML("<b>Team Members:</b> Alex Tan, Ben Liang, Dhananjay Bhaskar and Scott Mastromatteo <br/>"
 					+ "<br/> <b>Contact Us:</b> <a href='mailto:theblanksl8@gmail.com'>theblanksl8 AT gmail DOT com</a> &nbsp;"
-					+ "&copy; 2014 The Blank Slate Team<br />"));
+					+ "&copy; 2014 The Blank Slate Team<br />");
+			hp.add(footer);
+			hp.setCellHorizontalAlignment(footer, HasHorizontalAlignment.ALIGN_LEFT);
 		}
-		vp.add(new Button("Logout", new ClickHandler() {
+		
+		Button logoutButton = new Button("Logout", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				Cookies.removeCookie("HBC_username");
 				RootPanel.get().clear();
 				login();
 			}
-		}));
-		dock.addSouth(vp, 15);
+		});
+		hp.add(logoutButton);
+		hp.setCellHorizontalAlignment(logoutButton, HasHorizontalAlignment.ALIGN_RIGHT);
+		hp.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		dock.addSouth(hp, 15);
 	}
 
 
