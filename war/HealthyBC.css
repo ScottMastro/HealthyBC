@@ -68,3 +68,12 @@ h1 {
 	height: 24px;
 	padding-left: 6px;
 }
+
+.paddedPanel {
+    padding-left: 100px;
+    padding-top: 20px;
+}
+
+.emailBoxPadding {
+    padding-left: 30px;
+}
