@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -35,7 +36,7 @@ public class RatingTab {
 	private String currentUser;
 	private ArrayList<CommentBlock> commentBlocks;
 
-	private final String DEFAULT_TEXT = "Click here to review Clinic (Limit: 500 characters)";
+	private final String DEFAULT_TEXT = "Click here to review clinic (Limit: 500 characters)";
 
 	public RatingTab(String refID, String currentUser){
 		this.currentUser = currentUser;
@@ -164,7 +165,7 @@ public class RatingTab {
 
 		@Override
 		public void onSuccess(ArrayList<String> result) {
-			 // result in order: date, user information, review, rating (0 if does not exist)
+			// result in order: date, user information, review, rating (0 if does not exist)
 
 			commentBlocks = new ArrayList<CommentBlock>();
 
@@ -174,7 +175,7 @@ public class RatingTab {
 						result.get(i+1),
 						result.get(i+2),
 						result.get(i+3));
-				
+
 				commentBlocks.add(block);
 				panel.add(block.getBlock(), DockPanel.SOUTH);
 			}
@@ -306,32 +307,31 @@ public class RatingTab {
 				e.printStackTrace();
 				this.rating = new Rating(0, 10);
 			}
-			
+
 			this.rating.setReadOnly(true);
-			
+
 			try{
 				Date time = new Date(Long.valueOf(date));
-				date = time.toString();
+				this.date = time.toString();
 			}catch(Exception e){
 				e.printStackTrace();
 				this.date = "";
 			}
 		}
-		
+
 		public VerticalPanel getBlock(){
 			VerticalPanel panel = new VerticalPanel();
-			panel.add(new Label(date));
-			panel.add(new Label(user));
+			panel.setWidth("1000px");
+			panel.add(new HTML("<hr>"
+					+ "<font size='4'>" + user + "</font><br>"
+					+ "<i>" + date + "</i><br>"));
 			panel.add(rating);
 			panel.add(new Label(review));
-			
-			
+
+
 			return panel;
 
 		}
 	}
-
-
-
 }
 

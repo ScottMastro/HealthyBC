@@ -281,7 +281,7 @@ public class RemoteDataManager {
 		Filter clinic = new FilterPredicate("clinic", FilterOperator.EQUAL, refID);
 
 		
-		Query q = new Query("Review").addSort("date", SortDirection.DESCENDING).setFilter(clinic);
+		Query q = new Query("Review").addSort("date", SortDirection.ASCENDING).setFilter(clinic);
 
 		PreparedQuery pq = datastore.prepare(q);
 		List<Entity> entities = pq.asList(FetchOptions.Builder.withDefaults());
@@ -329,6 +329,7 @@ public class RemoteDataManager {
 			datastore.get(key);
 
 			result = "Sorry, but you have already reviewed this clinic.";
+			
 
 		} catch(EntityNotFoundException e){
 
