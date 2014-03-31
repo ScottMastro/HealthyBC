@@ -5,31 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
-
-
-
-
-
-
-
-
-
-
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
-
-
-
-
-
-
-
-
-
-
-
-
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -40,8 +16,12 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+
 
 public class RemoteDataManager {
 	private DatastoreService datastore;
@@ -298,7 +278,10 @@ public class RemoteDataManager {
 	public ArrayList<String> getAllReviews(String refID) {
 		ArrayList<String> result = new ArrayList<String>();
 
-		Query q = new Query("Review").addSort("date", SortDirection.DESCENDING);
+		Filter clinic = new FilterPredicate("clinic", FilterOperator.EQUAL, refID);
+
+		
+		Query q = new Query("Review").addSort("date", SortDirection.DESCENDING).setFilter(clinic);
 
 		PreparedQuery pq = datastore.prepare(q);
 		List<Entity> entities = pq.asList(FetchOptions.Builder.withDefaults());
@@ -350,6 +333,7 @@ public class RemoteDataManager {
 		} catch(EntityNotFoundException e){
 
 			Entity newReview = new Entity("Review", currentUser + refID);
+			newReview.setProperty("clinic", refID);
 			newReview.setProperty("review", review);
 			newReview.setProperty("user", currentUser);
 			newReview.setProperty("date", today.getTime());

@@ -1,6 +1,7 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.cobogw.gwt.user.client.ui.Rating;
 
@@ -32,6 +33,7 @@ public class RatingTab {
 	private int amount;
 	private int myScore;
 	private String currentUser;
+	private ArrayList<CommentBlock> commentBlocks;
 
 	private final String DEFAULT_TEXT = "Click here to review Clinic (Limit: 500 characters)";
 
@@ -39,20 +41,21 @@ public class RatingTab {
 		this.currentUser = currentUser;
 		this.refID = refID;
 		initialBoxState = true;
+		commentBlocks = new ArrayList<CommentBlock>();
 
 		VerticalPanel reviewPanel = createReviewBox();
 		VerticalPanel starPanel = makeStarRating();
-		
+
 		HorizontalPanel ratingPanel = new HorizontalPanel();
 		ratingPanel.add(starPanel);
 		ratingPanel.add(reviewPanel);
-		
+
 		panel = new DockPanel();
 		panel.add(ratingPanel, DockPanel.NORTH);
 
 		getAllReviews();
 	}
-	
+
 	public DockPanel getRatingTab(){
 		return panel;
 	}
@@ -161,9 +164,20 @@ public class RatingTab {
 
 		@Override
 		public void onSuccess(ArrayList<String> result) {
+			 // result in order: date, user information, review, rating (0 if does not exist)
 
-			for(int i = 0; i<= result.size()-1; i++)
-				System.out.print(result.get(i));
+			commentBlocks = new ArrayList<CommentBlock>();
+
+			for(int i = 0; i<= result.size()-1; i+=4){
+				CommentBlock block = new CommentBlock(
+						result.get(i),
+						result.get(i+1),
+						result.get(i+2),
+						result.get(i+3));
+				
+				commentBlocks.add(block);
+				panel.add(block.getBlock(), DockPanel.SOUTH);
+			}
 
 		}
 	}
@@ -191,7 +205,7 @@ public class RatingTab {
 
 		getStoredRatings();
 		setClickListener();
-		
+
 		VerticalPanel tempPanel = new VerticalPanel();
 		tempPanel.setStyleName("paddedPanel");
 		Label netLabel = new Label("Total Rating:");
@@ -271,5 +285,53 @@ public class RatingTab {
 
 		}
 	}
+
+
+
+	private class CommentBlock {
+
+		private String review;
+		private String user;
+		private String date;
+		private Rating rating;
+
+
+		public CommentBlock(String date, String user, String review, String rating){
+			this.review = review;
+			this.user = user;
+
+			try{
+				this.rating = new Rating(Integer.valueOf(rating), 10);
+			}catch(Exception e){
+				e.printStackTrace();
+				this.rating = new Rating(0, 10);
+			}
+			
+			this.rating.setReadOnly(true);
+			
+			try{
+				Date time = new Date(Long.valueOf(date));
+				date = time.toString();
+			}catch(Exception e){
+				e.printStackTrace();
+				this.date = "";
+			}
+		}
+		
+		public VerticalPanel getBlock(){
+			VerticalPanel panel = new VerticalPanel();
+			panel.add(new Label(date));
+			panel.add(new Label(user));
+			panel.add(rating);
+			panel.add(new Label(review));
+			
+			
+			return panel;
+
+		}
+	}
+
+
+
 }
 
