@@ -20,8 +20,11 @@ public class StarRating {
 	private String refID;
 	private int score;
 	private int amount;
+	private int myScore;
+	private String currentUser;
 
-	public StarRating(String clinicRefID){
+	public StarRating(String clinicRefID, String currentUser){
+		this.currentUser = currentUser;
 		refID = clinicRefID;
 		score = 0;
 		amount = 0;
@@ -29,8 +32,6 @@ public class StarRating {
 		//temporary until getStoredRating() gets real ratings
 		netRating = new Rating(0, 10);
 		netRating.setReadOnly(true);
-		
-		//TODO: store rating with user, get later
 		myRating = new Rating(0, 10);
 
 
@@ -47,7 +48,7 @@ public class StarRating {
 					RatingHandlerAsync ratingHandler = GWT.create(RatingHandler.class);
 
 					AddRatingCallback callback = new AddRatingCallback();
-					ratingHandler.setRating(refID, myRating.getValue(), callback);
+					ratingHandler.setRating(refID, myRating.getValue(), currentUser, callback);
 					
 			}
 		});
@@ -79,7 +80,7 @@ public class StarRating {
 		RatingHandlerAsync ratingHandler = GWT.create(RatingHandler.class);
 
 		GetRatingCallback callback = new GetRatingCallback();
-		ratingHandler.getRating(refID, callback);
+		ratingHandler.getRating(refID, currentUser, callback);
 	}
 	
 	/**
@@ -96,9 +97,11 @@ public class StarRating {
 			
 			score = result.get(0);
 			amount = result.get(1);
+			myScore = result.get(2);
 
 			netRating.setValue(score);
 			netRating.setTitle("Out of " + String.valueOf(amount) + " ratings.");
+			myRating.setValue(myScore);
 
 		}
 	}
