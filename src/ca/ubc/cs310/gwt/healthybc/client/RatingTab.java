@@ -90,7 +90,7 @@ public class RatingTab {
 		VerticalPanel tempPanel = new VerticalPanel();		
 		tempPanel.add(reviewBox);
 		tempPanel.add(submit);
-		tempPanel.addStyleName("paddedPanel");
+		tempPanel.addStyleName("paddedPanel2");
 
 		return tempPanel;
 	}
@@ -208,7 +208,7 @@ public class RatingTab {
 		setClickListener();
 
 		VerticalPanel tempPanel = new VerticalPanel();
-		tempPanel.setStyleName("paddedPanel");
+		tempPanel.setStyleName("paddedPanel1");
 		Label netLabel = new Label("Total Rating:");
 		tempPanel.add(netLabel);
 		tempPanel.add(netRating);

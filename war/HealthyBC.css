@@ -69,8 +69,12 @@ h1 {
 	padding-left: 6px;
 }
 
-.paddedPanel {
-    padding-left: 100px;
+.paddedPanel1 {
+    padding-left: 150px;
+    padding-top: 50px;
+}
+.paddedPanel2 {
+    padding-left: 150px;
     padding-top: 20px;
 }
 

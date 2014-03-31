@@ -62,7 +62,6 @@ public class HealthyBC implements EntryPoint {
 	private String currentUser = "";
 
 	// Social Login vars
-	private static HTML welcomeLabel = new HTML();
 	private static Widget socialLoginPanel;
 	private static Anchor logoutAnchor = new Anchor();
 
@@ -274,7 +273,8 @@ public class HealthyBC implements EntryPoint {
 		socialLoginPanel = SocialLogin.createLoginPanel();
 
 		// add home page & logout button
-		tabs.add(welcomeLabel, "Home");
+		SearchTab search = new SearchTab();
+		tabs.add(search.getSearchTab(), "Home");
 		tabs.add(socialLoginPanel, "Account");
 
 		tabNames.add("Home");
