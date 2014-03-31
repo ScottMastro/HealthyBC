@@ -1,12 +1,32 @@
 package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 
+
+
+
+
+
+
+
+
+
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -15,10 +35,12 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Transaction;
 
 public class RemoteDataManager {
@@ -172,10 +194,10 @@ public class RemoteDataManager {
 			//typical case, most users will not have a rating for a given clinic
 			a.add(0);
 		}
-		
+
 		score = new Integer(existingRating.getProperty("score").toString());
 		a.add(score);
-		
+
 		return a;
 
 	}
@@ -188,21 +210,21 @@ public class RemoteDataManager {
 	 * @return true if rating was successful, otherwise false
 	 */    
 	public boolean submitClinicRating(String refID, int rating, String currentUser){
-		
+
 		boolean alreadyRated = true;
 		int oldRating = 0;
-		
+
 		Transaction txn1 = datastore.beginTransaction();
 		try {
 			Key key = KeyFactory.createKey("UserRating", currentUser + refID);
 
 			Entity existingRating = datastore.get(key);
-			
+
 			long existingScore = (Long) existingRating.getProperty("score");
 
 			long score = rating;
 			oldRating = (int) existingScore;
-			
+
 			existingRating.setProperty("score", score);
 
 			datastore.put(existingRating);
@@ -235,7 +257,7 @@ public class RemoteDataManager {
 
 			score -= oldRating;
 			score += rating;
-			
+
 			if(!alreadyRated)
 				amount += 1;
 
@@ -261,10 +283,49 @@ public class RemoteDataManager {
 				return false;
 			}
 		}
-		
-		
+
+
 		return true;
 
+	}
+
+	/**
+	 * Gets all information about reviews from datastore
+	 *
+	 * @param refID of clinic to review
+	 * @return ArrayList<String> in order: date, user information, review, rating (0 if does not exist)
+	 */    
+	public ArrayList<String> getAllReviews(String refID) {
+		ArrayList<String> result = new ArrayList<String>();
+
+		Query q = new Query("Review").addSort("date", SortDirection.DESCENDING);
+
+		PreparedQuery pq = datastore.prepare(q);
+		List<Entity> entities = pq.asList(FetchOptions.Builder.withDefaults());
+
+		for (Entity entity : entities){
+			String date = String.valueOf(entity.getProperty("date"));
+			String review = (String) entity.getProperty("review");
+			String user = (String) entity.getProperty("user");
+			String rating = "0";
+			
+			try {
+				Key key = KeyFactory.createKey("UserRating", user + refID);
+
+				Entity existingRating = datastore.get(key);
+				rating = String.valueOf(existingRating.getProperty("score"));
+
+			} catch(EntityNotFoundException e){
+				// do nothing, that's okay
+			}
+				
+			result.add(date);
+			result.add(user);
+			result.add(review);
+			result.add(rating);
+		}
+
+		return result;
 	}
 
 	/**
@@ -272,25 +333,26 @@ public class RemoteDataManager {
 	 *
 	 * @param refID of clinic to review
 	 * @param review to give to specific clinic (less than 500 characters)
+	 * @param currentUser logged into system
 	 * @return true if rating was successful, otherwise false
 	 */    
-	public String submitClinicReview(String refID, String review){
+	public String submitClinicReview(String refID, String review, String currentUser){
 		Transaction txn = datastore.beginTransaction();
 		String result = "";
+		Date today = new Date();
 
 		try {
-			//TODO: CHANGE KEY TO userID and refID
-			Key key = KeyFactory.createKey("Review", refID);
+			Key key = KeyFactory.createKey("Review", currentUser + refID);
 			datastore.get(key);
 
 			result = "Sorry, but you have already reviewed this clinic.";
 
-
-
 		} catch(EntityNotFoundException e){
 
-			Entity newReview = new Entity("Review", refID);
+			Entity newReview = new Entity("Review", currentUser + refID);
 			newReview.setProperty("review", review);
+			newReview.setProperty("user", currentUser);
+			newReview.setProperty("date", today.getTime());
 
 			datastore.put(newReview);
 			txn.commit();  
@@ -305,7 +367,6 @@ public class RemoteDataManager {
 
 		return result;
 	}
-
 
 	/**
 	 * Pushes a simple string to datastore, used for testing

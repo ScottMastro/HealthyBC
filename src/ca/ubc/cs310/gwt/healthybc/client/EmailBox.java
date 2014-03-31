@@ -77,6 +77,7 @@ public class EmailBox {
 		});
 
 		panel = new VerticalPanel();
+		panel.setStyleName("emailBoxPadding");
 		panel.add(title);
 		panel.add(box);
 		panel.add(send);

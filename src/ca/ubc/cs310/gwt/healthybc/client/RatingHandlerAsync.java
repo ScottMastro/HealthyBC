@@ -10,6 +10,8 @@ public interface RatingHandlerAsync {
 
 	public void setRating(String refID, int score, String currentUser, AsyncCallback<ArrayList<Boolean>> callback);
 
-	public void addReview(String refID, String review, AsyncCallback<ArrayList<String>> callback);
+	public void addReview(String refID, String review, String currentUser, AsyncCallback<ArrayList<String>> callback);
+
+	public void getAllReviews(String refID, AsyncCallback<ArrayList<String>> callback);
 
 }

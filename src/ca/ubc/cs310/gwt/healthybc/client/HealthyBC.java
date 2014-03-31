@@ -5,6 +5,7 @@ import java.util.Date;
 
 
 
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -19,6 +20,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Button;
@@ -543,14 +545,9 @@ public class HealthyBC implements EntryPoint {
 
 				removeTab("View Ratings");
 
-				VerticalPanel ratingPanel = new VerticalPanel();
-				StarRating rating = new StarRating(t.getRefID(), currentUser);
-				CommentBox box = new CommentBox(t.getRefID());
-
-				ratingPanel.add(rating.getStarRating());
-				ratingPanel.add(box.getBox());
-
-				tabs.add(ratingPanel, "View Ratings");
+				RatingTab ratingTab = new RatingTab(t.getRefID(), currentUser);
+								
+				tabs.add(ratingTab.getRatingTab(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 
 			}

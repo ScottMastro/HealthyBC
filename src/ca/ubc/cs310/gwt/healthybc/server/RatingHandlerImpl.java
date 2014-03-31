@@ -31,14 +31,21 @@ public class RatingHandlerImpl extends RemoteServiceServlet implements RatingHan
 
 	}
 	
-	public ArrayList<String> addReview(String refID, String review){
+	public ArrayList<String> addReview(String refID, String review, String currentUser){
 		
 		RemoteDataManager rdm = new RemoteDataManager();		
-		String response = rdm.submitClinicReview(refID, review);
+		String response = rdm.submitClinicReview(refID, review, currentUser);
 		ArrayList<String> a = new ArrayList<String>();
 		a.add(response);
 		
 		return a;		
+	}
+
+	@Override
+	public ArrayList<String> getAllReviews(String refID) {
+		RemoteDataManager rdm = new RemoteDataManager();		
+		ArrayList<String> response = rdm.getAllReviews(refID);
+		return response;
 	}
 
 }
