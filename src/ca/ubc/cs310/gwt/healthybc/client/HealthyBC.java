@@ -280,7 +280,7 @@ public class HealthyBC implements EntryPoint {
 		tabNames.add("Home");
 		tabNames.add("Account");
 
-		createMap();
+		createMap(null, null);
 		createTable(null, null);
 		createUploadForm();
 
@@ -295,6 +295,7 @@ public class HealthyBC implements EntryPoint {
 	public void search(String searchBy, String searchKey){
 		mapTableDock.clear();
 		createTable(searchBy, searchKey);
+		createMap(searchBy, searchKey);
 	}
 
 
@@ -305,14 +306,14 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * Calls required methods to create the Google map interface
 	 */
-	private void createMap() {
-		loadMapAPI();
+	private void createMap(String searchBy, String searchKey) {
+		loadMapAPI(searchBy, searchKey);
 	}
 
 	/**
 	 * Initiates Google Map API
 	 */
-	private void loadMapAPI() {
+	private void loadMapAPI(final String searchBy, final String searchKey) {
 		boolean sensor = false;
 
 		// Load libraries needed for maps
@@ -320,18 +321,12 @@ public class HealthyBC implements EntryPoint {
 
 		// need this API to draw overlays on the map
 		loadLibraries.add(LoadLibrary.DRAWING);
-		//          loadLibraries.add(LoadLibrary.ADSENSE);
-		//          loadLibraries.add(LoadLibrary.GEOMETRY);
-		//          loadLibraries.add(LoadLibrary.PANORAMIO);
-		//          loadLibraries.add(LoadLibrary.PLACES);
-		//          loadLibraries.add(LoadLibrary.WEATHER);
-		//          loadLibraries.add(LoadLibrary.VISUALIZATION);
 
 		Runnable onLoad = new Runnable() {
 			@Override
 			public void run() {
 				// callback on successful API load
-				buildMap();
+				buildMap(searchBy, searchKey);
 			}
 		};
 
@@ -341,11 +336,11 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * On successful API load, retrieves data and constructs map
 	 */
-	private void buildMap() {
+	private void buildMap(String searchBy, String searchKey) {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
 		MapBuilder callback = new MapBuilder(this);
-		clinicFetcher.mapInfo(callback);
+		clinicFetcher.mapInfo(searchBy, searchKey, callback);
 	}
 
 	/**

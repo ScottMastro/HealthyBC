@@ -16,8 +16,11 @@ public class ClinicDataFetcherImpl extends RemoteServiceServlet implements Clini
 	}
 
 
-	public ArrayList<MapInfo> mapInfo(){
-		return ClinicManager.getInstance().getMapInfo();
+	public ArrayList<MapInfo> mapInfo(String searchBy, String searchKey){
+		if(searchBy == null && searchKey == null)
+			return ClinicManager.getInstance().getMapInfo();
+		else
+			return ClinicManager.getInstance().getSearchMapInfo(searchBy, searchKey);
 	}
 
 	public ArrayList<TableInfo> tableInfo(String searchBy, String searchKey){

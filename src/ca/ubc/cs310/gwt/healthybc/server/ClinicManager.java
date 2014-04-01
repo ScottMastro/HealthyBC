@@ -250,6 +250,22 @@ public class ClinicManager {
 
 		return list;
 	}
+
+	public ArrayList<MapInfo> getSearchMapInfo(String searchBy, String searchKey) {
+		ArrayList<MapInfo> list = new ArrayList<MapInfo>();
+		searchKey = searchKey.toLowerCase();
+
+		if(searchBy.equals("name")){
+			for(MapInfo info : mapInfo){
+
+				if(info.getName().toLowerCase().contains(searchKey))
+					list.add(info);
+			}
+		}
+
+
+		return list;
+	}
 }
 
 

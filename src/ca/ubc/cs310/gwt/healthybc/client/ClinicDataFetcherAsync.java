@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ClinicDataFetcherAsync {
-	public void mapInfo(AsyncCallback<ArrayList<MapInfo>> callback);
+	public void mapInfo(String searchBy, String searchKey, AsyncCallback<ArrayList<MapInfo>> callback);
 	
 	public void tableInfo(String searchBy, String searchKey, AsyncCallback<ArrayList<TableInfo>> callback);
 	
