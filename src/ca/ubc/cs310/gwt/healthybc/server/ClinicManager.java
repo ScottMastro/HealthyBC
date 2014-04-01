@@ -49,10 +49,10 @@ public class ClinicManager {
 		dataManager.retrieveAllClinics(this);
 
 		for(Clinic clinic : clinics) {
-			TableInfo newTableInfo = new TableInfo(clinic.getRefID(),
-					clinic.getName(), clinic.getAddressString(), clinic.getEmail());
-			MapInfo newMapInfo = new MapInfo(clinic.getRefID(),
-					clinic.getName(), clinic.getLatitude(), clinic.getLongitude());
+			TableInfo newTableInfo = new TableInfo(clinic.getRefID(), clinic.getName(),
+					clinic.getAddressString(), clinic.getEmail(), clinic.getLanguages());
+			MapInfo newMapInfo = new MapInfo(clinic.getRefID(), clinic.getName(),
+					clinic.getLatitude(), clinic.getLongitude(), clinic.getLanguages());
 
 			tableInfo.add(newTableInfo);
 			mapInfo.add(newMapInfo);			
@@ -61,15 +61,6 @@ public class ClinicManager {
 
 	}
 
-	private void RemoveAllData(){
-		for (Clinic c : clinics){
-			this.removeClinic(c.getRefID());
-		}
-
-		Logger logger = Logger.getLogger("NameOfYourLogger");
-		logger.log(Level.SEVERE, String.valueOf(tableInfo.size()));
-		logger.log(Level.SEVERE, String.valueOf(mapInfo.size()));
-	}
 
 	/**
 	 * Returns list of clinics stored in this class,
@@ -132,8 +123,8 @@ public class ClinicManager {
 
 		dataManager.addAndUploadClinicEntity(newClinic);
 
-		TableInfo newTableInfo = new TableInfo(refID, name, address, email);
-		MapInfo newMapInfo = new MapInfo(refID, name, lat, lon);
+		TableInfo newTableInfo = new TableInfo(refID, name, address, email, newClinic.getLanguages());
+		MapInfo newMapInfo = new MapInfo(refID, name, lat, lon, newClinic.getLanguages());
 
 		tableInfo.add(newTableInfo);
 		mapInfo.add(newMapInfo);
@@ -153,8 +144,6 @@ public class ClinicManager {
 		if (refID == null || refID.isEmpty()) {
 			return false;
 		}
-
-		//TODO: Test to make sure this works properly
 
 		for(Clinic clinic : clinics) {
 			if(clinic.getRefID().equals(refID)) {
@@ -218,7 +207,7 @@ public class ClinicManager {
 				String pcode = clinic.getPostalCode();
 				String email = clinic.getEmail();
 				String phone = clinic.getPhone();
-				String lang = clinic.getLanguages();
+				String lang = clinic.getLanguage();
 
 				ClinicTabInfo cti = new ClinicTabInfo(refID, name, hours, latitude,
 						longitude, addr, pcode, email, phone, lang);
@@ -247,6 +236,20 @@ public class ClinicManager {
 			}
 		}
 
+		if(searchBy.equals("language")){
+			for(TableInfo info : tableInfo){
+
+				String[] languages = info.getLanguages();
+				int n = languages.length;
+
+				for(int i = 0; i <= n-1; i++)
+					if(languages[i].toLowerCase().equals(searchKey)){
+						list.add(info);
+						break;
+					}
+			}
+		}
+
 
 		return list;
 	}
@@ -260,6 +263,20 @@ public class ClinicManager {
 
 				if(info.getName().toLowerCase().contains(searchKey))
 					list.add(info);
+			}
+		}
+		
+		if(searchBy.equals("language")){
+			for(MapInfo info : mapInfo){
+
+				String[] languages = info.getLanguages();
+				int n = languages.length;
+
+				for(int i = 0; i <= n-1; i++)
+					if(languages[i].toLowerCase().equals(searchKey)){
+						list.add(info);
+						break;
+					}
 			}
 		}
 

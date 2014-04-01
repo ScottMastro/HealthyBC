@@ -74,7 +74,7 @@ public class RemoteDataManager {
 		clinic.setProperty("hours", c.getHoursString());
 		clinic.setProperty("email", c.getEmail());
 		clinic.setProperty("phone", c.getPhone());
-		clinic.setProperty("language", c.getLanguages());
+		clinic.setProperty("language", c.getLanguage());
 
 		return clinic;
 	}

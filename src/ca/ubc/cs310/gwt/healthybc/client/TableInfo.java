@@ -9,6 +9,8 @@ public class TableInfo implements Serializable {
 	private String name;
 	private String addr;
 	private String email;
+	private String[] languages;
+
 	
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
@@ -16,17 +18,20 @@ public class TableInfo implements Serializable {
 	protected TableInfo() {
 	}
 	
-	public TableInfo(String refID, String name, String address, String email) {
+	public TableInfo(String refID, String name, String address, String email, String[] languages) {
 		this.refID = refID;
 		this.name = name;
 		this.addr = address;
 		this.email = email;
+		this.languages = languages;
 	}
 	
 	public String getRefID() { return refID; }
 	public String getName() { return name; }
 	public String getAddress() { return addr; }
 	public String getEmail() { return email; }
+	public String[] getLanguages() { return this.languages; }
+
 	
 	
 	public boolean equals(String clinicName, String clinicAddress, String clinicEmail){

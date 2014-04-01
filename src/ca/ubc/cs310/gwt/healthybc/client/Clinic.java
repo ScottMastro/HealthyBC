@@ -1,5 +1,8 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Clinic {
 	private String refID;
@@ -12,6 +15,8 @@ public class Clinic {
 	private String email;
 	private String phone;
 	private String lang;
+	private String[] languages;
+
 
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
@@ -31,6 +36,17 @@ public class Clinic {
 		this.email = email;
 		this.phone = phone;
 		this.lang = lang;
+		lang = lang.replace("and ", "");
+		lang = lang.replace(" ", "");
+		this.languages = lang.split(",");
+		
+
+		Logger logger = Logger.getLogger("NameOfYourLogger");
+		logger.log(Level.SEVERE, lang);
+		for(int i = 0; i<=languages.length-1; i++){
+			logger.log(Level.SEVERE, languages[i]);
+
+		}
 	}
 
 	public String getRefID() { return refID; }
@@ -41,8 +57,10 @@ public class Clinic {
 	public Double getLongitude() { return longitude; }
 	public String getEmail() { return email; }
 	public String getPhone() { return phone; }
-	public String getLanguages() { return lang; }
+	public String getLanguage() { return lang; }
 	public String getAddress() { return addr; }
 	public String getPostalCode() { return pcode; }
+	public String[] getLanguages() { return languages; }
+
 
 }

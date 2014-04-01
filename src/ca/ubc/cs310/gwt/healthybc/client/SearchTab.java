@@ -17,9 +17,16 @@ public class SearchTab {
 	private Button languageSearch;
 	private HealthyBC main;
 
-	private String[] languages = {"English", "Afghani", "Afrikaans", "Arabic",	"Bengali", "Bicol",	"Cantonese",
-			"Farsi", "Filipino",	"French", "German", "Greek", "Hindi", "Japanese", "Korean", "Mandarin",
-			"Polish", "Punjabi", "Russian", "Serbian", "Spanish", "Tagalog", "Urdu", "Vietnamese"};
+	private String[] languages = {"English", 
+			//"Afghani",
+			"Afrikaans", "Arabic",
+			//"Bengali",
+			"Bicol", "Cantonese", "Farsi", "Filipino",	"French", "German", "Greek", "Hindi",
+			"Japanese", "Korean", "Mandarin", "Polish", "Punjabi", "Russian",
+			//"Serbian",
+			"Spanish", "Tagalog", "Urdu",
+			//"Vietnamese"
+			};
 
 	public SearchTab(HealthyBC main){
 		this.main = main;
@@ -82,38 +89,6 @@ public class SearchTab {
 		buttons.add(languageSearch);
 
 		panel.add(buttons, DockPanel.WEST);
-
-		/*
-		
-		HorizontalPanel name = new HorizontalPanel();
-		name.getElement().setAttribute("cellpadding", "5");
-		Label n = new Label("Search by name:");
-		name.setCellVerticalAlignment(n, HasVerticalAlignment.ALIGN_MIDDLE);
-
-		
-		name.add(n);
-		name.add(clinicName);
-		name.add(nameSearch);
-		
-		HorizontalPanel language = new HorizontalPanel();
-		language.getElement().setAttribute("cellpadding", "5");
-		Label l = new Label("Search by language:");
-		l.getElement().setAttribute("font-size", "24pt");
-		language.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_MIDDLE);
-
-
-		
-		language.add(l);
-		language.add(clinicLanguage);
-		language.add(languageSearch);
-		
-		VerticalPanel panel = new VerticalPanel();
-
-		panel.add(name);
-		panel.add(new HTML("<hr>"));
-		panel.add(language);
-
-*/
 		return panel;
 	}
 
@@ -124,7 +99,7 @@ public class SearchTab {
 
 
 	protected void searchLanguage() {
-		//main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
+		main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
 	}
 
 }

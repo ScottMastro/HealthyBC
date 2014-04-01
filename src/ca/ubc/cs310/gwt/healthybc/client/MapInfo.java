@@ -14,6 +14,7 @@ public class MapInfo implements Serializable {
 	private String name;
 	private double latitude;
 	private double longitude;
+	private String[] languages;
 	
 	/**
 	 * Don't delete this; GWT needs this constructor to be here.
@@ -21,17 +22,19 @@ public class MapInfo implements Serializable {
 	protected MapInfo() {
 	}
 	
-	public MapInfo(String refID, String name, double latitude, double longitude) {
+	public MapInfo(String refID, String name, double latitude, double longitude, String languages[]) {
 		this.refID = refID;
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.languages = languages;
 	}
 	
 	public String getRefID() { return this.refID; }
 	public String getName() { return this.name; }
 	public double getLatitude() { return this.latitude; }
 	public double getLongitude() { return this.longitude; }
+	public String[] getLanguages() { return this.languages; }
 
 	
 	public boolean equals(String clinicName, Double lat, Double lon){

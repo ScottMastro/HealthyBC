@@ -1,6 +1,2 @@
 # Module healthybc
 # RPC service class, partial path of RPC policy file
-ca.ubc.cs310.gwt.healthybc.client.ClinicDataFetcher, C66681698AEB8885B26094D14EBED343.gwt.rpc
-ca.ubc.cs310.gwt.healthybc.client.OAuthLoginService, 21981D352B78E24590FA07C63BD91BD4.gwt.rpc
-ca.ubc.cs310.gwt.healthybc.client.TabFetcher, FBC05467D87DB7D1FA0456F5D8522639.gwt.rpc
-ca.ubc.cs310.gwt.healthybc.client.RatingHandler, 71E8270400760D08624205F00FDE4FD8.gwt.rpc
