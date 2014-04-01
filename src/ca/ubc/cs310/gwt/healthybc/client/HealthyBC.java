@@ -417,7 +417,8 @@ public class HealthyBC implements EntryPoint {
 	 */
 	private void createUploadForm(){
 		HorizontalPanel hp = new HorizontalPanel();
-		hp.getElement().setAttribute("cellpadding", "5");
+		hp.setSize("100%", "100%");
+		hp.getElement().setAttribute("cellpadding", "10");
 		if (showAdminTools == true ){
 			HTML uploadForm = new HTML("<form method='POST' action='/uploadURL'/>"
 					+ "Upload data from URL: <input name='urlstring' type='text' /> &nbsp;"
