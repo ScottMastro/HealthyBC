@@ -9,8 +9,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -75,10 +73,12 @@ public class TabFetcherImpl extends RemoteServiceServlet implements TabFetcher {
 		GeoCoder geoCoder = new GeoCoder();
 		try {
 			GeocodeResponse response = geoCoder.getLocation(address);
-			response.getResults();
 			
-			   Logger logger = Logger.getLogger("NameOfYourLogger");
-			    logger.log(Level.SEVERE, response.getResults().toString());
+			ArrayList<Double> returnVal = new ArrayList<Double>();
+			returnVal.add(response.getResults().get(0).getGeometry().getLocation().getLat());
+			returnVal.add(response.getResults().get(0).getGeometry().getLocation().getLng());
+			return returnVal;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		return null;
@@ -89,7 +89,7 @@ public class TabFetcherImpl extends RemoteServiceServlet implements TabFetcher {
 	// --------------------------------------------------------------
 	
 	
-	private class GeoCoder {
+	private static class GeoCoder {
 		private Gson gson = new Gson();
 
 		private volatile long lastRequest = 0L;
@@ -123,32 +123,16 @@ public class TabFetcherImpl extends RemoteServiceServlet implements TabFetcher {
 	}
 
 
-	private class Location {
+	private static class Location {
 		private double lat;
 		private double lng;
-
-		public Location() {
-		}
-
-		public Location(double lat, double lng) {
-			this.lat = lat;
-			this.lng = lng;
-		}
 
 		public double getLat() {
 			return lat;
 		}
 
-		public void setLat(double lat) {
-			this.lat = lat;
-		}
-
 		public double getLng() {
 			return lng;
-		}
-
-		public void setLng(double lng) {
-			this.lng = lng;
 		}
 	}
 
