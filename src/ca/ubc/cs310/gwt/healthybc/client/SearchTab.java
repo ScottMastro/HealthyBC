@@ -124,7 +124,7 @@ public class SearchTab {
 
 
 	protected void searchLanguage() {
-		main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
+		//main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
 	}
 
 }

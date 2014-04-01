@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.base.LatLng;
+import com.google.gwt.maps.client.events.MapEventType;
+import com.google.gwt.maps.client.events.MapHandlerRegistration;
 import com.google.gwt.maps.client.events.click.ClickMapEvent;
 import com.google.gwt.maps.client.events.click.ClickMapHandler;
 import com.google.gwt.maps.client.overlays.InfoWindow;
 import com.google.gwt.maps.client.overlays.InfoWindowOptions;
 import com.google.gwt.maps.client.overlays.Marker;
 import com.google.gwt.maps.client.overlays.MarkerOptions;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -18,7 +21,7 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 	
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer = new SimplePanel();
-	private MapWidget map;
+	private FixedMap map;
 	private HealthyBC main;
 	
 	public MapBuilder(HealthyBC h){
@@ -30,7 +33,6 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 		caught.printStackTrace();
 	}
 	
-
 	/**
 	 * Sets up map on successful result return
 	 */
@@ -46,7 +48,7 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 		options.setZoom(13);
 		options.setCenter(vanCity);
 
-		map = new MapWidget(options);
+		map = new FixedMap(options);
 		map.setSize("100%", "100%");
 
 		displayClinics(map, result);
@@ -83,5 +85,39 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 			};
 			marker.addClickHandler(handler);
 		}
+	}
+	
+	private class FixedMap extends MapWidget{
+
+		public FixedMap(MapOptions options) {
+			super(options);
+			}
+		
+		 @Override
+		 protected void onAttach() {
+		     super.onAttach();
+		     Timer timer = new Timer() {
+
+		         @Override
+		         public void run() {
+		             resize();
+		         }
+		     };
+		     timer.schedule(5);
+		 }
+
+		 /*
+		  * This method is called to fix the Map loading issue when opening
+		  * multiple instances of maps in different tabs
+		  * Triggers a resize event to be consumed by google api in order to resize view
+		  * after attach.
+		  *
+		  */
+		 public void resize() {
+		     LatLng center = this.getCenter();
+		     MapHandlerRegistration.trigger(this, MapEventType.RESIZE);        
+		     this.setCenter(center);
+		 }
+		
 	}
 }
