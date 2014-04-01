@@ -1,21 +1,34 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
+import java.util.ArrayList;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class SearchTab {
+
+
+public class OptionsTab {
 
 	private TextBox clinicName;
 	private ListBox clinicLanguage;
+	private TextBox addressBox;
 	private Button nameSearch;
 	private Button languageSearch;
+	private Button addressButton;
 	private HealthyBC main;
+	private MapWidget map;
 
 	private String[] languages = {"English", 
 			//"Afghani",
@@ -26,17 +39,19 @@ public class SearchTab {
 			//"Serbian",
 			"Spanish", "Tagalog", "Urdu",
 			//"Vietnamese"
-			};
+	};
 
-	public SearchTab(HealthyBC main){
+	public OptionsTab(HealthyBC main, MapWidget map){
 		this.main = main;
+		this.map = map;
 		clinicName = new TextBox();
 		clinicLanguage = new ListBox();
-		
+		addressBox = new TextBox();
+
 		clinicLanguage.setWidth("150px");
 		clinicLanguage.setHeight("32px");
-		
 
+		addressBox.setWidth("300px");
 
 		nameSearch = new Button();
 		nameSearch.setText("Search");
@@ -54,41 +69,64 @@ public class SearchTab {
 			}		
 		});
 
-
 		for(int i = 0; i <= languages.length - 1; i++)
 			clinicLanguage.addItem(languages[i]);
 
+		addressButton = new Button();
+		addressButton.setText("Place on map");
+		addressButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event) {
+				placeAddressOnMap();
+			}
+		});
+
 	}
 
-	public DockPanel getSearchTab(){
-		DockPanel panel = new DockPanel();
-		
+	public VerticalPanel getOptionsTab(){
+		VerticalPanel panel = new VerticalPanel();
+		DockPanel searchPanel = new DockPanel();
+
 		VerticalPanel labels = new VerticalPanel();
 		labels.getElement().setAttribute("cellpadding", "10");
 
 		Label n = new Label("Search by name:");
 		Label l = new Label("Search by language:");
-		
+
 		labels.add(n);
 		labels.add(l);
-		
-		panel.add(labels, DockPanel.WEST);
-		
+
+		searchPanel.add(labels, DockPanel.WEST);
+
 		VerticalPanel keys = new VerticalPanel();
 		keys.getElement().setAttribute("cellpadding", "5");
 
 		keys.add(clinicName);
 		keys.add(clinicLanguage);
 
-		panel.add(keys, DockPanel.WEST);
+		searchPanel.add(keys, DockPanel.WEST);
 
 		VerticalPanel buttons = new VerticalPanel();
 		buttons.getElement().setAttribute("cellpadding", "5");
-		
+
 		buttons.add(nameSearch);
 		buttons.add(languageSearch);
 
-		panel.add(buttons, DockPanel.WEST);
+		searchPanel.add(buttons, DockPanel.WEST);
+
+		HorizontalPanel address = new HorizontalPanel();
+		address.getElement().setAttribute("cellpadding", "5");
+
+		Label a = new Label("Add your address:");
+
+		address.add(a);
+		address.add(addressBox);
+		address.add(addressButton);
+
+		panel.add(searchPanel);
+		panel.add(new HTML("<hr>"));
+		panel.add(address);
+
+
 		return panel;
 	}
 
@@ -98,8 +136,48 @@ public class SearchTab {
 	}	
 
 
-	protected void searchLanguage() {
+	private void searchLanguage() {
 		main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
 	}
 
+
+	private void placeAddressOnMap() {
+		geoCode();
+	}
+
+
+	private void geoCode(){
+
+		TabFetcherAsync geoCoder = GWT.create(TabFetcher.class);
+		GeoCodeCallback callback = new GeoCodeCallback();
+
+		geoCoder.geoCode(addressBox.getText(), callback);
+	}
+
+	/**
+	 * Response from server after requesting rating
+	 */
+	private class GeoCodeCallback implements AsyncCallback<ArrayList<Double>> {
+		@Override
+		public void onFailure(Throwable caught) {
+			caught.printStackTrace();
+			Window.alert("Could not recoginize given address.");
+		}
+
+		@Override
+		public void onSuccess(ArrayList<Double> result) {
+			// result in order: date, user information, review, rating (0 if does not exist)
+			Window.alert("Success!");
+
+
+		}
+
+	}
 }
+
+
+
+
+
+
+

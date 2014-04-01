@@ -39,14 +39,6 @@ public class Clinic {
 		lang = lang.replace("and ", "");
 		lang = lang.replace(" ", "");
 		this.languages = lang.split(",");
-		
-
-		Logger logger = Logger.getLogger("NameOfYourLogger");
-		logger.log(Level.SEVERE, lang);
-		for(int i = 0; i<=languages.length-1; i++){
-			logger.log(Level.SEVERE, languages[i]);
-
-		}
 	}
 
 	public String getRefID() { return refID; }

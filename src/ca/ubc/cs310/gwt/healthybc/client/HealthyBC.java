@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
+import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -60,6 +61,7 @@ public class HealthyBC implements EntryPoint {
 	private ArrayList<String> tabNames;
 	private boolean showAdminTools = false;
 	private String currentUser = "";
+	private MapWidget map;
 
 	// Social Login vars
 	private static Widget socialLoginPanel;
@@ -273,8 +275,8 @@ public class HealthyBC implements EntryPoint {
 		socialLoginPanel = SocialLogin.createLoginPanel();
 
 		// add home page & logout button
-		SearchTab search = new SearchTab(this);
-		tabs.add(search.getSearchTab(), "Home");
+		OptionsTab options = new OptionsTab(this, map);
+		tabs.add(options.getOptionsTab(), "Home");
 		tabs.add(socialLoginPanel, "Account");
 
 		tabNames.add("Home");
@@ -297,7 +299,6 @@ public class HealthyBC implements EntryPoint {
 		createTable(searchBy, searchKey);
 		createMap(searchBy, searchKey);
 	}
-
 
 	// --------------------------------------------------------------
 	// Create Map
@@ -340,6 +341,7 @@ public class HealthyBC implements EntryPoint {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
 		MapBuilder callback = new MapBuilder(this);
+		this.map = callback.getMap();
 		clinicFetcher.mapInfo(searchBy, searchKey, callback);
 	}
 

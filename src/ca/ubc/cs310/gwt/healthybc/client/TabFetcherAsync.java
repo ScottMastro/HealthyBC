@@ -12,4 +12,6 @@ public interface TabFetcherAsync {
 	
 	public void sendEmail(String text, String emailAddress, String title, AsyncCallback<ArrayList<Boolean>> callback);
 
+	public void geoCode(String text, AsyncCallback<ArrayList<Double>> callback);
+
 }

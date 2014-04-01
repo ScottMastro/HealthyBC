@@ -28,6 +28,10 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 		main = h;
 	}
 	
+	public MapWidget getMap(){
+		return map;
+	}
+	
 	@Override
 	public void onFailure(Throwable caught) {
 		caught.printStackTrace();
