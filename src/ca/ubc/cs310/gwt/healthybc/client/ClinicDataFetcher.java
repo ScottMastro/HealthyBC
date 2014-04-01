@@ -9,6 +9,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface ClinicDataFetcher extends RemoteService {
 	public ArrayList<MapInfo> mapInfo();
 	
-	public ArrayList<TableInfo> tableInfo();
+	public ArrayList<TableInfo> tableInfo(String searchBy, String searchKey);
 	
 }

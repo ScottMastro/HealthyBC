@@ -273,7 +273,7 @@ public class HealthyBC implements EntryPoint {
 		socialLoginPanel = SocialLogin.createLoginPanel();
 
 		// add home page & logout button
-		SearchTab search = new SearchTab();
+		SearchTab search = new SearchTab(this);
 		tabs.add(search.getSearchTab(), "Home");
 		tabs.add(socialLoginPanel, "Account");
 
@@ -281,7 +281,7 @@ public class HealthyBC implements EntryPoint {
 		tabNames.add("Account");
 
 		createMap();
-		createTable();
+		createTable(null, null);
 		createUploadForm();
 
 		dock.addWest(mapTableDock, 30);
@@ -290,6 +290,11 @@ public class HealthyBC implements EntryPoint {
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
 		r.forceLayout();
+	}
+	
+	public void search(String searchBy, String searchKey){
+		mapTableDock.clear();
+		createTable(searchBy, searchKey);
 	}
 
 
@@ -359,18 +364,18 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * Calls required methods to create the table
 	 */
-	private void createTable() {
-		buildTable();
+	private void createTable(String searchBy, String searchKey) {
+		buildTable(searchBy, searchKey);
 	}
 
 	/**
 	 * Retrieves data and constructs the table
 	 */
-	private void buildTable() {
+	private void buildTable(String searchBy, String searchKey) {
 		ClinicDataFetcherAsync tableFetcher = GWT.create(ClinicDataFetcher.class);
 
 		TableInfoListCallback callback = new TableInfoListCallback();
-		tableFetcher.tableInfo(callback);
+		tableFetcher.tableInfo(searchBy, searchKey, callback);
 	}
 
 	/**

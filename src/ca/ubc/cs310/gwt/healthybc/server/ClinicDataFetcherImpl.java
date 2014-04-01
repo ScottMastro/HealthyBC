@@ -20,8 +20,11 @@ public class ClinicDataFetcherImpl extends RemoteServiceServlet implements Clini
 		return ClinicManager.getInstance().getMapInfo();
 	}
 
-	public ArrayList<TableInfo> tableInfo(){
-		return ClinicManager.getInstance().getTableInfo();
+	public ArrayList<TableInfo> tableInfo(String searchBy, String searchKey){
+		if(searchBy == null && searchKey == null)
+			return ClinicManager.getInstance().getTableInfo();
+		else
+			return ClinicManager.getInstance().getSearchTableInfo(searchBy, searchKey);
 	}
 
 }

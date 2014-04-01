@@ -229,8 +229,26 @@ public class ClinicManager {
 
 			}
 		}
-		
+
 		return null;
+	}
+
+	public ArrayList<TableInfo> getSearchTableInfo(String searchBy,
+			String searchKey) {
+
+		ArrayList<TableInfo> list = new ArrayList<TableInfo>();
+		searchKey = searchKey.toLowerCase();
+
+		if(searchBy.equals("name")){
+			for(TableInfo info : tableInfo){
+
+				if(info.getName().toLowerCase().contains(searchKey))
+					list.add(info);
+			}
+		}
+
+
+		return list;
 	}
 }
 

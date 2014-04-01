@@ -4,10 +4,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -19,12 +15,14 @@ public class SearchTab {
 	private ListBox clinicLanguage;
 	private Button nameSearch;
 	private Button languageSearch;
+	private HealthyBC main;
 
 	private String[] languages = {"English", "Afghani", "Afrikaans", "Arabic",	"Bengali", "Bicol",	"Cantonese",
 			"Farsi", "Filipino",	"French", "German", "Greek", "Hindi", "Japanese", "Korean", "Mandarin",
 			"Polish", "Punjabi", "Russian", "Serbian", "Spanish", "Tagalog", "Urdu", "Vietnamese"};
 
-	public SearchTab(){
+	public SearchTab(HealthyBC main){
+		this.main = main;
 		clinicName = new TextBox();
 		clinicLanguage = new ListBox();
 		
@@ -121,14 +119,12 @@ public class SearchTab {
 
 
 	private void searchName() {
-		// TODO Auto-generated method stub
-
+		main.search("name", clinicName.getText());
 	}	
 
 
 	protected void searchLanguage() {
-		// TODO Auto-generated method stub
-
+		main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
 	}
 
 }
