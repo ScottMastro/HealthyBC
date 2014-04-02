@@ -520,6 +520,9 @@ public class HealthyBC implements EntryPoint {
 		}
 	}
 
+	/*
+	 * JSNI method to force re-rendering of Like/+1 buttons
+	 */
 	public static native String forceRender() /*-{
 
 		$wnd.FB.XFBML.parse($doc.getElementById("fb-wrapper"));

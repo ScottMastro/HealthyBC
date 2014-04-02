@@ -311,7 +311,7 @@ public class RemoteDataManager {
 	}
 
 	/**
-	 * Updates review entity in datstore or creates new entity if no review currently exist
+	 * Updates review entity in datastore or creates new entity if no review currently exist
 	 *
 	 * @param refID of clinic to review
 	 * @param review to give to specific clinic (less than 500 characters)
