@@ -61,7 +61,6 @@ public class HealthyBC implements EntryPoint {
 	private ArrayList<String> tabNames;
 	private boolean showAdminTools = false;
 	private String currentUser = "";
-	private MapWidget map;
 
 	// Social Login vars
 	private static Widget socialLoginPanel;
@@ -275,14 +274,14 @@ public class HealthyBC implements EntryPoint {
 		socialLoginPanel = SocialLogin.createLoginPanel();
 
 		// add home page & logout button
-		OptionsTab options = new OptionsTab(this, map);
+		OptionsTab options = new OptionsTab(this);
 		tabs.add(options.getOptionsTab(), "Home");
 		tabs.add(socialLoginPanel, "Account");
 
 		tabNames.add("Home");
 		tabNames.add("Account");
 
-		createMap(null, null);
+		createMap(null, null, null, null);
 		createTable(null, null);
 		createUploadForm();
 
@@ -293,11 +292,17 @@ public class HealthyBC implements EntryPoint {
 		r.add(dock);
 		r.forceLayout();
 	}
-	
+
 	public void search(String searchBy, String searchKey){
 		mapTableDock.clear();
 		createTable(searchBy, searchKey);
-		createMap(searchBy, searchKey);
+		createMap(searchBy, searchKey, null, null);
+	}
+
+	public void setAddress(Double lat, Double lon){
+		mapTableDock.clear();
+		createTable(null, null);
+		createMap(null, null, lat, lon);
 	}
 
 	// --------------------------------------------------------------
@@ -307,14 +312,15 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * Calls required methods to create the Google map interface
 	 */
-	private void createMap(String searchBy, String searchKey) {
-		loadMapAPI(searchBy, searchKey);
+	private void createMap(String searchBy, String searchKey, Double lat, Double lon) {
+		loadMapAPI(searchBy, searchKey, lat, lon);
 	}
 
 	/**
 	 * Initiates Google Map API
+
 	 */
-	private void loadMapAPI(final String searchBy, final String searchKey) {
+	private void loadMapAPI(final String searchBy, final String searchKey, final Double lat, final Double lon) {
 		boolean sensor = false;
 
 		// Load libraries needed for maps
@@ -327,7 +333,10 @@ public class HealthyBC implements EntryPoint {
 			@Override
 			public void run() {
 				// callback on successful API load
-				buildMap(searchBy, searchKey);
+				if(lat == null || lon == null)
+					buildMap(searchBy, searchKey);
+				else
+					buildMap(null, null, lat, lon);
 			}
 		};
 
@@ -341,7 +350,16 @@ public class HealthyBC implements EntryPoint {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
 		MapBuilder callback = new MapBuilder(this);
-		this.map = callback.getMap();
+		clinicFetcher.mapInfo(searchBy, searchKey, callback);
+	}
+
+	/**
+	 * On successful API load, retrieves data and constructs map
+	 */
+	public void buildMap(String searchBy, String searchKey, Double latCentre, Double lonCentre) {
+		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
+
+		MapBuilder callback = new MapBuilder(this, latCentre, lonCentre);
 		clinicFetcher.mapInfo(searchBy, searchKey, callback);
 	}
 
@@ -436,7 +454,7 @@ public class HealthyBC implements EntryPoint {
 			hp.add(footer);
 			hp.setCellHorizontalAlignment(footer, HasHorizontalAlignment.ALIGN_LEFT);
 		}
-		
+
 		Button logoutButton = new Button("Logout", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -514,12 +532,12 @@ public class HealthyBC implements EntryPoint {
 				ClinicTabInfo t = result.get(0);
 				removeTab("Clinic Information");
 				DockLayoutPanel clinicPanel = new DockLayoutPanel(Unit.PCT);
-				
+
 				boolean hasEmail = !(t.getEmail() == null) && !t.getEmail().isEmpty();
 				String emailString = "";
 				if(hasEmail)
 					emailString = "<LI><b>Email: </b>" + t.getEmail();
-				
+
 				HTML info = new HTML("<br>"
 						+ "<h1 style='margin:0px'>" + t.getName() + "</h1>"
 						+ "<font size='4'>"
@@ -533,18 +551,18 @@ public class HealthyBC implements EntryPoint {
 						);
 
 				clinicPanel.addWest(info, 60);
-				
+
 				if(hasEmail){
 					VerticalPanel emailPanel = new VerticalPanel();
-					
+
 					EmailBox email = new EmailBox(t.getEmail());
 					emailPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-										
+
 					emailPanel.add(new HTML("<h2 style='color:gray'>Compose email to clinic</h2>"));
 					emailPanel.add(email.getBox());				
 					clinicPanel.addEast(emailPanel, 40);
 				}
-				
+
 				tabs.add(clinicPanel, "Clinic Information");
 
 				tabNames.add(tabs.getWidgetCount() -1, "Clinic Information");
@@ -553,7 +571,7 @@ public class HealthyBC implements EntryPoint {
 				removeTab("View Ratings");
 
 				RatingTab ratingTab = new RatingTab(t.getRefID(), currentUser);
-								
+
 				tabs.add(ratingTab.getRatingTab(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 
