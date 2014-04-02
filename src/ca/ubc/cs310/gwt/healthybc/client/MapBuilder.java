@@ -19,46 +19,31 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
-	
+
 	private InfoWindow infoWindow;
 	private SimplePanel mapContainer = new SimplePanel();
 	private FixedMap map;
 	private HealthyBC main;
 	private Double latCentre;
 	private Double lonCentre;
-	private boolean setAddress = false;
-	
-	public MapBuilder(HealthyBC h, Double latCentre, Double lonCentre){
-		main = h;
-		
-		setAddress = true;		
-		// Vancouver center coordinates
-		if(latCentre == null)
-			this.latCentre = 49.2569425;
-		else
-			this.latCentre = latCentre;
-		if(lonCentre == null)
-			this.lonCentre = -123.123904;
-		else
-			this.lonCentre = lonCentre;
-	}
-	
+
 	public MapBuilder(HealthyBC h){
 		main = h;
-		
-		this.latCentre = 49.2569425;
-		this.lonCentre = -123.123904;
+		// Vancouver center coordinates
+		latCentre = 49.2569425;
+		lonCentre = -123.123904;
+
 	}
-	
+
 	public MapWidget getMap(){
 		return map;
 	}
-	
+
 	@Override
 	public void onFailure(Throwable caught) {
 		caught.printStackTrace();
 	}
-	
+
 	/**
 	 * Sets up map on successful result return
 	 */
@@ -77,12 +62,12 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 		map.setSize("100%", "100%");
 
 		displayClinics(map, result);
-		
+
 		mapContainer.add(map);
 		main.addMap(mapContainer);
 		map.triggerResize();
 	}
-	
+
 	/**
 	 * Displays each clinic as a marker on the map
 	 * @param map the map to display markers on
@@ -96,7 +81,7 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 			options.setTitle(clinic.getName());
 			options.setPosition(LatLng.newInstance(clinic.getLatitude(), clinic.getLongitude()));
 			MarkerImage icon = MarkerImage.newInstance(
-				    "http://labs.google.com/ridefinder/images/mm_20_red.png");
+					"http://labs.google.com/ridefinder/images/mm_20_red.png");
 			options.setIcon(icon);
 
 			final Marker marker = Marker.newInstance(options);
@@ -112,63 +97,69 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 			};
 			marker.addClickHandler(handler);
 		}
-		
-		if(setAddress){
-			MarkerOptions options = MarkerOptions.newInstance();
-			options.setMap(map);
-			options.setClickable(true);
-			options.setTitle("My Address");
-			options.setPosition(LatLng.newInstance(latCentre, lonCentre));
-
-			MarkerImage icon = MarkerImage.newInstance(
-				    "http://labs.google.com/ridefinder/images/mm_20_green.png");
-			options.setIcon(icon);
-			final Marker marker = Marker.newInstance(options);
-			
-			final String desc = "My Address";
-
-			ClickMapHandler handler = new ClickMapHandler() {
-				public void onEvent(ClickMapEvent e) {
-					infoWindow.setContent("<div class=\"markerContent\" style=\"line-height:normal; white-space:nowrap;\">" + desc + "</div>");
-					infoWindow.open(map, marker);
-				} 
-			};
-			marker.addClickHandler(handler);
-			
-		}
 	}
-	
+
 	private class FixedMap extends MapWidget{
 
 		public FixedMap(MapOptions options) {
 			super(options);
-			}
-		
-		 @Override
-		 protected void onAttach() {
-		     super.onAttach();
-		     Timer timer = new Timer() {
+		}
 
-		         @Override
-		         public void run() {
-		             resize();
-		         }
-		     };
-		     timer.schedule(5);
-		 }
+		@Override
+		protected void onAttach() {
+			super.onAttach();
+			Timer timer = new Timer() {
 
-		 /*
-		  * This method is called to fix the Map loading issue when opening
-		  * multiple instances of maps in different tabs
-		  * Triggers a resize event to be consumed by google api in order to resize view
-		  * after attach.
-		  *
-		  */
-		 public void resize() {
-		     LatLng center = this.getCenter();
-		     MapHandlerRegistration.trigger(this, MapEventType.RESIZE);        
-		     this.setCenter(center);
-		 }
+				@Override
+				public void run() {
+					resize();
+				}
+			};
+			timer.schedule(5);
+		}
+
+		/*
+		 * This method is called to fix the Map loading issue when opening
+		 * multiple instances of maps in different tabs
+		 * Triggers a resize event to be consumed by google api in order to resize view
+		 * after attach.
+		 *
+		 */
+		public void resize() {
+			LatLng center = this.getCenter();
+			MapHandlerRegistration.trigger(this, MapEventType.RESIZE);        
+			this.setCenter(center);
+		}
+
+	}
+
+	public void setAddress(Double lat, Double lon) {
+		latCentre = lat;
+		lonCentre = lon;
 		
+		MarkerOptions options = MarkerOptions.newInstance();
+		options.setMap(map);
+		options.setClickable(true);
+		options.setTitle("My Address");
+		options.setPosition(LatLng.newInstance(lat, lon));
+
+		MarkerImage icon = MarkerImage.newInstance(
+			    "http://labs.google.com/ridefinder/images/mm_20_green.png");
+		options.setIcon(icon);
+		
+		final Marker marker = Marker.newInstance(options);
+		final String desc = "My Address";
+
+		ClickMapHandler handler = new ClickMapHandler() {
+			public void onEvent(ClickMapEvent e) {
+				infoWindow.setContent("<div class=\"markerContent\" style=\"line-height:normal; white-space:nowrap;\">" + desc + "</div>");
+				infoWindow.open(map, marker);
+			} 
+		};
+		marker.addClickHandler(handler);
+		
+		marker.setMap(map);
+		map.setCenter(LatLng.newInstance(latCentre, lonCentre));
+		map.resize();
 	}
 }

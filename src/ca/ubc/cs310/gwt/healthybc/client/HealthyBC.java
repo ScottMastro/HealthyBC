@@ -58,6 +58,7 @@ public class HealthyBC implements EntryPoint {
 	private String currentUser = "";
 	private Double addressLat;	
 	private Double addressLon;
+	private MapBuilder mapBuilder;
 	private static Widget twitterFeedPanel;
 
 	/**
@@ -196,7 +197,7 @@ public class HealthyBC implements EntryPoint {
 		tabNames = new ArrayList<String>();
 
 		twitterFeedPanel = TwitterFeed.getInstance().createTwitterFeed();
-		
+
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this);
 		tabs.add(options.getOptionsTab(), "Home");
@@ -204,19 +205,19 @@ public class HealthyBC implements EntryPoint {
 
 		tabNames.add("Home");
 		tabNames.add("Twitter");
-		
+
 		createMap(null, null);
 		createTable(null, null);
 		createUploadForm();
 
 		dock.addWest(mapTableDock, 30);
 		dock.addEast(tabs, 70);
-		
+
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
 		r.forceLayout();
 	}
-	
+
 	public void search(String searchBy, String searchKey){
 		mapTableDock.clear();
 		createTable(searchBy, searchKey);
@@ -224,11 +225,9 @@ public class HealthyBC implements EntryPoint {
 	}
 
 	public void setAddress(Double lat, Double lon){
-		mapTableDock.clear();
-		createTable(null, null);
 		addressLat = lat;
 		addressLon = lon;
-		createMap(null, null);
+		mapBuilder.setAddress(lat, lon);
 	}
 
 	// --------------------------------------------------------------
@@ -258,10 +257,7 @@ public class HealthyBC implements EntryPoint {
 			@Override
 			public void run() {
 				// callback on successful API load
-				if(addressLat == null || addressLon == null)
-					buildMap(searchBy, searchKey);
-				else
-					buildMap(null, null, addressLat, addressLon);
+				buildMap(searchBy, searchKey);
 			}
 		};
 
@@ -274,18 +270,8 @@ public class HealthyBC implements EntryPoint {
 	private void buildMap(String searchBy, String searchKey) {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
-		MapBuilder callback = new MapBuilder(this);
-		clinicFetcher.mapInfo(searchBy, searchKey, callback);
-	}
-
-	/**
-	 * On successful API load, retrieves data and constructs map
-	 */
-	public void buildMap(String searchBy, String searchKey, Double latCentre, Double lonCentre) {
-		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
-
-		MapBuilder callback = new MapBuilder(this, latCentre, lonCentre);
-		clinicFetcher.mapInfo(searchBy, searchKey, callback);
+		mapBuilder = new MapBuilder(this);
+		clinicFetcher.mapInfo(searchBy, searchKey, mapBuilder);
 	}
 
 	/**
@@ -380,7 +366,7 @@ public class HealthyBC implements EntryPoint {
 			hp.add(footer);
 			hp.setCellHorizontalAlignment(footer, HasHorizontalAlignment.ALIGN_LEFT);
 		}
-		
+
 		Button logoutButton = new Button("Logout", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -457,22 +443,22 @@ public class HealthyBC implements EntryPoint {
 			else{
 
 				VerticalPanel container = new VerticalPanel();
-				
+
 				ClinicTabInfo t = result.get(0);
 				removeTab("Clinic Information");
 				DockLayoutPanel clinicPanel = new DockLayoutPanel(Unit.PCT);
-				
+
 				boolean hasEmail = !(t.getEmail() == null) && !t.getEmail().isEmpty();
 				String emailString = "";
 				String distanceString = "";
 
 				if(hasEmail)
 					emailString = "<LI><b>Email: </b><br>" + t.getEmail();
-				
+
 				if(addressLat != null && addressLon != null)
 					distanceString = "<center><font size='6'>Distance is about " +
 							t.getDistance(addressLat, addressLon) + " km away</font></center>";
-				
+
 				HTML info = new HTML("<br>"
 						+ "<h1 style='margin:0px'>" + t.getName() + "</h1>"
 						+ "<font size='4'>"
@@ -487,7 +473,7 @@ public class HealthyBC implements EntryPoint {
 						);
 
 				HorizontalPanel socialContainer = new HorizontalPanel();
-				
+
 				String sURL = "http://healthy-bc-310.appspot.com/?clinicID=" + t.getRefID();
 				HTML gHTML = new HTML("<g:plusone><div class=\"g-plusone\" data-annotation=\"inline\" data-width=\"50\" data-href=\" style=\"padding-bottom:15px !important;\""
 						+ sURL
@@ -495,26 +481,26 @@ public class HealthyBC implements EntryPoint {
 				HTML fbHTML = new HTML("<div id=\"fb-wrapper\"><fb:like href=\""
 						+ sURL
 						+ "\" layout=\"standard\" action=\"like\" show_faces=\"false\" share=\"false\"></fb:like></div>");
-				
+
 				socialContainer.add(gHTML);
 				socialContainer.add(fbHTML);
-				
+
 				container.add(info);
 				container.add(socialContainer);
-						
+
 				clinicPanel.addWest(container, 60);
-				
+
 				if(hasEmail){
 					VerticalPanel emailPanel = new VerticalPanel();
-					
+
 					EmailBox email = new EmailBox(t.getEmail());
 					emailPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-										
+
 					emailPanel.add(new HTML("<h2 style='color:gray'>Compose email to clinic</h2>"));
 					emailPanel.add(email.getBox());				
 					clinicPanel.addEast(emailPanel, 40);
 				}
-				
+
 				tabs.add(clinicPanel, "Clinic Information");
 
 				tabNames.add(tabs.getWidgetCount() -1, "Clinic Information");
@@ -523,17 +509,17 @@ public class HealthyBC implements EntryPoint {
 				removeTab("View Ratings");
 
 				RatingTab ratingTab = new RatingTab(t.getRefID(), currentUser);
-								
+
 				tabs.add(ratingTab.getRatingTab(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
-				
+
 				forceRender();
 			}
 		}
 	}
-	
+
 	public static native String forceRender() /*-{
-		
+
 		$wnd.FB.XFBML.parse($doc.getElementById("fb-wrapper"));
 		$wnd.gapi.plusone.go();
 	}-*/;
