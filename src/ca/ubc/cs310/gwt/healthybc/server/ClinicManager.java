@@ -2,8 +2,6 @@ package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
 import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;

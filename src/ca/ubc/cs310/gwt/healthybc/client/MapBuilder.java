@@ -23,9 +23,30 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 	private SimplePanel mapContainer = new SimplePanel();
 	private FixedMap map;
 	private HealthyBC main;
+	private Double latCentre;
+	private Double lonCentre;
+	private boolean setAddress = false;
+	
+	public MapBuilder(HealthyBC h, Double latCentre, Double lonCentre){
+		main = h;
+		
+		setAddress = true;		
+		// Vancouver center coordinates
+		if(latCentre == null)
+			this.latCentre = 49.2569425;
+		else
+			this.latCentre = latCentre;
+		if(lonCentre == null)
+			this.lonCentre = -123.123904;
+		else
+			this.lonCentre = lonCentre;
+	}
 	
 	public MapBuilder(HealthyBC h){
 		main = h;
+		
+		this.latCentre = 49.2569425;
+		this.lonCentre = -123.123904;
 	}
 	
 	public MapWidget getMap(){
@@ -42,15 +63,14 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 	 */
 	@Override
 	public void onSuccess(ArrayList<MapInfo> result) {
-		// Vancouver center coordinates
-		LatLng vanCity = LatLng.newInstance(49.2569425,-123.123904);
+		LatLng centre = LatLng.newInstance(latCentre, lonCentre);
 
 		InfoWindowOptions iwOptions = InfoWindowOptions.newInstance();
 		infoWindow = InfoWindow.newInstance(iwOptions);
 
 		MapOptions options = MapOptions.newInstance();
 		options.setZoom(13);
-		options.setCenter(vanCity);
+		options.setCenter(centre);
 
 		map = new FixedMap(options);
 		map.setSize("100%", "100%");
@@ -74,7 +94,6 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 			options.setClickable(true);
 			options.setTitle(clinic.getName());
 			options.setPosition(LatLng.newInstance(clinic.getLatitude(), clinic.getLongitude()));
-			options.setTitle(clinic.getRefID());
 
 			final Marker marker = Marker.newInstance(options);
 			final String desc = clinic.getName();
@@ -88,6 +107,26 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 				} 
 			};
 			marker.addClickHandler(handler);
+		}
+		
+		if(setAddress){
+			MarkerOptions options = MarkerOptions.newInstance();
+			options.setMap(map);
+			options.setClickable(true);
+			options.setTitle("My Address");
+			options.setPosition(LatLng.newInstance(latCentre, lonCentre));
+
+			final Marker marker = Marker.newInstance(options);
+			final String desc = "My Address";
+
+			ClickMapHandler handler = new ClickMapHandler() {
+				public void onEvent(ClickMapEvent e) {
+					infoWindow.setContent("<div class=\"markerContent\" style=\"line-height:normal; white-space:nowrap;\">" + desc + "</div>");
+					infoWindow.open(map, marker);
+				} 
+			};
+			marker.addClickHandler(handler);
+			
 		}
 	}
 	

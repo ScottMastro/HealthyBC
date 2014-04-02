@@ -17,6 +17,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -51,9 +52,8 @@ public class HealthyBC implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	/**
-	 * Private variables
-	 */
+	private static final String WELCOME_STRING = "Welcome to HealthyBC";
+
 	private static final long DURATION = 1000 * 60 * 60 * 24;
 	private DockLayoutPanel dock;
 	private DockLayoutPanel mapTableDock;
@@ -63,9 +63,9 @@ public class HealthyBC implements EntryPoint {
 	private String currentUser = "";
 	private MapWidget map;
 
-	/**
-	 * Get Singleton object
-	 */
+	private static Widget twitterFeedPanel;
+	private static Anchor logoutAnchor = new Anchor();
+
 	public static HealthyBC get() {
 		return singleton;
 	}
@@ -75,7 +75,8 @@ public class HealthyBC implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		singleton = this;
-		
+
+		//handleRedirect();
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null){
@@ -99,6 +100,67 @@ public class HealthyBC implements EntryPoint {
                                 System.out.println(historyToken);
                         }
          });*/
+
+	}
+
+
+	private void handleRedirect()
+	{
+		if (SocialLogin.redirected())
+		{
+			verifySocialUser();
+		}
+	}
+
+	private void verifySocialUser()
+	{
+		final String authProviderName = SocialLogin.getAuthProviderNameFromCookie();
+		final int authProvider = SocialLogin.getAuthProviderFromCookieAsInt();
+		log("Verifying " + authProviderName + " user ...");
+
+		new LoginCallbackAsync<SocialUser>()
+		{
+			@Override
+			public void onSuccess(SocialUser result)
+			{
+				SocialLogin.saveSessionId(result.getSessionId());
+
+				String name = "";
+				if (result.getName() != null)
+				{
+					name = result.getName();
+					SocialLogin.saveName(name, authProvider);
+				}
+
+				// TODO: remove alert in final version
+				Window.alert(result.getJson());				
+			}
+
+			@Override
+			protected void callService(AsyncCallback<SocialUser> cb)
+			{
+				try
+				{
+					final Credential credential = SocialLogin.getCredential();
+					if (credential == null)
+					{
+						log("verifySocialUser: Could not get credential for " + authProvider + " user");
+						return;
+					}
+					OAuthLoginService.Util.getInstance().verifySocialUser(credential,cb);
+				}
+				catch (Exception e)
+				{
+					Window.alert(e.getMessage());
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				Window.alert("Coult not verify" + authProvider + " user." + caught);
+			}
+		}.go("Verifying " + authProviderName + " user..");
 	}
 
 	/**
@@ -141,16 +203,15 @@ public class HealthyBC implements EntryPoint {
 				// further explanation).
 				if (event.getResults().trim().startsWith("success")){
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
-					currentUser = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
+					String user = event.getResults().split(":")[1].trim();
+					Cookies.setCookie("HBC_username", user, expires, null, "/", false);
 					RootPanel.get().clear();
-					showAdminTools = false;
 					//History.newItem("homepage");
 					init();
 				} else if (event.getResults().trim().startsWith("admin")){
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
-					currentUser = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
+					String user = event.getResults().split(":")[1].trim();
+					Cookies.setCookie("HBC_username", user, expires, null, "/", false);
 					RootPanel.get().clear();
 					showAdminTools = true;
 					//History.newItem("homepage");
@@ -180,10 +241,10 @@ public class HealthyBC implements EntryPoint {
 				if (event.getResults().trim().startsWith("success")){
 					Window.alert("New user created.");
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
-					currentUser = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
+					String user = event.getResults().split(":")[1].trim();
+					Cookies.setCookie("HBC_username", user, expires, null, "/", false);
+
 					RootPanel.get().clear();
-					showAdminTools = false;
 					//History.newItem("homepage");
 					init();
 				} else {
@@ -206,15 +267,18 @@ public class HealthyBC implements EntryPoint {
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
 		tabNames = new ArrayList<String>();
 
+		twitterFeedPanel = TwitterFeed.getInstance().createTwitterFeed();
+
 		// add home page & logout button
-		OptionsTab options = new OptionsTab(this, map);
+		OptionsTab options = new OptionsTab(this);
 		tabs.add(options.getOptionsTab(), "Home");
-		tabs.add(new HTML(), "Account");
+
+		tabs.add(twitterFeedPanel, "Twitter");
 
 		tabNames.add("Home");
-		tabNames.add("Account");
+		tabNames.add("Twitter");
 
-		createMap(null, null);
+		createMap(null, null, null, null);
 		createTable(null, null);
 		createUploadForm();
 
@@ -225,11 +289,17 @@ public class HealthyBC implements EntryPoint {
 		r.add(dock);
 		r.forceLayout();
 	}
-	
+
 	public void search(String searchBy, String searchKey){
 		mapTableDock.clear();
 		createTable(searchBy, searchKey);
-		createMap(searchBy, searchKey);
+		createMap(searchBy, searchKey, null, null);
+	}
+
+	public void setAddress(Double lat, Double lon){
+		mapTableDock.clear();
+		createTable(null, null);
+		createMap(null, null, lat, lon);
 	}
 
 	// --------------------------------------------------------------
@@ -239,14 +309,15 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * Calls required methods to create the Google map interface
 	 */
-	private void createMap(String searchBy, String searchKey) {
-		loadMapAPI(searchBy, searchKey);
+	private void createMap(String searchBy, String searchKey, Double lat, Double lon) {
+		loadMapAPI(searchBy, searchKey, lat, lon);
 	}
 
 	/**
 	 * Initiates Google Map API
+
 	 */
-	private void loadMapAPI(final String searchBy, final String searchKey) {
+	private void loadMapAPI(final String searchBy, final String searchKey, final Double lat, final Double lon) {
 		boolean sensor = false;
 
 		// Load libraries needed for maps
@@ -259,7 +330,10 @@ public class HealthyBC implements EntryPoint {
 			@Override
 			public void run() {
 				// callback on successful API load
-				buildMap(searchBy, searchKey);
+				if(lat == null || lon == null)
+					buildMap(searchBy, searchKey);
+				else
+					buildMap(null, null, lat, lon);
 			}
 		};
 
@@ -273,7 +347,16 @@ public class HealthyBC implements EntryPoint {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
 		MapBuilder callback = new MapBuilder(this);
-		this.map = callback.getMap();
+		clinicFetcher.mapInfo(searchBy, searchKey, callback);
+	}
+
+	/**
+	 * On successful API load, retrieves data and constructs map
+	 */
+	public void buildMap(String searchBy, String searchKey, Double latCentre, Double lonCentre) {
+		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
+
+		MapBuilder callback = new MapBuilder(this, latCentre, lonCentre);
 		clinicFetcher.mapInfo(searchBy, searchKey, callback);
 	}
 
@@ -341,16 +424,15 @@ public class HealthyBC implements EntryPoint {
 	}
 
 	// --------------------------------------------------------------
-	// Create Footer (Upload form and Credits)
+	// Create Upload Form
 	// --------------------------------------------------------------
 
 	/**
-	 * Create footer and add form to parse remote data
+	 * Sets up form to browse for and send local file to servlet
 	 */
 	private void createUploadForm(){
 		HorizontalPanel hp = new HorizontalPanel();
-		hp.setSize("100%", "100%");
-		hp.getElement().setAttribute("cellpadding", "10");
+		hp.getElement().setAttribute("cellpadding", "5");
 		if (showAdminTools == true ){
 			HTML uploadForm = new HTML("<form method='POST' action='/uploadURL'/>"
 					+ "Upload data from URL: <input name='urlstring' type='text' /> &nbsp;"
@@ -369,12 +451,11 @@ public class HealthyBC implements EntryPoint {
 			hp.add(footer);
 			hp.setCellHorizontalAlignment(footer, HasHorizontalAlignment.ALIGN_LEFT);
 		}
-		
+
 		Button logoutButton = new Button("Logout", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				Cookies.removeCookie("HBC_username");
-				currentUser = "";
 				RootPanel.get().clear();
 				login();
 			}
@@ -449,12 +530,12 @@ public class HealthyBC implements EntryPoint {
 				ClinicTabInfo t = result.get(0);
 				removeTab("Clinic Information");
 				DockLayoutPanel clinicPanel = new DockLayoutPanel(Unit.PCT);
-				
+
 				boolean hasEmail = !(t.getEmail() == null) && !t.getEmail().isEmpty();
 				String emailString = "";
 				if(hasEmail)
 					emailString = "<LI><b>Email: </b>" + t.getEmail();
-				
+
 				HTML info = new HTML("<br>"
 						+ "<h1 style='margin:0px'>" + t.getName() + "</h1>"
 						+ "<font size='4'>"
@@ -466,6 +547,7 @@ public class HealthyBC implements EntryPoint {
 						+ emailString
 						+ "</UL></font>"
 						);
+
 				container.add(info);
 				
 				HorizontalPanel socialContainer = new HorizontalPanel();
@@ -484,18 +566,18 @@ public class HealthyBC implements EntryPoint {
 				loadSocialJS();
 				
 				clinicPanel.addWest(container, 60);
-				
+
 				if(hasEmail){
 					VerticalPanel emailPanel = new VerticalPanel();
-					
+
 					EmailBox email = new EmailBox(t.getEmail());
 					emailPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-										
+
 					emailPanel.add(new HTML("<h2 style='color:gray'>Compose email to clinic</h2>"));
 					emailPanel.add(email.getBox());				
 					clinicPanel.addEast(emailPanel, 40);
 				}
-				
+
 				tabs.add(clinicPanel, "Clinic Information");
 
 				tabNames.add(tabs.getWidgetCount() -1, "Clinic Information");
@@ -504,7 +586,7 @@ public class HealthyBC implements EntryPoint {
 				removeTab("View Ratings");
 
 				RatingTab ratingTab = new RatingTab(t.getRefID(), currentUser);
-								
+
 				tabs.add(ratingTab.getRatingTab(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 
