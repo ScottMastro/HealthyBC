@@ -64,6 +64,7 @@ public class HealthyBC implements EntryPoint {
 
 	// Social Login vars
 	private static Widget socialLoginPanel;
+	private static Widget twitterFeedPanel;
 	private static Anchor logoutAnchor = new Anchor();
 
 	public static HealthyBC get() {
@@ -272,14 +273,17 @@ public class HealthyBC implements EntryPoint {
 		tabNames = new ArrayList<String>();
 
 		socialLoginPanel = SocialLogin.createLoginPanel();
+		twitterFeedPanel = TwitterFeed.getInstance().createTwitterFeed();
 
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this);
 		tabs.add(options.getOptionsTab(), "Home");
 		tabs.add(socialLoginPanel, "Account");
+		tabs.add(twitterFeedPanel, "Twitter");
 
 		tabNames.add("Home");
 		tabNames.add("Account");
+		tabNames.add("Twitter");
 
 		createMap(null, null, null, null);
 		createTable(null, null);
