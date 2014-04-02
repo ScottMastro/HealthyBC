@@ -1,6 +1,10 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+
+import com.google.gwt.maps.client.base.LatLng;
+import com.google.gwt.user.client.Window;
 
 @SuppressWarnings("serial")
 public class ClinicTabInfo implements Serializable {
@@ -37,6 +41,44 @@ public class ClinicTabInfo implements Serializable {
 		this.email = email;
 		this.phone = phone;
 		this.lang = lang;
+	}
+
+	public String getDistance(Double lat, Double lon){
+		double d = distFrom(lat, lon, this.latitude, this.longitude, "K");
+		
+		String distance = String.valueOf(d);
+		int decimal = distance.indexOf(".");
+		distance = distance.substring(0, decimal + 2);
+		
+		return distance;
+		
+	}
+
+	/**
+	 * Calculates the distance in km between two lat/long points
+	 * using the haversine formula
+	 */
+	private double distFrom(double lat1, double lng1, double lat2, double lng2, String unit) {
+		double theta = lng1 - lng2;
+		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+		dist = Math.acos(dist);
+		dist = rad2deg(dist);
+		dist = dist * 60 * 1.1515;
+		if (unit == "K") {
+			dist = dist * 1.609344;
+		} else if (unit == "N") {
+			dist = dist * 0.8684;
+		}
+		return (dist);
+
+	}
+
+	private double deg2rad(double deg) {
+		return (deg * Math.PI / 180.0);
+	}
+
+	private double rad2deg(double rad) {
+		return (rad * 180 / Math.PI);
 	}
 
 	public String getRefID() { return refID; }
