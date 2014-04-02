@@ -460,9 +460,21 @@ public class HealthyBC implements EntryPoint {
 						+ "</UL></font>"
 						);
 
+				HorizontalPanel socialContainer = new HorizontalPanel();
+				
+				String sURL = "http://healthy-bc-310.appspot.com/?clinicID=" + t.getRefID();
+				HTML fbHTML = new HTML("<div id=\"fb-wrapper\"><fb:like href=\""
+						+ sURL
+						+ "\" layout=\"standard\" action=\"like\" show_faces=\"true\" share=\"true\"></fb:like></div>");
+				
+				socialContainer.add(fbHTML);
+				
 				container.add(info);
+				container.add(socialContainer);
 						
 				clinicPanel.addWest(container, 60);
+				
+				
 				
 				if(hasEmail){
 					VerticalPanel emailPanel = new VerticalPanel();
@@ -486,9 +498,15 @@ public class HealthyBC implements EntryPoint {
 								
 				tabs.add(ratingTab.getRatingTab(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
-
+				
+				forceRender();
 			}
 		}
 	}
 	
+	public static native String forceRender() /*-{
+		$wnd.alert("Forcing render...");
+		$wnd.FB.XFBML.parse($doc.getElementById("fb-wrapper"));
+		
+	}-*/;
 }
