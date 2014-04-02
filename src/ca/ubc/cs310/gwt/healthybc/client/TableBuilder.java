@@ -14,11 +14,11 @@ import com.google.gwt.view.client.ListDataProvider;
  */
 public class TableBuilder {
 	private CellTable<TableInfo> table;
-	
+
 	public TableBuilder() {
 		table = new CellTable<TableInfo>(400);
 	}
-	
+
 	public CellTable<TableInfo> buildTable(List<TableInfo> tableInfos) {
 		TextColumn<TableInfo> nameColumn = new TextColumn<TableInfo>() {
 			@Override
@@ -41,19 +41,19 @@ public class TableBuilder {
 		nameColumn.setSortable(true);
 		addressColumn.setSortable(true);
 		emailColumn.setSortable(true);
-		
+
 		table.addColumn(nameColumn, "Name");
 		table.addColumn(addressColumn, "Address");
 		table.addColumn(emailColumn, "E-mail");
-		
+
 		ListDataProvider<TableInfo> dataProvider = new ListDataProvider<TableInfo>();
 		dataProvider.addDataDisplay(table);
-		
+
 		List<TableInfo> tableInfoList = dataProvider.getList();
 		for (TableInfo tabInf : tableInfos) {
 			tableInfoList.add(tabInf);
 		}
-		
+
 		ListHandler<TableInfo> sortHandler = new ListHandler<TableInfo>(tableInfoList);
 		Comparator<TableInfo> nameSortComparator = new Comparator<TableInfo>() {
 			@Override
@@ -61,11 +61,11 @@ public class TableBuilder {
 				if (a == b) {
 					return 0;
 				}
-				
+
 				if (a != null) {
 					return (b != null) ? a.getName().compareTo(b.getName()) : 1;
 				}
-				
+
 				return -1;
 			}
 		};
@@ -75,11 +75,11 @@ public class TableBuilder {
 				if (a == b) {
 					return 0;
 				}
-				
+
 				if (a != null) {
 					return (b != null) ? a.getAddress().compareTo(b.getAddress()) : 1;
 				}
-				
+
 				return -1;
 			}
 		};
@@ -89,24 +89,24 @@ public class TableBuilder {
 				if (a == b) {
 					return 0;
 				}
-				
+
 				if (a != null) {
 					return (b != null) ? a.getEmail().compareTo(b.getEmail()) : 1;
 				}
-				
+
 				return -1;
 			}
 		};
-		
+
 		sortHandler.setComparator(nameColumn, nameSortComparator);
 		sortHandler.setComparator(addressColumn, addressSortComparator);
 		sortHandler.setComparator(emailColumn, emailSortComparator);
 		table.addColumnSortHandler(sortHandler);
-		
+
 		table.getColumnSortList().push(nameColumn);
-		
+
 		table.setWidth("100%", false);
-		
+
 		return table;
 	}
 }

@@ -2,6 +2,8 @@ package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
 import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;
@@ -45,14 +47,6 @@ public class ClinicManager {
 
 	private void initalizeClinicData(){
 		dataManager.retrieveAllClinics(this);
-
-		for(Clinic clinic : clinics) {
-			TableInfo newTableInfo = new TableInfo(clinic.getRefID(), clinic.getName(), clinic.getAddressString(), clinic.getEmail(), clinic.getLanguages());
-			MapInfo newMapInfo = new MapInfo(clinic.getRefID(), clinic.getName(), clinic.getLatitude(), clinic.getLongitude(), clinic.getLanguages());
-			tableInfo.add(newTableInfo);
-			mapInfo.add(newMapInfo);			
-		}
-
 	}
 
 
@@ -259,7 +253,7 @@ public class ClinicManager {
 					list.add(info);
 			}
 		}
-		
+
 		if(searchBy.equals("language")){
 			for(MapInfo info : mapInfo){
 
