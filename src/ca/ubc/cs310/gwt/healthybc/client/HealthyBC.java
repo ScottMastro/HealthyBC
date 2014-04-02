@@ -83,7 +83,7 @@ public class HealthyBC implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		singleton = this;
-
+		
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null){
@@ -149,15 +149,16 @@ public class HealthyBC implements EntryPoint {
 				// further explanation).
 				if (event.getResults().trim().startsWith("success")){
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
-					String user = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", user, expires, null, "/", false);
+					currentUser = event.getResults().split(":")[1].trim();
+					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
 					RootPanel.get().clear();
+					showAdminTools = false;
 					//History.newItem("homepage");
 					init();
 				} else if (event.getResults().trim().startsWith("admin")){
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
-					String user = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", user, expires, null, "/", false);
+					currentUser = event.getResults().split(":")[1].trim();
+					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
 					RootPanel.get().clear();
 					showAdminTools = true;
 					//History.newItem("homepage");
@@ -187,10 +188,10 @@ public class HealthyBC implements EntryPoint {
 				if (event.getResults().trim().startsWith("success")){
 					Window.alert("New user created.");
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
-					String user = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", user, expires, null, "/", false);
-
+					currentUser = event.getResults().split(":")[1].trim();
+					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
 					RootPanel.get().clear();
+					showAdminTools = false;
 					//History.newItem("homepage");
 					init();
 				} else {
@@ -383,6 +384,7 @@ public class HealthyBC implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				Cookies.removeCookie("HBC_username");
+				currentUser = "";
 				RootPanel.get().clear();
 				login();
 			}
