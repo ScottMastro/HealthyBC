@@ -16,7 +16,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -52,8 +51,9 @@ public class HealthyBC implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	private static final String WELCOME_STRING = "Welcome to HealthyBC";
-
+	/**
+	 * Private variables
+	 */
 	private static final long DURATION = 1000 * 60 * 60 * 24;
 	private DockLayoutPanel dock;
 	private DockLayoutPanel mapTableDock;
@@ -62,26 +62,28 @@ public class HealthyBC implements EntryPoint {
 	private boolean showAdminTools = false;
 	private String currentUser = "";
 	private MapWidget map;
-
-	// Social Login vars
 	private static Widget socialLoginPanel;
-	private static Anchor logoutAnchor = new Anchor();
 
+	/**
+	 * Get Singleton object
+	 */
 	public static HealthyBC get() {
 		return singleton;
 	}
 
+	/**
+	 * Create a log entry
+	 */
 	public void log(String msg) {
 		Log.debug(msg);
 	}
-
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		singleton = this;
 
-		//handleRedirect();
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null){
@@ -105,67 +107,6 @@ public class HealthyBC implements EntryPoint {
                                 System.out.println(historyToken);
                         }
          });*/
-
-	}
-
-
-	private void handleRedirect()
-	{
-		if (SocialLogin.redirected())
-		{
-			verifySocialUser();
-		}
-	}
-
-	private void verifySocialUser()
-	{
-		final String authProviderName = SocialLogin.getAuthProviderNameFromCookie();
-		final int authProvider = SocialLogin.getAuthProviderFromCookieAsInt();
-		log("Verifying " + authProviderName + " user ...");
-
-		new LoginCallbackAsync<SocialUser>()
-		{
-			@Override
-			public void onSuccess(SocialUser result)
-			{
-				SocialLogin.saveSessionId(result.getSessionId());
-
-				String name = "";
-				if (result.getName() != null)
-				{
-					name = result.getName();
-					SocialLogin.saveName(name, authProvider);
-				}
-
-				// TODO: remove alert in final version
-				Window.alert(result.getJson());				
-			}
-
-			@Override
-			protected void callService(AsyncCallback<SocialUser> cb)
-			{
-				try
-				{
-					final Credential credential = SocialLogin.getCredential();
-					if (credential == null)
-					{
-						log("verifySocialUser: Could not get credential for " + authProvider + " user");
-						return;
-					}
-					OAuthLoginService.Util.getInstance().verifySocialUser(credential,cb);
-				}
-				catch (Exception e)
-				{
-					Window.alert(e.getMessage());
-				}
-			}
-
-			@Override
-			public void onFailure(Throwable caught)
-			{
-				Window.alert("Coult not verify" + authProvider + " user." + caught);
-			}
-		}.go("Verifying " + authProviderName + " user..");
 	}
 
 	/**
@@ -409,11 +350,11 @@ public class HealthyBC implements EntryPoint {
 	}
 
 	// --------------------------------------------------------------
-	// Create Upload Form
+	// Create Footer (Upload form and Credits)
 	// --------------------------------------------------------------
 
 	/**
-	 * Sets up form to browse for and send local file to servlet
+	 * Create footer and add form to parse remote data
 	 */
 	private void createUploadForm(){
 		HorizontalPanel hp = new HorizontalPanel();
