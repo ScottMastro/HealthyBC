@@ -47,14 +47,10 @@ public class ClinicManager {
 		dataManager.retrieveAllClinics(this);
 
 		for(Clinic clinic : clinics) {
-			TableInfo newTableInfo = new TableInfo(clinic.getRefID(), clinic.getName(),
-					clinic.getAddressString(), clinic.getEmail(), clinic.getLanguages());
-			MapInfo newMapInfo = new MapInfo(clinic.getRefID(), clinic.getName(),
-					clinic.getLatitude(), clinic.getLongitude(), clinic.getLanguages());
-
+			TableInfo newTableInfo = new TableInfo(clinic.getRefID(), clinic.getName(), clinic.getAddressString(), clinic.getEmail(), clinic.getLanguages());
+			MapInfo newMapInfo = new MapInfo(clinic.getRefID(), clinic.getName(), clinic.getLatitude(), clinic.getLongitude(), clinic.getLanguages());
 			tableInfo.add(newTableInfo);
 			mapInfo.add(newMapInfo);			
-
 		}
 
 	}

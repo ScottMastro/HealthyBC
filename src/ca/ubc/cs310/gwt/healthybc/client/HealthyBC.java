@@ -130,6 +130,7 @@ public class HealthyBC implements EntryPoint {
 				// we can get the result text here (see the FormPanel documentation for
 				// further explanation).
 				if (event.getResults().trim().startsWith("success")){
+					Cookies.removeCookie("HBC_username");
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
 					currentUser = event.getResults().split(":")[1].trim();
 					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
@@ -138,6 +139,7 @@ public class HealthyBC implements EntryPoint {
 					//History.newItem("homepage");
 					init();
 				} else if (event.getResults().trim().startsWith("admin")){
+					Cookies.removeCookie("HBC_username");
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
 					currentUser = event.getResults().split(":")[1].trim();
 					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
@@ -168,6 +170,7 @@ public class HealthyBC implements EntryPoint {
 				// we can get the result text here (see the FormPanel documentation for
 				// further explanation).
 				if (event.getResults().trim().startsWith("success")){
+					Cookies.removeCookie("HBC_username");
 					Window.alert("New user created.");
 					Date expires = new Date(System.currentTimeMillis() + DURATION);
 					currentUser = event.getResults().split(":")[1].trim();
