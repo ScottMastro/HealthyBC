@@ -270,7 +270,9 @@ public class HealthyBC implements EntryPoint {
 	private void buildMap(String searchBy, String searchKey) {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
-		mapBuilder = new MapBuilder(this);
+		boolean hasAddress = (addressLat != null && addressLon != null);
+		
+		mapBuilder = new MapBuilder(this, hasAddress, addressLat, addressLon);
 		clinicFetcher.mapInfo(searchBy, searchKey, mapBuilder);
 	}
 

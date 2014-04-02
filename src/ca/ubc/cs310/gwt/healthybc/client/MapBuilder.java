@@ -26,13 +26,20 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 	private HealthyBC main;
 	private Double latCentre;
 	private Double lonCentre;
+	private boolean hasAddress;
 
-	public MapBuilder(HealthyBC h){
+	public MapBuilder(HealthyBC h, boolean hasAddress, Double lat, Double lon){
 		main = h;
 		// Vancouver center coordinates
 		latCentre = 49.2569425;
 		lonCentre = -123.123904;
-
+		
+		this.hasAddress = hasAddress;
+		
+		if(hasAddress){
+			latCentre = lat;
+			lonCentre = lon;
+		}
 	}
 
 	public MapWidget getMap(){
@@ -96,6 +103,9 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 				} 
 			};
 			marker.addClickHandler(handler);
+			
+			if(hasAddress)
+				setAddress(latCentre, lonCentre);
 		}
 	}
 
