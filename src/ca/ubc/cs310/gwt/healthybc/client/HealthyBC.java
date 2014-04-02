@@ -1,7 +1,6 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -68,7 +67,7 @@ public class HealthyBC implements EntryPoint {
 
 		String username = Cookies.getCookie("HBC_username");
 
-		if (username != null){
+		if (username != null && username != ""){
 			currentUser = username.trim();
 			if (currentUser.equalsIgnoreCase("admin")) {
 				showAdminTools = true;
@@ -95,7 +94,9 @@ public class HealthyBC implements EntryPoint {
 	 * Authorizes the user
 	 */
 	private void login(){
-
+		
+		RootPanel.get().clear();
+		
 		VerticalPanel rtpanel = new VerticalPanel();
 
 		rtpanel.add(new HTML("<h2> Healthy BC : Walk-in Clinics </h2> <br/>"));
@@ -129,21 +130,16 @@ public class HealthyBC implements EntryPoint {
 				// fired. Assuming the service returned a response of type text/html,
 				// we can get the result text here (see the FormPanel documentation for
 				// further explanation).
-				if (event.getResults().trim().startsWith("success")){
-					Cookies.removeCookie("HBC_username");
-					Date expires = new Date(System.currentTimeMillis() + DURATION);
+				String res = event.getResults();
+				if (res.trim().startsWith("success")){
 					currentUser = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
-					RootPanel.get().clear();
+					Cookies.setCookie("HBC_username", currentUser);
 					showAdminTools = false;
 					//History.newItem("homepage");
 					init();
-				} else if (event.getResults().trim().startsWith("admin")){
-					Cookies.removeCookie("HBC_username");
-					Date expires = new Date(System.currentTimeMillis() + DURATION);
+				} else if (res.trim().startsWith("admin")){
 					currentUser = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
-					RootPanel.get().clear();
+					Cookies.setCookie("HBC_username", currentUser);
 					showAdminTools = true;
 					//History.newItem("homepage");
 					init();
@@ -170,12 +166,8 @@ public class HealthyBC implements EntryPoint {
 				// we can get the result text here (see the FormPanel documentation for
 				// further explanation).
 				if (event.getResults().trim().startsWith("success")){
-					Cookies.removeCookie("HBC_username");
-					Window.alert("New user created.");
-					Date expires = new Date(System.currentTimeMillis() + DURATION);
 					currentUser = event.getResults().split(":")[1].trim();
-					Cookies.setCookie("HBC_username", currentUser, expires, null, "/", false);
-					RootPanel.get().clear();
+					Cookies.setCookie("HBC_username", currentUser);
 					showAdminTools = false;
 					//History.newItem("homepage");
 					init();
@@ -192,7 +184,8 @@ public class HealthyBC implements EntryPoint {
 	 * Sets up the interface for the main page.
 	 */
 	private void init() {
-
+		RootPanel.get().clear();
+		
 		dock = new DockLayoutPanel(Unit.PCT);
 		mapTableDock = new DockLayoutPanel(Unit.PCT);
 
@@ -377,7 +370,6 @@ public class HealthyBC implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				Cookies.removeCookie("HBC_username");
 				currentUser = "";
-				RootPanel.get().clear();
 				login();
 			}
 		});

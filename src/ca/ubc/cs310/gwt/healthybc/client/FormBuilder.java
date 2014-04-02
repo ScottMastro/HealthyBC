@@ -158,7 +158,7 @@ public class FormBuilder {
 
 			public void onSubmit(SubmitEvent event) {
 				if (name.getText().length() == 0 || email.getText().length() == 0 || tb.getText().length() == 0 || pb.getText().length() == 0) {
-					Window.alert("Username or password cannot be empty.");
+					Window.alert("Fields cannot be empty.");
 					event.cancel();
 				}
 			}
