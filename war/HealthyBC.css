@@ -81,3 +81,9 @@ h1 {
 .emailBoxPadding {
     padding-left: 30px;
 }
+
+iframe[title="+1"] {
+	width: 76px !important;
+	margin-top: -2px !important;
+	margin-left: 20px !important;
+}
