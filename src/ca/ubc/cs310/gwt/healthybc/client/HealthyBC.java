@@ -5,8 +5,6 @@ import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,8 +32,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.reveregroup.gwt.facebook4gwt.Facebook;
-import com.reveregroup.gwt.facebook4gwt.ShareButton;
 
 
 /**
@@ -69,7 +65,7 @@ public class HealthyBC implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		Facebook.init("742561872429487");
+
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null){
@@ -193,8 +189,6 @@ public class HealthyBC implements EntryPoint {
 	 * Sets up the interface for the main page.
 	 */
 	private void init() {
-
-		System.out.println("init");
 		
 		dock = new DockLayoutPanel(Unit.PCT);
 		mapTableDock = new DockLayoutPanel(Unit.PCT);
@@ -218,8 +212,6 @@ public class HealthyBC implements EntryPoint {
 
 		dock.addWest(mapTableDock, 30);
 		dock.addEast(tabs, 70);
-
-//		loadSocialJS();
 		
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
@@ -469,25 +461,7 @@ public class HealthyBC implements EntryPoint {
 						);
 
 				container.add(info);
-				
-				HorizontalPanel socialContainer = new HorizontalPanel();
-				
-				String likeURL = "http://healthy-bc-310.appspot.com/";//?" + "clinicID=" + t.getRefID(); 
-//				HTML gsocial = new HTML("<g:plusone href=\""
-//						+ likeURL
-//						+ "\"></g:plusone>");
-//				HTML fbsocial = new HTML("<div id=\"fb-detail\"><fb:like href=\""
-//						+ likeURL
-//						+ "\" layout=\"standard\" action=\"like\" show_faces=\"true\" share=\"true\"></fb:like></div>");
-
-//				ShareButton fb = new ShareButton(likeURL, "qwe");
-//				socialContainer.add(gsocial);
-//				socialContainer.add(fbsocial);
-//				socialContainer.add(fb);
-				container.add(socialContainer);
-				
-//				forceRenderSocialMedia();
-				
+						
 				clinicPanel.addWest(container, 60);
 				
 				if(hasEmail){
@@ -517,7 +491,4 @@ public class HealthyBC implements EntryPoint {
 		}
 	}
 	
-//	public static native String forceRenderSocialMedia() /*-{
-//		$wnd.FB.XFBML.parse();
-//	}-*/;
 }
