@@ -3,9 +3,10 @@ package ca.ubc.cs310.gwt.healthybc.client;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,14 +34,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.reveregroup.gwt.facebook4gwt.Facebook;
+import com.reveregroup.gwt.facebook4gwt.ShareButton;
 
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class HealthyBC implements EntryPoint {
-
-	private static HealthyBC singleton;
 
 	/**
 	 * The message displayed to the user when the server cannot be reached or
@@ -62,28 +63,13 @@ public class HealthyBC implements EntryPoint {
 	private boolean showAdminTools = false;
 	private String currentUser = "";
 	private MapWidget map;
-	private static Widget socialLoginPanel;
-
-	/**
-	 * Get Singleton object
-	 */
-	public static HealthyBC get() {
-		return singleton;
-	}
-
-	/**
-	 * Create a log entry
-	 */
-	public void log(String msg) {
-		Log.debug(msg);
-	}
+	private static Widget twitterFeedPanel;
 	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		singleton = this;
-		
+		Facebook.init("742561872429487");
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null){
@@ -208,22 +194,24 @@ public class HealthyBC implements EntryPoint {
 	 */
 	private void init() {
 
+		System.out.println("init");
+		
 		dock = new DockLayoutPanel(Unit.PCT);
 		mapTableDock = new DockLayoutPanel(Unit.PCT);
 
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
 		tabNames = new ArrayList<String>();
 
-		socialLoginPanel = SocialLogin.createLoginPanel();
-
+		twitterFeedPanel = TwitterFeed.getInstance().createTwitterFeed();
+		
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this, map);
 		tabs.add(options.getOptionsTab(), "Home");
-		tabs.add(socialLoginPanel, "Account");
+		tabs.add(twitterFeedPanel, "Twitter");
 
 		tabNames.add("Home");
-		tabNames.add("Account");
-
+		tabNames.add("Twitter");
+		
 		createMap(null, null);
 		createTable(null, null);
 		createUploadForm();
@@ -231,6 +219,8 @@ public class HealthyBC implements EntryPoint {
 		dock.addWest(mapTableDock, 30);
 		dock.addEast(tabs, 70);
 
+//		loadSocialJS();
+		
 		RootLayoutPanel r = RootLayoutPanel.get();
 		r.add(dock);
 		r.forceLayout();
@@ -455,6 +445,8 @@ public class HealthyBC implements EntryPoint {
 			}
 			else{
 
+				VerticalPanel container = new VerticalPanel();
+				
 				ClinicTabInfo t = result.get(0);
 				removeTab("Clinic Information");
 				DockLayoutPanel clinicPanel = new DockLayoutPanel(Unit.PCT);
@@ -476,7 +468,27 @@ public class HealthyBC implements EntryPoint {
 						+ "</UL></font>"
 						);
 
-				clinicPanel.addWest(info, 60);
+				container.add(info);
+				
+				HorizontalPanel socialContainer = new HorizontalPanel();
+				
+				String likeURL = "http://healthy-bc-310.appspot.com/";//?" + "clinicID=" + t.getRefID(); 
+//				HTML gsocial = new HTML("<g:plusone href=\""
+//						+ likeURL
+//						+ "\"></g:plusone>");
+//				HTML fbsocial = new HTML("<div id=\"fb-detail\"><fb:like href=\""
+//						+ likeURL
+//						+ "\" layout=\"standard\" action=\"like\" show_faces=\"true\" share=\"true\"></fb:like></div>");
+
+//				ShareButton fb = new ShareButton(likeURL, "qwe");
+//				socialContainer.add(gsocial);
+//				socialContainer.add(fbsocial);
+//				socialContainer.add(fb);
+				container.add(socialContainer);
+				
+//				forceRenderSocialMedia();
+				
+				clinicPanel.addWest(container, 60);
 				
 				if(hasEmail){
 					VerticalPanel emailPanel = new VerticalPanel();
@@ -504,4 +516,8 @@ public class HealthyBC implements EntryPoint {
 			}
 		}
 	}
+	
+//	public static native String forceRenderSocialMedia() /*-{
+//		$wnd.FB.XFBML.parse();
+//	}-*/;
 }
