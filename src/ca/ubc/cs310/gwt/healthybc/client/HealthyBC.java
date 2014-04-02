@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
-import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -58,9 +57,10 @@ public class HealthyBC implements EntryPoint {
 	private ArrayList<String> tabNames;
 	private boolean showAdminTools = false;
 	private String currentUser = "";
-	private MapWidget map;
+	private Double addressLat;	
+	private Double addressLon;
 	private static Widget twitterFeedPanel;
-	
+
 	/**
 	 * This is the entry point method.
 	 */
@@ -189,7 +189,7 @@ public class HealthyBC implements EntryPoint {
 	 * Sets up the interface for the main page.
 	 */
 	private void init() {
-		
+
 		dock = new DockLayoutPanel(Unit.PCT);
 		mapTableDock = new DockLayoutPanel(Unit.PCT);
 
@@ -199,7 +199,7 @@ public class HealthyBC implements EntryPoint {
 		twitterFeedPanel = TwitterFeed.getInstance().createTwitterFeed();
 		
 		// add home page & logout button
-		OptionsTab options = new OptionsTab(this, map);
+		OptionsTab options = new OptionsTab(this);
 		tabs.add(options.getOptionsTab(), "Home");
 		tabs.add(twitterFeedPanel, "Twitter");
 
@@ -222,6 +222,14 @@ public class HealthyBC implements EntryPoint {
 		mapTableDock.clear();
 		createTable(searchBy, searchKey);
 		createMap(searchBy, searchKey);
+	}
+
+	public void setAddress(Double lat, Double lon){
+		mapTableDock.clear();
+		createTable(null, null);
+		addressLat = lat;
+		addressLon = lon;
+		createMap(null, null);
 	}
 
 	// --------------------------------------------------------------
@@ -251,7 +259,10 @@ public class HealthyBC implements EntryPoint {
 			@Override
 			public void run() {
 				// callback on successful API load
-				buildMap(searchBy, searchKey);
+				if(addressLat == null || addressLon == null)
+					buildMap(searchBy, searchKey);
+				else
+					buildMap(null, null, addressLat, addressLon);
 			}
 		};
 
@@ -265,7 +276,16 @@ public class HealthyBC implements EntryPoint {
 		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
 
 		MapBuilder callback = new MapBuilder(this);
-		this.map = callback.getMap();
+		clinicFetcher.mapInfo(searchBy, searchKey, callback);
+	}
+
+	/**
+	 * On successful API load, retrieves data and constructs map
+	 */
+	public void buildMap(String searchBy, String searchKey, Double latCentre, Double lonCentre) {
+		ClinicDataFetcherAsync clinicFetcher = GWT.create(ClinicDataFetcher.class);
+
+		MapBuilder callback = new MapBuilder(this, latCentre, lonCentre);
 		clinicFetcher.mapInfo(searchBy, searchKey, callback);
 	}
 
@@ -445,8 +465,14 @@ public class HealthyBC implements EntryPoint {
 				
 				boolean hasEmail = !(t.getEmail() == null) && !t.getEmail().isEmpty();
 				String emailString = "";
+				String distanceString = "";
+
 				if(hasEmail)
-					emailString = "<LI><b>Email: </b>" + t.getEmail();
+					emailString = "<LI><b>Email: </b><br>" + t.getEmail();
+				
+				if(addressLat != null && addressLon != null)
+					distanceString = "<center><font size='6'>Distance is about " +
+							t.getDistance(addressLat, addressLon) + " km away</font></center>";
 				
 				HTML info = new HTML("<br>"
 						+ "<h1 style='margin:0px'>" + t.getName() + "</h1>"
@@ -458,6 +484,7 @@ public class HealthyBC implements EntryPoint {
 						+ "<LI><b>Phone: </b>" + t.getPhone() + "<br>"
 						+ emailString
 						+ "</UL></font>"
+						+ distanceString
 						);
 
 				HorizontalPanel socialContainer = new HorizontalPanel();

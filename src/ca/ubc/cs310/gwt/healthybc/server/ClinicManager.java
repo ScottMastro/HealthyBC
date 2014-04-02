@@ -2,8 +2,6 @@ package ca.ubc.cs310.gwt.healthybc.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
 import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;
@@ -202,7 +200,7 @@ public class ClinicManager {
 				String name = clinic.getName();
 				String hours = clinic.getHoursString();
 				Double latitude = clinic.getLatitude();
-				Double longitude = clinic.getLatitude();
+				Double longitude = clinic.getLongitude();
 				String addr = clinic.getAddress();
 				String pcode = clinic.getPostalCode();
 				String email = clinic.getEmail();

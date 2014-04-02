@@ -1,11 +1,9 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -18,7 +16,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
-
 public class OptionsTab {
 
 	private TextBox clinicName;
@@ -28,7 +25,6 @@ public class OptionsTab {
 	private Button languageSearch;
 	private Button addressButton;
 	private HealthyBC main;
-	private MapWidget map;
 
 	private String[] languages = {"English", 
 			//"Afghani",
@@ -41,9 +37,9 @@ public class OptionsTab {
 			//"Vietnamese"
 	};
 
-	public OptionsTab(HealthyBC main, MapWidget map){
+	public OptionsTab(HealthyBC main){
 		this.main = main;
-		this.map = map;
+
 		clinicName = new TextBox();
 		clinicLanguage = new ListBox();
 		addressBox = new TextBox();
@@ -135,7 +131,6 @@ public class OptionsTab {
 		main.search("name", clinicName.getText());
 	}	
 
-
 	private void searchLanguage() {
 		main.search("language", clinicLanguage.getItemText(clinicLanguage.getSelectedIndex()));
 	}
@@ -166,18 +161,9 @@ public class OptionsTab {
 
 		@Override
 		public void onSuccess(ArrayList<Double> result) {
-			// result in order: date, user information, review, rating (0 if does not exist)
-			Window.alert("Success!");
-
-
+			if(result!=null && result.size() == 2)
+				main.setAddress(result.get(0), result.get(1));
 		}
 
 	}
 }
-
-
-
-
-
-
-
