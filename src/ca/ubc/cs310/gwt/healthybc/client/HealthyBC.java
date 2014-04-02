@@ -3,9 +3,10 @@ package ca.ubc.cs310.gwt.healthybc.client;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,7 +31,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -62,7 +62,6 @@ public class HealthyBC implements EntryPoint {
 	private boolean showAdminTools = false;
 	private String currentUser = "";
 	private MapWidget map;
-	private static Widget socialLoginPanel;
 
 	/**
 	 * Get Singleton object
@@ -71,13 +70,6 @@ public class HealthyBC implements EntryPoint {
 		return singleton;
 	}
 
-	/**
-	 * Create a log entry
-	 */
-	public void log(String msg) {
-		Log.debug(msg);
-	}
-	
 	/**
 	 * This is the entry point method.
 	 */
@@ -213,12 +205,10 @@ public class HealthyBC implements EntryPoint {
 		tabs = new TabLayoutPanel(2.5, Unit.EM);
 		tabNames = new ArrayList<String>();
 
-		socialLoginPanel = SocialLogin.createLoginPanel();
-
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this, map);
 		tabs.add(options.getOptionsTab(), "Home");
-		tabs.add(socialLoginPanel, "Account");
+		tabs.add(new HTML(), "Account");
 
 		tabNames.add("Home");
 		tabNames.add("Account");
@@ -452,7 +442,8 @@ public class HealthyBC implements EntryPoint {
 				Window.alert("Could not find information about this clinic");                          
 			}
 			else{
-
+				VerticalPanel container = new VerticalPanel();
+				
 				ClinicTabInfo t = result.get(0);
 				removeTab("Clinic Information");
 				DockLayoutPanel clinicPanel = new DockLayoutPanel(Unit.PCT);
@@ -473,8 +464,24 @@ public class HealthyBC implements EntryPoint {
 						+ emailString
 						+ "</UL></font>"
 						);
-
-				clinicPanel.addWest(info, 60);
+				container.add(info);
+				
+				HorizontalPanel socialContainer = new HorizontalPanel();
+				
+				String likeURL = "http://healthy-bc-310.appspot.com/?" + "clinicID=" + t.getRefID(); 
+				HTML gsocial = new HTML("<g:plusone href=\""
+						+ likeURL
+						+ "\"></g:plusone>");
+				HTML fbsocial = new HTML("<div class=\"fb-like\" data-href=\""
+						+ likeURL
+						+ "\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"true\" data-share=\"true\"></div>");
+				socialContainer.add(gsocial);
+				socialContainer.add(fbsocial);
+				container.add(socialContainer);
+				
+				loadSocialJS();
+				
+				clinicPanel.addWest(container, 60);
 				
 				if(hasEmail){
 					VerticalPanel emailPanel = new VerticalPanel();
@@ -501,5 +508,20 @@ public class HealthyBC implements EntryPoint {
 
 			}
 		}
+	}
+	
+	private void loadSocialJS() {
+		Document doc = Document.get();
+	    ScriptElement script = doc.createScriptElement();
+	    script.setSrc("https://apis.google.com/js/plusone.js");
+	    script.setType("text/javascript");
+	    script.setLang("javascript");
+	    doc.getBody().appendChild(script);
+	    
+	    script = doc.createScriptElement();
+	    script.setSrc("https://connect.facebook.net/en_GB/all.js#xfbml=1&appId=742561872429487");
+	    script.setType("text/javascript");
+	    script.setLang("javascript");
+	    doc.getBody().appendChild(script);
 	}
 }
