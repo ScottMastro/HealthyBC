@@ -2,7 +2,6 @@ package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 

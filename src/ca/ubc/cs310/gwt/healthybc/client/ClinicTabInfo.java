@@ -1,10 +1,6 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
-
-import com.google.gwt.maps.client.base.LatLng;
-import com.google.gwt.user.client.Window;
 
 @SuppressWarnings("serial")
 public class ClinicTabInfo implements Serializable {

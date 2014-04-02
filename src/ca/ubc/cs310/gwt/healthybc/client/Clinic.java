@@ -1,9 +1,5 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 public class Clinic {
 	private String refID;
 	private String name;
