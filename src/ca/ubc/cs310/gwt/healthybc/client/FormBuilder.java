@@ -93,6 +93,15 @@ public class FormBuilder {
 		form.setAction("/register");
 
 		form.setMethod(FormPanel.METHOD_POST);
+		
+		KeyDownHandler formKeypressCallback = new KeyDownHandler() {
+			@Override
+			public void onKeyDown(KeyDownEvent event) {
+				boolean isEnter = KeyCodes.KEY_ENTER == event.getNativeKeyCode();
+				if (isEnter)
+					form.submit();
+			}
+		};
 
 		// Create a panel to hold all of the form widgets.
 		VerticalPanel panel = new VerticalPanel();
@@ -108,6 +117,7 @@ public class FormBuilder {
 		// Name field
 		final TextBox name = new TextBox();
 		name.setName("name");
+		name.addKeyDownHandler(formKeypressCallback);
 		panel.add(name);
 
 		panel.add(new HTML("<br/> EMail : "));
@@ -115,6 +125,7 @@ public class FormBuilder {
 		// EMail field
 		final TextBox email = new TextBox();
 		email.setName("email");
+		email.addKeyDownHandler(formKeypressCallback);
 		panel.add(email);
 
 		panel.add(new HTML("<br/> Username : "));
@@ -122,6 +133,7 @@ public class FormBuilder {
 		// Username field
 		final TextBox tb = new TextBox();
 		tb.setName("username");
+		tb.addKeyDownHandler(formKeypressCallback);
 		panel.add(tb);
 
 		panel.add(new HTML("<br/> Password : "));
@@ -129,6 +141,7 @@ public class FormBuilder {
 		// Password field
 		final PasswordTextBox pb = new PasswordTextBox();
 		pb.setName("password");
+		pb.addKeyDownHandler(formKeypressCallback);
 		panel.add(pb);
 
 		panel.add(new HTML("<br/> <br/>"));
@@ -144,7 +157,7 @@ public class FormBuilder {
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
 
 			public void onSubmit(SubmitEvent event) {
-				if (tb.getText().length() == 0 || pb.getText().length() == 0) {
+				if (name.getText().length() == 0 || email.getText().length() == 0 || tb.getText().length() == 0 || pb.getText().length() == 0) {
 					Window.alert("Username or password cannot be empty.");
 					event.cancel();
 				}

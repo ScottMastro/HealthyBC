@@ -90,6 +90,11 @@
 		<servlet-name>OAuthLoginService</servlet-name>
 		<url-pattern>/healthybc/OAuthLoginService</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>twitterService</servlet-name>
+		<url-pattern>/healthybc/twitter</url-pattern>
+	</servlet-mapping>
 
 	<!-- Default page to serve -->
 	<welcome-file-list>
