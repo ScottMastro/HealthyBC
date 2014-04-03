@@ -21,6 +21,7 @@ import ca.ubc.cs310.gwt.healthybc.client.ClinicHours;
 public class UploadedURLParser extends HttpServlet
 {   
 	Logger logger = Logger.getLogger("uploadServletLogger");
+	static String cvsSplitBy = "\\t";
 
 	
 	/**
@@ -50,40 +51,16 @@ public class UploadedURLParser extends HttpServlet
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			
 			String line = "";
-			String cvsSplitBy = "\\t";
 			
 			while ((line = br.readLine()) != null) {
 				
-				String[] cells = line.split(cvsSplitBy);
+				Clinic newClinic = parseInputLine(line);
 				
-				// check length and ignore file header
-				if (cells.length != 25 || cells[0].equals("SV_TAXONOMY")){	
-					continue;
+				if (newClinic != null){
+					rdm.addAndUploadClinicEntity(newClinic);
+					resp += "Added new Clinic: " + newClinic.getName() + "<br/>";
 				}
-				
-				String name = cells[3];
-				String refID = cells[7];
-				String phone = cells[9];
-				String email = cells[11];
-				String languages = cells[13];	/* no necessarily comma separated */
-				String hours = cells[14];
-				String street_no = cells[15];
-				String street_name = cells[16];
-				String street_type = cells[17];
-				String city = cells[19];
-				String pcode = cells[21];
-				Double lat = Double.parseDouble(cells[22]);
-				Double lon = Double.parseDouble(cells[23]); 
-				
-				String address = street_no + " " + street_name + " " + street_type + " " + city;
-				address = address.replaceAll("\\s+", " ");	/* remove additional spaces */
-				
-				ClinicHours newhrs = new ClinicHours(hours);
-				
-				Clinic newClinic = new Clinic(refID, name, newhrs, lat, lon, address, pcode, email, phone, languages);
-				rdm.addAndUploadClinicEntity(newClinic);
-				
-				resp += "Added new Clinic: " + newClinic.getName() + "<br/>";	
+					
 			}
 		
 			br.close();
@@ -103,14 +80,50 @@ public class UploadedURLParser extends HttpServlet
 			out.println("<title>Server Response</title>");
 			out.println("</head>");
 			out.println("<body>");
-			out.println("</body>");
-		
+			out.println("<center><b>Success :</b><a href='http://healthy-bc-310.appspot.com/'> Return to application </a></center><br/>");
 			out.println(resp);
-		
+			out.println("</body>");
 			out.println("</html>");
 			out.close();
 		}
 
 	} 
+	
+	public static Clinic parseInputLine(String line){
+		
+		if (line == null){
+			return null;
+		}
+		
+		String[] cells = line.split(cvsSplitBy);
+		
+		// check length and ignore file header
+		if (cells.length != 25 || cells[0].equals("SV_TAXONOMY")){	
+			return null;
+		}
+		
+		String name = cells[3];
+		String refID = cells[7];
+		String phone = cells[9];
+		String email = cells[11];
+		String languages = cells[13];	/* no necessarily comma separated */
+		String hours = cells[14];
+		String street_no = cells[15];
+		String street_name = cells[16];
+		String street_type = cells[17];
+		String city = cells[19];
+		String pcode = cells[21];
+		Double lat = Double.parseDouble(cells[22]);
+		Double lon = Double.parseDouble(cells[23]); 
+		
+		String address = street_no + " " + street_name + " " + street_type + " " + city;
+		address = address.replaceAll("\\s+", " ");	/* remove additional spaces */
+		
+		ClinicHours newhrs = new ClinicHours(hours);
+		
+		Clinic newClinic = new Clinic(refID, name, newhrs, lat, lon, address, pcode, email, phone, languages);
+		
+		return newClinic;
+	}
 
 }
