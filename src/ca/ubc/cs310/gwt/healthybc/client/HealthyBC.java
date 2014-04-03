@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -182,10 +183,16 @@ public class HealthyBC implements EntryPoint {
 
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this);
-		tabs.add(options.getOptionsTab(), "Home");
+		
+		Image homeImage = new Image();
+	    homeImage.setUrl(GWT.getModuleBaseURL()+"images/healthyBC.png");
+
+		tabs.add(homeImage, "Home");
+		tabs.add(options.getOptionsTab(), "Options");
 		tabs.add(twitterFeedPanel, "Twitter");
 
 		tabNames.add("Home");
+		tabNames.add("Options");
 		tabNames.add("Twitter");
 
 		createMap(null, null);
