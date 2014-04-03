@@ -3,7 +3,7 @@ package ca.ubc.cs310.gwt.healthybc.server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Logger;
- 
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +45,7 @@ public class Login extends HttpServlet
                         break section;
 	                }
 	                else if (username.equalsIgnoreCase("nsa") && password.equalsIgnoreCase("silencesnowden")) {
-	                    resp = "success";
+	                    resp = "admin";
 	                    break section;
 	                }
 	               
