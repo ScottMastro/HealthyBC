@@ -75,19 +75,10 @@ public class HealthyBC implements EntryPoint {
 			else {
 				showAdminTools = false;
 			}
-			//History.newItem("homepage");
 			init();
 		} else {
-			//History.newItem("login");
 			login();
 		}
-
-		/*History.addValueChangeHandler(new ValueChangeHandler<String>() {
-                        public void onValueChange(ValueChangeEvent<String> event) {
-                                String historyToken = event.getValue();
-                                System.out.println(historyToken);
-                        }
-         });*/
 	}
 
 	/**
@@ -125,27 +116,24 @@ public class HealthyBC implements EntryPoint {
 		final FormPanel form = FormBuilder.createLoginForm();
 
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			/* Form submission handler */
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				// When the form submission is successfully completed, this event is
-				// fired. Assuming the service returned a response of type text/html,
-				// we can get the result text here (see the FormPanel documentation for
-				// further explanation).
+				
 				String res = event.getResults();
 				if (res.trim().startsWith("success")){
 					currentUser = event.getResults().split(":")[1].trim();
 					Cookies.setCookie("HBC_username", currentUser);
 					showAdminTools = false;
-					//History.newItem("homepage");
 					init();
 				} else if (res.trim().startsWith("admin")){
 					currentUser = event.getResults().split(":")[1].trim();
 					Cookies.setCookie("HBC_username", currentUser);
 					showAdminTools = true;
-					//History.newItem("homepage");
 					init();
 				} else {
-					Window.alert("Error: Login failed!");
+					Window.alert("Error: Login failed - Invalid username or password.");
 				}
+				
 			}
 		});
 
@@ -160,20 +148,18 @@ public class HealthyBC implements EntryPoint {
 		final FormPanel form = FormBuilder.createRegisterForm();
 
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			/* Form submission handler */
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				// When the form submission is successfully completed, this event is
-				// fired. Assuming the service returned a response of type text/html,
-				// we can get the result text here (see the FormPanel documentation for
-				// further explanation).
+				
 				if (event.getResults().trim().startsWith("success")){
 					currentUser = event.getResults().split(":")[1].trim();
 					Cookies.setCookie("HBC_username", currentUser);
 					showAdminTools = false;
-					//History.newItem("homepage");
 					init();
 				} else {
 					Window.alert("Error: Could not create user. Username may be taken or invalid.");
 				}
+				
 			}
 		});
 
