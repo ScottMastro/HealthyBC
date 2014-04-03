@@ -549,7 +549,6 @@ public class HealthyBC implements EntryPoint {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
 				
 			}
 

@@ -6,6 +6,7 @@ import ca.ubc.cs310.gwt.healthybc.client.HistoryHandler;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+@SuppressWarnings("serial")
 public class HistoryHandlerImpl extends RemoteServiceServlet implements HistoryHandler {
 
 	public HistoryHandlerImpl(){
