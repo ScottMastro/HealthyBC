@@ -370,8 +370,6 @@ public class RemoteDataManager {
 
 		PreparedQuery pq = datastore.prepare(q);
 		List<Entity> entities = pq.asList(FetchOptions.Builder.withDefaults());
-		System.out.println("In getUserHistory() in rdm");
-		System.out.println("sizeOf List<Entity>: "+ entities.size());
 		for (Entity entity : entities){
 			String clinicName = String.valueOf(entity.getProperty("clinicName"));
 			String clinicAddress = String.valueOf(entity.getProperty("clinicAddress"));
@@ -380,7 +378,6 @@ public class RemoteDataManager {
 			result.add(clinicName);
 			result.add(clinicAddress);
 			result.add(date);
-			System.out.println("Looping thru entities..");
 		}
 
 		return result;

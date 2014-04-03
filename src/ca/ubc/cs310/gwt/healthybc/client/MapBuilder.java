@@ -97,7 +97,7 @@ public class MapBuilder implements AsyncCallback<ArrayList<MapInfo>> {
 
 			ClickMapHandler handler = new ClickMapHandler() {
 				public void onEvent(ClickMapEvent e) {
-					infoWindow.setContent("<div class=\"markerContent\" style=\"line-height:normal; white-space:nowrap;\">" + desc + "</div>");
+					infoWindow.setContent("<div class=\"markerContent\">" + desc + "</div>");
 					infoWindow.open(map, marker);
 					main.getTabFromMapInfo(mi);
 				} 

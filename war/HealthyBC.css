@@ -70,3 +70,9 @@ iframe[title="+1"] {
 	margin-top: -2px !important;
 	margin-left: 20px !important;
 }
+
+.markerContent {
+	line-height:normal; 
+	white-space:nowrap; 
+	overflow:auto;
+}
