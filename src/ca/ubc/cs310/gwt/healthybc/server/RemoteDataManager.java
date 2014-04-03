@@ -392,7 +392,7 @@ public class RemoteDataManager {
 		
 		// Parse date into preferred string format before storage
 		SimpleDateFormat df = new SimpleDateFormat("hh:mm aa, MMMM dd, yyyy");
-		df.setTimeZone(TimeZone.getTimeZone("GMT-08:00"));
+		df.setTimeZone(TimeZone.getTimeZone("GMT-07:00"));
 		String dateString = df.format(date); 
 		
 		e.setProperty("username", currentUser);
