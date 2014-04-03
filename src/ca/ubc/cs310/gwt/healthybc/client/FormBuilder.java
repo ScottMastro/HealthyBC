@@ -56,6 +56,7 @@ public class FormBuilder {
 
 		// Password field
 		final PasswordTextBox pb = new PasswordTextBox();
+		pb.getElement().setPropertyString("placeholder", "Password");
 		pb.setName("password");
 		pb.addKeyDownHandler(formKeypressCallback);
 		panel.add(pb);
@@ -120,7 +121,7 @@ public class FormBuilder {
 		name.addKeyDownHandler(formKeypressCallback);
 		panel.add(name);
 
-		panel.add(new HTML("<br/> EMail : "));
+		panel.add(new HTML("<br/> Email : "));
 
 		// EMail field
 		final TextBox email = new TextBox();
