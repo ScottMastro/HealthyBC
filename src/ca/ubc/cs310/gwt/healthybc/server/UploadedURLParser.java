@@ -40,6 +40,7 @@ public class UploadedURLParser extends HttpServlet
 		String urlstring = request.getParameter("urlstring");
 		
 		try {
+			
 			URL url = new URL(urlstring);
 			InputStream is = url.openStream();
 			

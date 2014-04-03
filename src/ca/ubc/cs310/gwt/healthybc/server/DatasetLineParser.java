@@ -31,17 +31,33 @@ public class DatasetLineParser {
 		String street_type = cells[17];
 		String city = cells[19];
 		String pcode = cells[21];
-		Double lat = Double.parseDouble(cells[22]);
-		Double lon = Double.parseDouble(cells[23]); 
 		
-		String address = street_no + " " + street_name + " " + street_type + " " + city;
-		address = address.replaceAll("\\s+", " ");	/* remove additional spaces */
+		// Perform validation
 		
-		ClinicHours newhrs = new ClinicHours(hours);
+		if(!refID.startsWith("SL")){
+			return null;
+		}
 		
-		Clinic newClinic = new Clinic(refID, name, newhrs, lat, lon, address, pcode, email, phone, languages);
+		try {
+			
+			Double lat = Double.parseDouble(cells[22]);
+			Double lon = Double.parseDouble(cells[23]);
+			long phonenumber = Long.parseLong(phone);
+			
+			String address = street_no + " " + street_name + " " + street_type + " " + city;
+			address = address.replaceAll("\\s+", " ");	/* remove additional spaces */
+			
+			ClinicHours newhrs = new ClinicHours(hours);
+			
+			Clinic newClinic = new Clinic(refID, name, newhrs, lat, lon, address, pcode, email, phone, languages);
+			
+			return newClinic;
 		
-		return newClinic;
+		} catch (NumberFormatException e){
+			System.out.println("def");
+			return null;
+		}
+		
 	}
 
 }
