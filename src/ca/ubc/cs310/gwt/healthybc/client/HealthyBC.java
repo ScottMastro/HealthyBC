@@ -37,9 +37,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class HealthyBC implements EntryPoint {
-
-	public static HealthyBC singleton;
-	
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -66,23 +63,9 @@ public class HealthyBC implements EntryPoint {
 	private Widget historyTable;
 
 	/**
-	 * Returns singleton object HealthyBC
-	 * @return HealthyBC Returns static object
-	 */
-	public static HealthyBC get() {
-		return singleton;
-	}
-	
-	public String getCurrentUser() {
-		return currentUser;
-	}
-	
-	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		singleton = this;
-		
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null && username != ""){

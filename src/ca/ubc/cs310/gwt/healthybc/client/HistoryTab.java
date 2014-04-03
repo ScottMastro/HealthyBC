@@ -10,8 +10,6 @@ import com.google.gwt.view.client.ListDataProvider;
 public class HistoryTab {
 	
 	private static HistoryTab singleton = null;
-	private String currentUser;
-	private ArrayList<Clinic> clinics;
 	private ListDataProvider<Clinic> dataProvider; 
 	
 	public static HistoryTab getInstance() {
@@ -28,7 +26,6 @@ public class HistoryTab {
 		CellTable<Clinic> table = new CellTable<Clinic>(100);
 		ArrayList<Clinic> clinics = parseClinics(result);
 		
-		if (currentUser != "") {
 			TextColumn<Clinic> nameColumn = new TextColumn<Clinic>() {
 				@Override
 				public String getValue(Clinic c) {
@@ -51,7 +48,6 @@ public class HistoryTab {
 			table.addColumn(nameColumn, "Clinic Name");
 			table.addColumn(addressColumn, "Clinic Address");
 			table.addColumn(dateColumn, "Access Date");
-		}
 		
 		dataProvider = new ListDataProvider<Clinic>();
 		dataProvider.addDataDisplay(table);
