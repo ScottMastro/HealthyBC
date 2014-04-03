@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -391,6 +392,7 @@ public class RemoteDataManager {
 		
 		// Parse date into preferred string format before storage
 		SimpleDateFormat df = new SimpleDateFormat("hh:mm aa, MMMM dd, yyyy");
+		df.setTimeZone(TimeZone.getTimeZone("GMT-08:00"));
 		String dateString = df.format(date); 
 		
 		e.setProperty("username", currentUser);
