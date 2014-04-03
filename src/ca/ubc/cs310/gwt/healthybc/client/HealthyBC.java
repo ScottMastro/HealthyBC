@@ -63,7 +63,6 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	
 	public void onModuleLoad() {
 
 		String username = Cookies.getCookie("HBC_username");

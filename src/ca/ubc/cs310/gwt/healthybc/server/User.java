@@ -1,12 +1,7 @@
 package ca.ubc.cs310.gwt.healthybc.server;
  
 import java.security.MessageDigest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
  
-
-
-
 import com.google.appengine.api.datastore.Entity;
  
 /**
@@ -14,6 +9,7 @@ import com.google.appengine.api.datastore.Entity;
  *
  */
 public class User {
+	
         private String realName;
         private String userName;
         private String password;
@@ -113,23 +109,32 @@ public class User {
                 return new User(name, email, realName, password);
         }
        
-        
-        private String hash(String s){
+        /**
+         * Hashing function (SHA-256 with ASCII encoding)
+         * @param input Input string to be hashed
+         * @return
+         */
+        private String hash(String input){
         	try {
 				MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
-				byte[] b = digest.digest(s.getBytes(CHARSET));
-				String result = new String(b, CHARSET);
-				
+				byte[] btarray = digest.digest(input.getBytes(CHARSET));
+				String result = new String(btarray, CHARSET);
 				return result;
-
 			} catch (Exception e) {
 				// Should never happen
 				e.printStackTrace();
 			}
-        	
 			return null;
-        }
-       
+        }  
+        
+        /**
+         * Check password for match
+         * @param pass Password to be checked
+         * @return true is match occurs 
+         */
+		public boolean checkPassword(String pass) {
+			return hash(pass).equals(password);
+		}
        
         /**
          * internal helper method to ensure data manager is initialized
@@ -140,14 +145,29 @@ public class User {
                 if (dataManager == null) {
                         dataManager = new RemoteDataManager();
                 }
-               
                 return dataManager;
         }
        
-        public String getRealName() { return realName; }
-        public String getUserName() { return userName; }
-        public String getPassword() { return password; }
-        public String getEmail() { return email; }
+        /**
+         * Getters and setters for private variables
+         */
+        
+        public String getRealName() { 
+        	return realName;
+        }
+        
+        public String getUserName() { 
+        	return userName;
+        }
+        
+        public String getPassword() { 
+        	return password;
+        }
+        
+        public String getEmail() { 
+        	return email;
+        }
+        
         public User setRealName(String name) {
                 realName = name;
                 getDataManager().uploadUserEntity(this);
@@ -159,12 +179,5 @@ public class User {
                 getDataManager().uploadUserEntity(this);
                 return this;
         }
-
-		public boolean checkPassword(String pass) {
-			Logger logger = Logger.getLogger("uploadServletLogger");
-			logger.log(Level.SEVERE, pass);
-			logger.log(Level.WARNING, password);
-			return hash(pass).equals(password);
-		}
         
 }
