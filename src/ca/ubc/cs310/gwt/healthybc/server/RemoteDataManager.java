@@ -152,7 +152,6 @@ public class RemoteDataManager {
 			logger.log(Level.WARNING, "Unable to find rating for clinic " + refID);
 			a.add(0);   a.add(0);	a.add(0);
 			return a;
-
 		}
 
 		//need to do this because of the format the datastore stores the integer
@@ -392,6 +391,7 @@ public class RemoteDataManager {
 		
 		// Parse date into preferred string format before storage
 		SimpleDateFormat df = new SimpleDateFormat("hh:mm aa, MMMM dd, yyyy");
+		df.setTimeZone(TimeZone.getTimeZone("GMT-07:00"));
 		String dateString = df.format(date); 
 		
 		e.setProperty("username", currentUser);

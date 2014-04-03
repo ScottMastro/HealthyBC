@@ -91,10 +91,11 @@ public class HealthyBC implements EntryPoint {
 		
 		VerticalPanel rtpanel = new VerticalPanel();
 
-		rtpanel.add(new HTML("<h2> Healthy BC : Walk-in Clinics </h2> <br/>"));
+		rtpanel.setStyleName("loginPageContainer");
+		rtpanel.add(new HTML("<h2 style=\"text-align:center;\"> Healthy BC : Walk-in Clinics </h2> <br/>"));
 
 		HorizontalPanel hpanel = new HorizontalPanel();
-		hpanel.setHeight("520px");
+		hpanel.setHeight("320px");
 
 		// Create Login form
 		hpanel.add(createLoginForm());

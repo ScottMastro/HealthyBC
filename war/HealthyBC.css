@@ -76,3 +76,33 @@ iframe[title="+1"] {
 	white-space:nowrap; 
 	overflow:auto;
 }
+
+.gwt-TextBox, .gwt-PasswordTextBox {
+	width: 200px;
+	margin-bottom: 15px;
+}
+
+.leftForm {
+     border-right:1px solid #BBBBBB; 
+     height: 280px;
+     width: 230px;
+}
+
+.rightForm {
+	margin-left: 20px;
+}
+
+.loginPageContainer {
+	width: 400px;
+	height: 300px;
+	padding: 20px;
+	border: 1px solid #888888;
+	box-shadow: 5px 5px 5px #888888;
+	position: absolute;
+    top:0;
+    bottom: 0;
+    left: 50%;
+    right: 0;
+    margin: auto;
+    margin-top: 150px;
+}

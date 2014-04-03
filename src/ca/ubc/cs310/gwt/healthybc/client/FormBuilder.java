@@ -37,22 +37,20 @@ public class FormBuilder {
 
 		// Create a panel to hold all of the form widgets.
 		VerticalPanel panel = new VerticalPanel();
+		form.setStyleName("leftForm");
 		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		panel.setSize("400px", "400px");
+		panel.setWidth("220px");
 
-		panel.add(new HTML("<h2> Login </h2><br/>"));
+		panel.add(new HTML("<h3> Login </h3>"));
 
 		form.setWidget(panel);
 
-		panel.add(new HTML("Username : "));
-
 		// Username field
 		final TextBox tb = new TextBox();
+		tb.getElement().setPropertyString("placeholder", "Username");
 		tb.setName("username");
 		tb.addKeyDownHandler(formKeypressCallback);
 		panel.add(tb);
-
-		panel.add(new HTML("<br/> Password : "));
 
 		// Password field
 		final PasswordTextBox pb = new PasswordTextBox();
@@ -60,8 +58,6 @@ public class FormBuilder {
 		pb.setName("password");
 		pb.addKeyDownHandler(formKeypressCallback);
 		panel.add(pb);
-
-		panel.add(new HTML("<br/> <br/>"));
 
 		// Add a 'submit' button.
 		panel.add(new Button("Submit", new ClickHandler() {
@@ -106,46 +102,41 @@ public class FormBuilder {
 
 		// Create a panel to hold all of the form widgets.
 		VerticalPanel panel = new VerticalPanel();
+		panel.setStyleName("rightForm");
 		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		panel.setSize("400px", "500px");
+		panel.setWidth("200px");
 
-		panel.add(new HTML("<h2> Register </h2><br/>"));
+		panel.add(new HTML("<h3> Register</h3>"));
 
 		form.setWidget(panel);
 
-		panel.add(new HTML("Name : "));
-
 		// Name field
 		final TextBox name = new TextBox();
+		name.getElement().setPropertyString("placeholder", "Name");
 		name.setName("name");
 		name.addKeyDownHandler(formKeypressCallback);
 		panel.add(name);
 
-		panel.add(new HTML("<br/> Email : "));
-
 		// EMail field
 		final TextBox email = new TextBox();
+		email.getElement().setPropertyString("placeholder", "Email");
 		email.setName("email");
 		email.addKeyDownHandler(formKeypressCallback);
 		panel.add(email);
 
-		panel.add(new HTML("<br/> Username : "));
-
 		// Username field
 		final TextBox tb = new TextBox();
+		tb.getElement().setPropertyString("placeholder", "Username");
 		tb.setName("username");
 		tb.addKeyDownHandler(formKeypressCallback);
 		panel.add(tb);
 
-		panel.add(new HTML("<br/> Password : "));
-
 		// Password field
 		final PasswordTextBox pb = new PasswordTextBox();
+		pb.getElement().setPropertyString("placeholder", "Password");
 		pb.setName("password");
 		pb.addKeyDownHandler(formKeypressCallback);
 		panel.add(pb);
-
-		panel.add(new HTML("<br/> <br/>"));
 
 		// Add a 'submit' button.
 		panel.add(new Button("Submit", new ClickHandler() {
