@@ -38,6 +38,8 @@ import com.google.gwt.view.client.SingleSelectionModel;
  */
 public class HealthyBC implements EntryPoint {
 
+	public static HealthyBC singleton;
+	
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -60,12 +62,27 @@ public class HealthyBC implements EntryPoint {
 	private Double addressLon;
 	private MapBuilder mapBuilder;
 	private static Widget twitterFeedPanel;
+	private SimplePanel historyPanel;
+	private Widget historyTable;
 
+	/**
+	 * Returns singleton object HealthyBC
+	 * @return HealthyBC Returns static object
+	 */
+	public static HealthyBC get() {
+		return singleton;
+	}
+	
+	public String getCurrentUser() {
+		return currentUser;
+	}
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
+		singleton = this;
+		
 		String username = Cookies.getCookie("HBC_username");
 
 		if (username != null && username != ""){
@@ -180,7 +197,8 @@ public class HealthyBC implements EntryPoint {
 		tabNames = new ArrayList<String>();
 
 		twitterFeedPanel = TwitterFeed.getInstance().createTwitterFeed();
-
+		historyPanel = new SimplePanel();
+		
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this);
 		
@@ -190,15 +208,19 @@ public class HealthyBC implements EntryPoint {
 		tabs.add(homeImage, "Home");
 		tabs.add(options.getOptionsTab(), "Options");
 		tabs.add(twitterFeedPanel, "Twitter");
+		tabs.add(historyPanel, "History");
 
 		tabNames.add("Home");
 		tabNames.add("Options");
 		tabNames.add("Twitter");
+		tabNames.add("History");
 
 		createMap(null, null);
 		createTable(null, null);
 		createUploadForm();
 
+		populateHistory();
+		
 		dock.addWest(mapTableDock, 30);
 		dock.addEast(tabs, 70);
 
@@ -296,7 +318,7 @@ public class HealthyBC implements EntryPoint {
 	}
 
 	/**
-	 * Calls the server to retrieve data
+	 * Calls the server to retrieve clinic data
 	 */
 	private class TableInfoListCallback implements AsyncCallback<ArrayList<TableInfo>> {
 		@Override
@@ -503,16 +525,66 @@ public class HealthyBC implements EntryPoint {
 				tabs.add(ratingTab.getRatingTab(), "View Ratings");
 				tabNames.add(tabs.getWidgetCount() -1, "View Ratings");
 
+				saveClinicVisit(t.getRefID(), currentUser, t.getName(), t.getAddress());
+				
 				forceRender();
 			}
 		}
 	}
 
-	/*
+	/**
+	 * Save a clicked clinic to the data store for viewing history purposes
+	 */
+	private void saveClinicVisit(String refID, String currentUser, final String clinicName, final String clinicAddress) {
+		// Try and save the clinic to user history
+		HistoryHandlerAsync historyHandler = GWT.create(HistoryHandler.class);
+
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				// Couldn't save our visit to the datastore
+			}
+
+			@Override
+			public void onSuccess(String dateString) {
+				// Successfully saved to datastore
+				// Returns dateString on successful storage of visit
+				// TODO: Let's show it on the history page/tab so we don't need to refresh for it to show up
+				HistoryTab.getInstance().addClinicToTable(clinicName, clinicAddress, dateString);
+			}
+		};
+		historyHandler.saveClinicVisit(refID, currentUser, clinicName, clinicAddress, callback);
+	}
+
+	/**
+	 * Gets and adds current users clinic viewing history
+	 */
+	private void populateHistory() {
+		HistoryHandlerAsync historyHandler = GWT.create(HistoryHandler.class);
+		
+		AsyncCallback<ArrayList<String>> callback = new AsyncCallback<ArrayList<String>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<String> result) {
+				historyTable = HistoryTab.getInstance().buildTable(result);
+				historyPanel.add(historyTable);
+				System.out.println("Populating history...");
+			}
+		};
+		
+		historyHandler.getHistory(currentUser, callback);
+	}
+	
+	/**
 	 * JSNI method to force re-rendering of Like/+1 buttons
 	 */
 	public static native String forceRender() /*-{
-
 		$wnd.FB.XFBML.parse($doc.getElementById("fb-wrapper"));
 		$wnd.gapi.plusone.go();
 	}-*/;

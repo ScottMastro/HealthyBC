@@ -1,11 +1,14 @@
 package ca.ubc.cs310.gwt.healthybc.server;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import ca.ubc.cs310.gwt.healthybc.client.Clinic;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -81,7 +84,7 @@ public class RemoteDataManager {
 	/**
 	 * Uploads an Entity to the database
 	 *
-	 * @param Clinc class to convert to an entity
+	 * @param Clinic class to convert to an entity
 	 * @throws Exception
 	 */            
 	private void uploadToDatabase(Entity e) {
@@ -163,7 +166,6 @@ public class RemoteDataManager {
 
 		a.add(score);
 		a.add(amount);
-
 
 		key = KeyFactory.createKey("UserRating", currentUser + refID);
 		try {
@@ -351,6 +353,60 @@ public class RemoteDataManager {
 		return result;
 	}
 
+	/**
+	 * Gets a user's history of viewed clinics
+	 * 
+	 * @param username	Username of current user (to get entries for this user from the datastore)
+	 * @return ArrayList<String>	array of elements, in order, alternating: clinic name, clinic address, date accessed
+	 */
+	public ArrayList<String> getUserHistory(String username) {
+		ArrayList<String> result = new ArrayList<String>();
+
+		Filter userFilter = new FilterPredicate("username", FilterOperator.EQUAL, username);
+		
+		Query q = new Query("History Entry")
+					.addSort("date", SortDirection.DESCENDING)
+					.setFilter(userFilter);
+
+		PreparedQuery pq = datastore.prepare(q);
+		List<Entity> entities = pq.asList(FetchOptions.Builder.withDefaults());
+		System.out.println("In getUserHistory() in rdm");
+		System.out.println("sizeOf List<Entity>: "+ entities.size());
+		for (Entity entity : entities){
+			String clinicName = String.valueOf(entity.getProperty("clinicName"));
+			String clinicAddress = String.valueOf(entity.getProperty("clinicAddress"));
+			String date = String.valueOf(entity.getProperty("date"));
+
+			result.add(clinicName);
+			result.add(clinicAddress);
+			result.add(date);
+			System.out.println("Looping thru entities..");
+		}
+
+		return result;
+	}
+	
+	public String saveClinicVisit(String refID, String currentUser, String clinicName, String clinicAddress) {
+		Key key = KeyFactory.createKey("History Entry", currentUser+refID);
+		Entity e = new Entity("History Entry", key);
+
+		Date date = new Date();
+		
+		// Parse date into preferred string format before storage
+		SimpleDateFormat df = new SimpleDateFormat("hh:mm aa, MMMM dd, yyyy");
+		String dateString = df.format(date); 
+		
+		e.setProperty("username", currentUser);
+		e.setProperty("refID", refID);
+		e.setProperty("date", dateString);
+		e.setProperty("clinicName", clinicName);
+		e.setProperty("clinicAddress", clinicAddress);
+
+		uploadToDatabase(e);
+		
+		return dateString;
+	}
+	
 	/**
 	 * Pushes a simple string to datastore, used for testing
 	 * @param string to push
