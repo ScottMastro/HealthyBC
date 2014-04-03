@@ -52,14 +52,17 @@ public class Login extends HttpServlet
 	                User user = User.getUser(username);
 	                if (user != null) {
 	                        if (user.checkPassword(password)) {
-	                                resp = "success";                              
+	                                resp = "success";
+	                                break section;
 	                        }
 	                        else {
 	                                resp = "fail";
+	                                break section;
 	                        }
 	                }
 	                else {
 	                        resp = "fail";
+	                        break section;
 	                }
                 }
                
