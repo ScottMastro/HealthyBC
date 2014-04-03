@@ -185,8 +185,7 @@ public class HealthyBC implements EntryPoint {
 		// add home page & logout button
 		OptionsTab options = new OptionsTab(this);
 		
-		Image homeImage = new Image();
-	    homeImage.setUrl(GWT.getModuleBaseURL()+"images/healthyBC.png");
+		Image homeImage = new Image("healthyBC.png");
 
 		tabs.add(homeImage, "Home");
 		tabs.add(options.getOptionsTab(), "Options");
