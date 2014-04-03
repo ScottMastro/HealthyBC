@@ -549,7 +549,7 @@ public class HealthyBC implements EntryPoint {
 			public void onSuccess(String dateString) {
 				// Successfully saved to datastore
 				// Returns dateString on successful storage of visit
-				// TODO: Let's show it on the history page/tab so we don't need to refresh for it to show up
+				
 				HistoryTab.getInstance().addClinicToTable(clinicName, clinicAddress, dateString);
 			}
 		};
@@ -574,7 +574,6 @@ public class HealthyBC implements EntryPoint {
 			public void onSuccess(ArrayList<String> result) {
 				historyTable = HistoryTab.getInstance().buildTable(result);
 				historyPanel.add(historyTable);
-				System.out.println("Populating history...");
 			}
 		};
 		

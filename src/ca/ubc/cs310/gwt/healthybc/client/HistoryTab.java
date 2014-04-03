@@ -1,7 +1,6 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.cellview.client.CellTable;
@@ -64,14 +63,8 @@ public class HistoryTab {
 		
 		table.setWidth("100%", false);
 		
-		consoleLog("supposedly built the history table.......");
-		
 		return table;
 	}
-	
-	native void consoleLog( String message) /*-{
-    	console.log( "me:" + message );
-	}-*/;
 	
 	private class Clinic {
 		private String clinicName;
