@@ -40,7 +40,6 @@ public class Clinic {
 	public String getRefID() { return refID; }
 	public String getName() { return name; }
 	public String getHoursString() { return hours.getHours(); }
-	public String getAddressString() { return addr + pcode; }
 	public Double getLatitude() { return latitude; }
 	public Double getLongitude() { return longitude; }
 	public String getEmail() { return email; }

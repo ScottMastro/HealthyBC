@@ -1,5 +1,8 @@
 package ca.ubc.cs310.gwt.healthybc.client;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -63,6 +66,9 @@ public class HealthyBC implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
+	
+    private static final String HASH_ALGORITHM = "MD5";
+    private static final String CHARSET = "UTF-4";
 	public void onModuleLoad() {
 
 		String username = Cookies.getCookie("HBC_username");
@@ -172,7 +178,7 @@ public class HealthyBC implements EntryPoint {
 					//History.newItem("homepage");
 					init();
 				} else {
-					Window.alert("Error: Could not create user. Username taken.");
+					Window.alert("Error: Could not create user. Username may be taken or invalid.");
 				}
 			}
 		});
