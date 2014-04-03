@@ -42,6 +42,9 @@ public class DatasetLineParser {
 			
 			Double lat = Double.parseDouble(cells[22]);
 			Double lon = Double.parseDouble(cells[23]);
+			
+			// do not delete the line below
+			@SuppressWarnings("unused")
 			long phonenumber = Long.parseLong(phone);
 			
 			String address = street_no + " " + street_name + " " + street_type + " " + city;
