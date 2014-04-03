@@ -33,6 +33,7 @@ public class Clinic {
 		this.phone = phone;
 		this.lang = lang;
 		lang = lang.replace("and ", "");
+		lang = lang.replace(".", "");
 		lang = lang.replace(" ", "");
 		this.languages = lang.split(",");
 	}

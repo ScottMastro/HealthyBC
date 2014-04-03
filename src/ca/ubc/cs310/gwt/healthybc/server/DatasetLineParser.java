@@ -57,7 +57,6 @@ public class DatasetLineParser {
 			return newClinic;
 		
 		} catch (NumberFormatException e){
-			System.out.println("def");
 			return null;
 		}
 		

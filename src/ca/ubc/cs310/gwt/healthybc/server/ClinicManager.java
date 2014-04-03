@@ -108,7 +108,7 @@ public class ClinicManager {
 		Clinic newClinic = new Clinic(refID, name, newHours, lat, lon, address, pcode, email, phone, languages);
 
 		dataManager.addAndUploadClinicEntity(newClinic);
-
+		
 		TableInfo newTableInfo = new TableInfo(refID, name, address, email, newClinic.getLanguages());
 		MapInfo newMapInfo = new MapInfo(refID, name, lat, lon, newClinic.getLanguages());
 
