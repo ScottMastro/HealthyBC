@@ -72,12 +72,14 @@ public class DatasetLineParserTest {
 		assertTrue(myclinic1.getLatitude() == 49.2385);
 		assertTrue(myclinic1.getLongitude() == -121.7675);
 		assertTrue(Long.parseLong(myclinic1.getPhone()) == 6047032030L);
+		assertTrue(myclinic1.getPostalCode().equals("V0M 1A2"));
 		
 		assertTrue(myclinic2.getName().equals("Vancouver Coastal Health Authority"));
 		assertTrue(myclinic2.getRefID().equals("SL004037"));
 		assertTrue(myclinic2.getLatitude() == 49.265082);
 		assertTrue(myclinic2.getLongitude() == -123.244573);
 		assertTrue(Long.parseLong(myclinic2.getPhone()) == 6048227011L);
+		assertTrue(myclinic2.getPostalCode().equals("V6T 2B5"));
 		
 	}
 
