@@ -9,6 +9,7 @@ Alex Tan | h5m8
 Scott Mastromatteo | i7z7
 Ben Liang | w0y7
 
+Deployed version: http://www.healthy-bc-310.appspot.com/
 **Project Title**: Healthy BC - Walk-In Clinics in our province
 
 **Project Description**
@@ -19,3 +20,4 @@ It is designed to provide support to patients that do not have family physicians
 After authentication, the users of this application can browse and query important information including name, location, hours, address and contact information for each walk-in clinic. Clinic locations will be plotted on a map to allow easy visualization of location data. In addition to providing a wealth of information the application will feature social integration with Facebook and Twitter, allowing users to review their experience and provide feedback for others (by clicking on ‘Like’ or posting a comment).
 
 Dataset URL: http://pub.data.gov.bc.ca/datasets/174267/hlbc_walkinclinics.txt
+Admin account: username: admin   password : blankslate123
